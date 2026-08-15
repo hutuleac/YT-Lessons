@@ -1,0 +1,495 @@
+1
+00:00:00,000 --> 00:00:01,630
+
+hallucinations. They're going to happen.
+
+2
+00:00:01,630 --> 00:00:01,640
+hallucinations. They're going to happen.
+ 
+
+3
+00:00:01,640 --> 00:00:03,830
+hallucinations. They're going to happen.
+They're probably inherent to LLMs. So,
+
+4
+00:00:03,830 --> 00:00:03,840
+They're probably inherent to LLMs. So,
+ 
+
+5
+00:00:03,840 --> 00:00:05,390
+They're probably inherent to LLMs. So,
+how do you avoid them and how do you
+
+6
+00:00:05,390 --> 00:00:05,400
+how do you avoid them and how do you
+ 
+
+7
+00:00:05,400 --> 00:00:06,830
+how do you avoid them and how do you
+diagnose? Well, let's say you have some
+
+8
+00:00:06,830 --> 00:00:06,840
+diagnose? Well, let's say you have some
+ 
+
+9
+00:00:06,840 --> 00:00:09,070
+diagnose? Well, let's say you have some
+kind of coding hallucination and what
+
+10
+00:00:09,070 --> 00:00:09,080
+kind of coding hallucination and what
+ 
+
+11
+00:00:09,080 --> 00:00:11,750
+kind of coding hallucination and what
+you first need to say is was the
+
+12
+00:00:11,750 --> 00:00:11,760
+you first need to say is was the
+ 
+
+13
+00:00:11,760 --> 00:00:14,270
+you first need to say is was the
+information available to the LLM in its
+
+14
+00:00:14,270 --> 00:00:14,280
+information available to the LLM in its
+ 
+
+15
+00:00:14,280 --> 00:00:16,510
+information available to the LLM in its
+context window. People think that LLMs
+
+16
+00:00:16,510 --> 00:00:16,520
+context window. People think that LLMs
+ 
+
+17
+00:00:16,520 --> 00:00:18,190
+context window. People think that LLMs
+are kind of like databases where they
+
+18
+00:00:18,190 --> 00:00:18,200
+are kind of like databases where they
+ 
+
+19
+00:00:18,200 --> 00:00:20,230
+are kind of like databases where they
+store information and retrieve, but
+
+20
+00:00:20,230 --> 00:00:20,240
+store information and retrieve, but
+ 
+
+21
+00:00:20,240 --> 00:00:22,030
+store information and retrieve, but
+that's absolutely not right. It's more
+
+22
+00:00:22,030 --> 00:00:22,040
+that's absolutely not right. It's more
+ 
+
+23
+00:00:22,040 --> 00:00:24,110
+that's absolutely not right. It's more
+like they have a fuzzy JPEG of the
+
+24
+00:00:24,110 --> 00:00:24,120
+like they have a fuzzy JPEG of the
+ 
+
+25
+00:00:24,120 --> 00:00:25,950
+like they have a fuzzy JPEG of the
+entirety of human knowledge. And so,
+
+26
+00:00:25,950 --> 00:00:25,960
+entirety of human knowledge. And so,
+ 
+
+27
+00:00:25,960 --> 00:00:27,910
+entirety of human knowledge. And so,
+they know the basic shapes of things,
+
+28
+00:00:27,910 --> 00:00:27,920
+they know the basic shapes of things,
+ 
+
+29
+00:00:27,920 --> 00:00:29,190
+they know the basic shapes of things,
+but they can't really tell you
+
+30
+00:00:29,190 --> 00:00:29,200
+but they can't really tell you
+ 
+
+31
+00:00:29,200 --> 00:00:31,630
+but they can't really tell you
+specifics. And so, you have to basically
+
+32
+00:00:31,630 --> 00:00:31,640
+specifics. And so, you have to basically
+ 
+
+33
+00:00:31,640 --> 00:00:33,550
+specifics. And so, you have to basically
+say was the information in context? If
+
+34
+00:00:33,550 --> 00:00:33,560
+say was the information in context? If
+ 
+
+35
+00:00:33,560 --> 00:00:35,030
+say was the information in context? If
+it's not, then it's a factuality
+
+36
+00:00:35,030 --> 00:00:35,040
+it's not, then it's a factuality
+ 
+
+37
+00:00:35,040 --> 00:00:36,150
+it's not, then it's a factuality
+hallucination. A factuality
+
+38
+00:00:36,150 --> 00:00:36,160
+hallucination. A factuality
+ 
+
+39
+00:00:36,160 --> 00:00:38,350
+hallucination. A factuality
+hallucination is when it's attempting to
+
+40
+00:00:38,350 --> 00:00:38,360
+hallucination is when it's attempting to
+ 
+
+41
+00:00:38,360 --> 00:00:40,150
+hallucination is when it's attempting to
+read something that you haven't passed
+
+42
+00:00:40,150 --> 00:00:40,160
+read something that you haven't passed
+ 
+
+43
+00:00:40,160 --> 00:00:42,830
+read something that you haven't passed
+it and it just fails. It cannot recall
+
+44
+00:00:42,830 --> 00:00:42,840
+it and it just fails. It cannot recall
+ 
+
+45
+00:00:42,840 --> 00:00:44,630
+it and it just fails. It cannot recall
+things. You should never trust an
+
+46
+00:00:44,630 --> 00:00:44,640
+things. You should never trust an
+ 
+
+47
+00:00:44,640 --> 00:00:46,790
+things. You should never trust an
+unsourced LLM. So, the fix there is
+
+48
+00:00:46,790 --> 00:00:46,800
+unsourced LLM. So, the fix there is
+ 
+
+49
+00:00:46,800 --> 00:00:48,310
+unsourced LLM. So, the fix there is
+obvious. You just load the information
+
+50
+00:00:48,310 --> 00:00:48,320
+obvious. You just load the information
+ 
+
+51
+00:00:48,320 --> 00:00:50,150
+obvious. You just load the information
+into context. However, even if you pass
+
+52
+00:00:50,150 --> 00:00:50,160
+into context. However, even if you pass
+ 
+
+53
+00:00:50,160 --> 00:00:51,590
+into context. However, even if you pass
+the agent the right context, it's not
+
+54
+00:00:51,590 --> 00:00:51,600
+the agent the right context, it's not
+ 
+
+55
+00:00:51,600 --> 00:00:53,350
+the agent the right context, it's not
+always going to work. And so, you will
+
+56
+00:00:53,350 --> 00:00:53,360
+always going to work. And so, you will
+ 
+
+57
+00:00:53,360 --> 00:00:55,710
+always going to work. And so, you will
+get a faithfulness hallucination where
+
+58
+00:00:55,710 --> 00:00:55,720
+get a faithfulness hallucination where
+ 
+
+59
+00:00:55,720 --> 00:00:57,150
+get a faithfulness hallucination where
+it's not been faithful to the
+
+60
+00:00:57,150 --> 00:00:57,160
+it's not been faithful to the
+ 
+
+61
+00:00:57,160 --> 00:00:59,030
+it's not been faithful to the
+information that you provided. Now, this
+
+62
+00:00:59,030 --> 00:00:59,040
+information that you provided. Now, this
+ 
+
+63
+00:00:59,040 --> 00:01:00,430
+information that you provided. Now, this
+can sometimes happen because of
+
+64
+00:01:00,430 --> 00:01:00,440
+can sometimes happen because of
+ 
+
+65
+00:01:00,440 --> 00:01:02,750
+can sometimes happen because of
+attention degradation where the context
+
+66
+00:01:02,750 --> 00:01:02,760
+attention degradation where the context
+ 
+
+67
+00:01:02,760 --> 00:01:04,950
+attention degradation where the context
+window grows longer and longer and the
+
+68
+00:01:04,950 --> 00:01:04,960
+window grows longer and longer and the
+ 
+
+69
+00:01:04,960 --> 00:01:06,710
+window grows longer and longer and the
+attention relationships get strained
+
+70
+00:01:06,710 --> 00:01:06,720
+attention relationships get strained
+ 
+
+71
+00:01:06,720 --> 00:01:08,110
+attention relationships get strained
+between all the elements. So, the way to
+
+72
+00:01:08,110 --> 00:01:08,120
+between all the elements. So, the way to
+ 
+
+73
+00:01:08,120 --> 00:01:09,950
+between all the elements. So, the way to
+get the agent out of that is to reduce
+
+74
+00:01:09,950 --> 00:01:09,960
+get the agent out of that is to reduce
+ 
+
+75
+00:01:09,960 --> 00:01:11,670
+get the agent out of that is to reduce
+the number of tokens in its context
+
+76
+00:01:11,670 --> 00:01:11,680
+the number of tokens in its context
+ 
+
+77
+00:01:11,680 --> 00:01:13,430
+the number of tokens in its context
+window. So, you reduce the number of
+
+78
+00:01:13,430 --> 00:01:13,440
+window. So, you reduce the number of
+ 
+
+79
+00:01:13,440 --> 00:01:15,390
+window. So, you reduce the number of
+attention relationships and it can focus
+
+80
+00:01:15,390 --> 00:01:15,400
+attention relationships and it can focus
+ 
+
+81
+00:01:15,400 --> 00:01:17,110
+attention relationships and it can focus
+better. When you're deep in the context
+
+82
+00:01:17,110 --> 00:01:17,120
+better. When you're deep in the context
+ 
+
+83
+00:01:17,120 --> 00:01:18,350
+better. When you're deep in the context
+window and there's lots of attention
+
+84
+00:01:18,350 --> 00:01:18,360
+window and there's lots of attention
+ 
+
+85
+00:01:18,360 --> 00:01:20,590
+window and there's lots of attention
+degradation, I call that the dumb zone.
+
+86
+00:01:20,590 --> 00:01:20,600
+degradation, I call that the dumb zone.
+ 
+
+87
+00:01:20,600 --> 00:01:22,030
+degradation, I call that the dumb zone.
+So, the cure for faithfulness is to
+
+88
+00:01:22,030 --> 00:01:22,040
+So, the cure for faithfulness is to
+ 
+
+89
+00:01:22,040 --> 00:01:23,990
+So, the cure for faithfulness is to
+somehow get out of the dumb zone. That
+
+90
+00:01:23,990 --> 00:01:24,000
+somehow get out of the dumb zone. That
+ 
+
+91
+00:01:24,000 --> 00:01:25,510
+somehow get out of the dumb zone. That
+might be clearing the context, that
+
+92
+00:01:25,510 --> 00:01:25,520
+might be clearing the context, that
+ 
+
+93
+00:01:25,520 --> 00:01:27,430
+might be clearing the context, that
+might be running compact, that might be
+
+94
+00:01:27,430 --> 00:01:27,440
+might be running compact, that might be
+ 
+
+95
+00:01:27,440 --> 00:01:28,630
+might be running compact, that might be
+handing off to a separate session.
+
+96
+00:01:28,630 --> 00:01:28,640
+handing off to a separate session.
+ 
+
+97
+00:01:28,640 --> 00:01:30,630
+handing off to a separate session.
+Hallucinations are here to stay and so,
+
+98
+00:01:30,630 --> 00:01:30,640
+Hallucinations are here to stay and so,
+ 
+
+99
+00:01:30,640 --> 00:01:33,880
+Hallucinations are here to stay and so,
+you need to know how to deal with them.
+

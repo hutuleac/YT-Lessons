@@ -1,0 +1,545 @@
+1
+00:00:00,000 --> 00:00:01,870
+
+Many models now ship with 1 million
+
+2
+00:00:01,870 --> 00:00:01,880
+Many models now ship with 1 million
+ 
+
+3
+00:00:01,880 --> 00:00:03,550
+Many models now ship with 1 million
+tokens of context window, but it's
+
+4
+00:00:03,550 --> 00:00:03,560
+tokens of context window, but it's
+ 
+
+5
+00:00:03,560 --> 00:00:05,270
+tokens of context window, but it's
+pretty shocking how little of that is
+
+6
+00:00:05,270 --> 00:00:05,280
+pretty shocking how little of that is
+ 
+
+7
+00:00:05,280 --> 00:00:07,750
+pretty shocking how little of that is
+usable for actual work. All models
+
+8
+00:00:07,750 --> 00:00:07,760
+usable for actual work. All models
+ 
+
+9
+00:00:07,760 --> 00:00:09,710
+usable for actual work. All models
+suffer from attention degradation, which
+
+10
+00:00:09,710 --> 00:00:09,720
+suffer from attention degradation, which
+ 
+
+11
+00:00:09,720 --> 00:00:11,350
+suffer from attention degradation, which
+means that the more tokens you have in
+
+12
+00:00:11,350 --> 00:00:11,360
+means that the more tokens you have in
+ 
+
+13
+00:00:11,360 --> 00:00:13,750
+means that the more tokens you have in
+the context window, the worse the agent
+
+14
+00:00:13,750 --> 00:00:13,760
+the context window, the worse the agent
+ 
+
+15
+00:00:13,760 --> 00:00:15,270
+the context window, the worse the agent
+performs. The reason for this is
+
+16
+00:00:15,270 --> 00:00:15,280
+performs. The reason for this is
+ 
+
+17
+00:00:15,280 --> 00:00:17,150
+performs. The reason for this is
+whenever you add a token to the context
+
+18
+00:00:17,150 --> 00:00:17,160
+whenever you add a token to the context
+ 
+
+19
+00:00:17,160 --> 00:00:18,910
+whenever you add a token to the context
+window, the model needs to keep track of
+
+20
+00:00:18,910 --> 00:00:18,920
+window, the model needs to keep track of
+ 
+
+21
+00:00:18,920 --> 00:00:20,910
+window, the model needs to keep track of
+not just that token, but also its
+
+22
+00:00:20,910 --> 00:00:20,920
+not just that token, but also its
+ 
+
+23
+00:00:20,920 --> 00:00:22,910
+not just that token, but also its
+relationships to every other token. So,
+
+24
+00:00:22,910 --> 00:00:22,920
+relationships to every other token. So,
+ 
+
+25
+00:00:22,920 --> 00:00:25,110
+relationships to every other token. So,
+here we have five tokens, but 10
+
+26
+00:00:25,110 --> 00:00:25,120
+here we have five tokens, but 10
+ 
+
+27
+00:00:25,120 --> 00:00:26,590
+here we have five tokens, but 10
+attention relationships. If you have
+
+28
+00:00:26,590 --> 00:00:26,600
+attention relationships. If you have
+ 
+
+29
+00:00:26,600 --> 00:00:29,070
+attention relationships. If you have
+10,000 tokens, then that's 1 million
+
+30
+00:00:29,070 --> 00:00:29,080
+10,000 tokens, then that's 1 million
+ 
+
+31
+00:00:29,080 --> 00:00:30,590
+10,000 tokens, then that's 1 million
+attention relationships, which means
+
+32
+00:00:30,590 --> 00:00:30,600
+attention relationships, which means
+ 
+
+33
+00:00:30,600 --> 00:00:32,510
+attention relationships, which means
+that at some point the model starts to
+
+34
+00:00:32,510 --> 00:00:32,520
+that at some point the model starts to
+ 
+
+35
+00:00:32,520 --> 00:00:34,870
+that at some point the model starts to
+perform worse, starts to create more
+
+36
+00:00:34,870 --> 00:00:34,880
+perform worse, starts to create more
+ 
+
+37
+00:00:34,880 --> 00:00:36,750
+perform worse, starts to create more
+hallucinations, starts to retrieve
+
+38
+00:00:36,750 --> 00:00:36,760
+hallucinations, starts to retrieve
+ 
+
+39
+00:00:36,760 --> 00:00:39,310
+hallucinations, starts to retrieve
+information less well, starts to write
+
+40
+00:00:39,310 --> 00:00:39,320
+information less well, starts to write
+ 
+
+41
+00:00:39,320 --> 00:00:41,070
+information less well, starts to write
+worse code. And so, practically, you can
+
+42
+00:00:41,070 --> 00:00:41,080
+worse code. And so, practically, you can
+ 
+
+43
+00:00:41,080 --> 00:00:42,910
+worse code. And so, practically, you can
+think of the agent as having a smart
+
+44
+00:00:42,910 --> 00:00:42,920
+think of the agent as having a smart
+ 
+
+45
+00:00:42,920 --> 00:00:45,950
+think of the agent as having a smart
+zone and a dumb zone. This isn't a like
+
+46
+00:00:45,950 --> 00:00:45,960
+zone and a dumb zone. This isn't a like
+ 
+
+47
+00:00:45,960 --> 00:00:48,430
+zone and a dumb zone. This isn't a like
+immediate drop-off, it slowly sinks
+
+48
+00:00:48,430 --> 00:00:48,440
+immediate drop-off, it slowly sinks
+ 
+
+49
+00:00:48,440 --> 00:00:51,270
+immediate drop-off, it slowly sinks
+down, and some tasks don't need that
+
+50
+00:00:51,270 --> 00:00:51,280
+down, and some tasks don't need that
+ 
+
+51
+00:00:51,280 --> 00:00:53,150
+down, and some tasks don't need that
+much of a smart zone. So, you can do
+
+52
+00:00:53,150 --> 00:00:53,160
+much of a smart zone. So, you can do
+ 
+
+53
+00:00:53,160 --> 00:00:54,870
+much of a smart zone. So, you can do
+some tasks in the dumb zone. But, if you
+
+54
+00:00:54,870 --> 00:00:54,880
+some tasks in the dumb zone. But, if you
+ 
+
+55
+00:00:54,880 --> 00:00:56,510
+some tasks in the dumb zone. But, if you
+want to get the most out of the tokens
+
+56
+00:00:56,510 --> 00:00:56,520
+want to get the most out of the tokens
+ 
+
+57
+00:00:56,520 --> 00:00:57,990
+want to get the most out of the tokens
+that you're spending, you want to spend
+
+58
+00:00:57,990 --> 00:00:58,000
+that you're spending, you want to spend
+ 
+
+59
+00:00:58,000 --> 00:00:59,710
+that you're spending, you want to spend
+those tokens in the smart zone, not the
+
+60
+00:00:59,710 --> 00:00:59,720
+those tokens in the smart zone, not the
+ 
+
+61
+00:00:59,720 --> 00:01:01,150
+those tokens in the smart zone, not the
+dumb zone. So, the question is, where
+
+62
+00:01:01,150 --> 00:01:01,160
+dumb zone. So, the question is, where
+ 
+
+63
+00:01:01,160 --> 00:01:03,310
+dumb zone. So, the question is, where
+does the dumb zone begin? And this is
+
+64
+00:01:03,310 --> 00:01:03,320
+does the dumb zone begin? And this is
+ 
+
+65
+00:01:03,320 --> 00:01:05,310
+does the dumb zone begin? And this is
+hotly debated, and it's different per
+
+66
+00:01:05,310 --> 00:01:05,320
+hotly debated, and it's different per
+ 
+
+67
+00:01:05,320 --> 00:01:07,430
+hotly debated, and it's different per
+model, and probably different per task.
+
+68
+00:01:07,430 --> 00:01:07,440
+model, and probably different per task.
+ 
+
+69
+00:01:07,440 --> 00:01:09,310
+model, and probably different per task.
+However, I think a useful rule of thumb
+
+70
+00:01:09,310 --> 00:01:09,320
+However, I think a useful rule of thumb
+ 
+
+71
+00:01:09,320 --> 00:01:12,270
+However, I think a useful rule of thumb
+is around 150,000 tokens. It's pretty
+
+72
+00:01:12,270 --> 00:01:12,280
+is around 150,000 tokens. It's pretty
+ 
+
+73
+00:01:12,280 --> 00:01:14,230
+is around 150,000 tokens. It's pretty
+easy to design workflows where you break
+
+74
+00:01:14,230 --> 00:01:14,240
+easy to design workflows where you break
+ 
+
+75
+00:01:14,240 --> 00:01:16,270
+easy to design workflows where you break
+down tasks into small chunks, and then
+
+76
+00:01:16,270 --> 00:01:16,280
+down tasks into small chunks, and then
+ 
+
+77
+00:01:16,280 --> 00:01:18,470
+down tasks into small chunks, and then
+run them in new context windows. And I
+
+78
+00:01:18,470 --> 00:01:18,480
+run them in new context windows. And I
+ 
+
+79
+00:01:18,480 --> 00:01:20,110
+run them in new context windows. And I
+found that doing this means I spend
+
+80
+00:01:20,110 --> 00:01:20,120
+found that doing this means I spend
+ 
+
+81
+00:01:20,120 --> 00:01:22,350
+found that doing this means I spend
+fewer tokens, and I get better results.
+
+82
+00:01:22,350 --> 00:01:22,360
+fewer tokens, and I get better results.
+ 
+
+83
+00:01:22,360 --> 00:01:24,150
+fewer tokens, and I get better results.
+This recommendation has moved as well. I
+
+84
+00:01:24,150 --> 00:01:24,160
+This recommendation has moved as well. I
+ 
+
+85
+00:01:24,160 --> 00:01:26,030
+This recommendation has moved as well. I
+used to think it was around 100K tokens
+
+86
+00:01:26,030 --> 00:01:26,040
+used to think it was around 100K tokens
+ 
+
+87
+00:01:26,040 --> 00:01:28,230
+used to think it was around 100K tokens
+about 6 months ago. Now, it is going up,
+
+88
+00:01:28,230 --> 00:01:28,240
+about 6 months ago. Now, it is going up,
+ 
+
+89
+00:01:28,240 --> 00:01:29,750
+about 6 months ago. Now, it is going up,
+and it will continue to creep up. But,
+
+90
+00:01:29,750 --> 00:01:29,760
+and it will continue to creep up. But,
+ 
+
+91
+00:01:29,760 --> 00:01:31,190
+and it will continue to creep up. But,
+when you reach the dumb zone, you should
+
+92
+00:01:31,190 --> 00:01:31,200
+when you reach the dumb zone, you should
+ 
+
+93
+00:01:31,200 --> 00:01:32,870
+when you reach the dumb zone, you should
+use that as a signal to either clear the
+
+94
+00:01:32,870 --> 00:01:32,880
+use that as a signal to either clear the
+ 
+
+95
+00:01:32,880 --> 00:01:35,670
+use that as a signal to either clear the
+context, compact the context, hand off,
+
+96
+00:01:35,670 --> 00:01:35,680
+context, compact the context, hand off,
+ 
+
+97
+00:01:35,680 --> 00:01:37,630
+context, compact the context, hand off,
+or think on how you can work your
+
+98
+00:01:37,630 --> 00:01:37,640
+or think on how you can work your
+ 
+
+99
+00:01:37,640 --> 00:01:40,230
+or think on how you can work your
+workflow differently to design tasks
+
+100
+00:01:40,230 --> 00:01:40,240
+workflow differently to design tasks
+ 
+
+101
+00:01:40,240 --> 00:01:41,750
+workflow differently to design tasks
+that don't need that much context
+
+102
+00:01:41,750 --> 00:01:41,760
+that don't need that much context
+ 
+
+103
+00:01:41,760 --> 00:01:43,190
+that don't need that much context
+window. And also, if you're seeing
+
+104
+00:01:43,190 --> 00:01:43,200
+window. And also, if you're seeing
+ 
+
+105
+00:01:43,200 --> 00:01:45,070
+window. And also, if you're seeing
+hallucinations, especially faithfulness
+
+106
+00:01:45,070 --> 00:01:45,080
+hallucinations, especially faithfulness
+ 
+
+107
+00:01:45,080 --> 00:01:46,750
+hallucinations, especially faithfulness
+hallucinations, then you're probably in
+
+108
+00:01:46,750 --> 00:01:46,760
+hallucinations, then you're probably in
+ 
+
+109
+00:01:46,760 --> 00:01:49,360
+hallucinations, then you're probably in
+the dumb zone.
+
