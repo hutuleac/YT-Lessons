@@ -254,9 +254,28 @@ def render_note(n, idx, total, bridge):
     return "\n".join(o)
 
 
+def check_note(nid, n):
+    """Catch the errors that would otherwise render silently to the reader."""
+    if n["id"] != nid:
+        raise SystemExit(f"notes/{nid}.py: declares id '{n['id']}' — must match its filename")
+    for field in ("prerequisites", "related"):
+        for ref in n.get(field) or []:
+            if not (NOTES / f"{ref}.py").exists():
+                raise SystemExit(
+                    f"notes/{nid}.py: {field} names '{ref}', which is not a note. "
+                    f"Typo, or write that note first."
+                )
+
+
 def build_lesson(path):
     L = load(path, "LESSON")
-    notes = {i: load(NOTES / f"{i}.py", "NOTE") for i in L["notes"]}
+    notes = {}
+    for i in L["notes"]:
+        f = NOTES / f"{i}.py"
+        if not f.exists():
+            raise SystemExit(f"{path.name}: lists note '{i}', which does not exist")
+        notes[i] = load(f, "NOTE")
+        check_note(i, notes[i])
 
     # The concept graph is enforced, not decorative: a note may not appear before its prerequisite.
     seen = []

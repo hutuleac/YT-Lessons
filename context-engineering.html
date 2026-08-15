@@ -149,7 +149,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </div></header>
 <section id="dumb-zone">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 3 &middot; start here</span>
+<span class="cnum">1 / 4 &middot; start here</span>
 <h2>The dumb zone</h2>
 <p class="oneline">Every model degrades as its context window fills, so a large window has a usable region and a wasteful one — the dumb zone is where you stop getting your tokens' worth.</p>
 </div></div>
@@ -208,7 +208,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The mechanism explains a failure that looks like it has nothing to do with context length — and is the most common way people fill a window without noticing.</p>
 <section id="tool-overload">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 3 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">2 / 4 &middot; builds on <s>dumb-zone</s></span>
 <h2>Tool definitions are context</h2>
 <p class="oneline">Every tool you hand an agent is text pinned to the top of its system prompt, so more tools means less room and worse tool choice — the opposite of what adding a tool is meant to do.</p>
 </div></div>
@@ -244,10 +244,58 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/shorts/_1KrC_5Xv4s" target="_blank" rel="noopener">Matt Pocock &middot; Stop giving your LLM more tools &middot; 1:12 &#8599;</a></div>
 </section>
+<p class="bridge">Tools are not the only thing that floods a window. The same overload arrives through process, and it now has a name.</p>
+<section id="skill-hell">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 4 &middot; builds on <s>dumb-zone</s></span>
+<h2>Skill hell</h2>
+<p class="oneline">Stacking every agent framework you can find into one context window at once — the same overload as tool bloat, arriving through process instead of tools.</p>
+</div></div>
+<div class="wrap">
+<p>Pocock puts this in a lineage developers already recognise. There was framework hell, then tutorial hell, and now skill hell: trying several agent frameworks at once — he names GSD, Spec Kit, BMAD — and cobbling them into something that works, which it doesn't. He notes he has contributed to the problem himself, having published a set of skills.</p>
+<p>The failure is mechanical, not aesthetic. Loading a pile of skills at once means smacking a bunch of stuff into the same context window — often without reading any of it, just checking whether it works. That is the same overload as tool bloat, reached through process instead of tool definitions.</p>
+<p>His diagnosis of the cause is a control inversion. People are trying to take software development processes and encode them directly into the agent. He argues the opposite: skills should empower the user, not the agent — your hand stays on the steering wheel, and a skill is your process made repeatable rather than autonomy handed over.</p>
+<p>The practical difference is sequencing. When you drive the skills, you understand each stage, you can guide the agent, and only what the current stage needs is loaded. That does not mean staying in the loop for everything — you can still delegate and go AFK — but you own the shape of the process rather than hoping a stack of frameworks agrees.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 214" role="img"
+  aria-label="Top: five skills loaded into a single context window that overflows. Bottom: the same skills run as three sequential stages, each in its own small context window.">
+  <text x="0" y="12" class="d-label">ALL AT ONCE</text>
+  <rect x="0" y="22" width="520" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="4" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="106" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="208" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="310" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="412" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <text x="260" y="47" class="d-node" text-anchor="middle">skills</text>
+  <text x="0" y="80" class="d-label">no room left for the actual task &#8594; dumb zone</text>
+
+  <text x="0" y="126" class="d-label">YOU DRIVE</text>
+  <rect x="0" y="136" width="150" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <rect x="4" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="103" y="160" class="d-label" text-anchor="middle">room</text>
+  <text x="163" y="160" class="d-node">&#8594;</text>
+  <rect x="185" y="136" width="150" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <rect x="189" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="288" y="160" class="d-label" text-anchor="middle">room</text>
+  <text x="348" y="160" class="d-node">&#8594;</text>
+  <rect x="370" y="136" width="150" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <rect x="374" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="473" y="160" class="d-label" text-anchor="middle">room</text>
+  <text x="0" y="196" class="d-label">one stage at a time, each in a window that fits it</text>
+</svg></div><figcaption><b>Same skills, two ways of loading them</b><span>Stacked, they compete for one window and push the work into the dumb zone. Sequenced, each stage gets a window that fits it.</span></figcaption></figure>
+<div class="analogy"><q>You should have your hand on the steering wheel.</q><p>The test for any skill or framework: does it give you a repeatable version of your own process, or does it hand the process to the agent and ask you to trust the result?</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Run one framework properly instead of three partially — overlap is what floods the window.</li>
+<li>Read a skill before installing it. Loading it to see if it works is the whole failure mode.</li>
+<li>Judge a skill by whether it makes your process repeatable, not by how autonomous it is.</li>
+<li>Sequence stages so each loads only what it needs, then delegate the stage and step away.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/32LyZyFQhCQ" target="_blank" rel="noopener">Matt Pocock &middot; Framework Hell, Tutorial Hell... now Skill Hell &middot; 1:30 &#8599;</a></div>
+</section>
 <p class="bridge">It also turns a vague complaint into a diagnosis. Not all hallucinations are the same failure, and one question separates them.</p>
 <section id="hallucination-types">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 3 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">4 / 4 &middot; builds on <s>dumb-zone</s></span>
 <h2>Factuality vs faithfulness</h2>
 <p class="oneline">One question splits every hallucination into two kinds with two different fixes: was the information in the context window at all?</p>
 </div></div>

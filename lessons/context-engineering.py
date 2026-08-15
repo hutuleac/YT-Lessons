@@ -12,6 +12,7 @@ LESSON = {
     "notes": [
         "dumb-zone",
         "tool-overload",
+        "skill-hell",
         "hallucination-types",
     ],
 
@@ -20,6 +21,8 @@ LESSON = {
         "tool-overload": "The mechanism explains a failure that looks like it has nothing to do"
                          " with context length — and is the most common way people fill a window"
                          " without noticing.",
+        "skill-hell": "Tools are not the only thing that floods a window. The same overload"
+                      " arrives through process, and it now has a name.",
         "hallucination-types": "It also turns a vague complaint into a diagnosis. Not all"
                                " hallucinations are the same failure, and one question separates them.",
     },

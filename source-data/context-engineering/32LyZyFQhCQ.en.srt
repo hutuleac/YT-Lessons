@@ -1,0 +1,425 @@
+1
+00:00:00,000 --> 00:00:02,230
+
+Yeah, devs seem to be pretty good at
+
+2
+00:00:02,230 --> 00:00:02,240
+Yeah, devs seem to be pretty good at
+ 
+
+3
+00:00:02,240 --> 00:00:05,270
+Yeah, devs seem to be pretty good at
+finding different types of hell. We had
+
+4
+00:00:05,270 --> 00:00:05,280
+finding different types of hell. We had
+ 
+
+5
+00:00:05,280 --> 00:00:07,670
+finding different types of hell. We had
+framework hell, that was one. Tutorial
+
+6
+00:00:07,670 --> 00:00:07,680
+framework hell, that was one. Tutorial
+ 
+
+7
+00:00:07,680 --> 00:00:09,670
+framework hell, that was one. Tutorial
+hell, that's another. And now we have
+
+8
+00:00:09,670 --> 00:00:09,680
+hell, that's another. And now we have
+ 
+
+9
+00:00:09,680 --> 00:00:11,550
+hell, that's another. And now we have
+skill hell. Skill hell is where you try
+
+10
+00:00:11,550 --> 00:00:11,560
+skill hell. Skill hell is where you try
+ 
+
+11
+00:00:11,560 --> 00:00:13,510
+skill hell. Skill hell is where you try
+all these different frameworks like GSD
+
+12
+00:00:13,510 --> 00:00:13,520
+all these different frameworks like GSD
+ 
+
+13
+00:00:13,520 --> 00:00:16,030
+all these different frameworks like GSD
+and Spec kits and all this B mad and
+
+14
+00:00:16,030 --> 00:00:16,040
+and Spec kits and all this B mad and
+ 
+
+15
+00:00:16,040 --> 00:00:18,510
+and Spec kits and all this B mad and
+stuff and you just try to cludge them
+
+16
+00:00:18,510 --> 00:00:18,520
+stuff and you just try to cludge them
+ 
+
+17
+00:00:18,520 --> 00:00:20,590
+stuff and you just try to cludge them
+all together into something that works
+
+18
+00:00:20,590 --> 00:00:20,600
+all together into something that works
+ 
+
+19
+00:00:20,600 --> 00:00:22,390
+all together into something that works
+and it doesn't. Now I know that I've
+
+20
+00:00:22,390 --> 00:00:22,400
+and it doesn't. Now I know that I've
+ 
+
+21
+00:00:22,400 --> 00:00:24,030
+and it doesn't. Now I know that I've
+contributed a bit to skill hell because
+
+22
+00:00:24,030 --> 00:00:24,040
+contributed a bit to skill hell because
+ 
+
+23
+00:00:24,040 --> 00:00:25,870
+contributed a bit to skill hell because
+I have a you know a set of skills out
+
+24
+00:00:25,870 --> 00:00:25,880
+I have a you know a set of skills out
+ 
+
+25
+00:00:25,880 --> 00:00:30,230
+I have a you know a set of skills out
+there. Um but I think of my skills as
+
+26
+00:00:30,230 --> 00:00:30,240
+there. Um but I think of my skills as
+ 
+
+27
+00:00:30,240 --> 00:00:32,870
+there. Um but I think of my skills as
+empowering the user, not empowering the
+
+28
+00:00:32,870 --> 00:00:32,880
+empowering the user, not empowering the
+ 
+
+29
+00:00:32,880 --> 00:00:34,350
+empowering the user, not empowering the
+agent. I think what people are trying to
+
+30
+00:00:34,350 --> 00:00:34,360
+agent. I think what people are trying to
+ 
+
+31
+00:00:34,360 --> 00:00:35,950
+agent. I think what people are trying to
+do right now is they're trying to take
+
+32
+00:00:35,950 --> 00:00:35,960
+do right now is they're trying to take
+ 
+
+33
+00:00:35,960 --> 00:00:37,350
+do right now is they're trying to take
+software development processes and
+
+34
+00:00:37,350 --> 00:00:37,360
+software development processes and
+ 
+
+35
+00:00:37,360 --> 00:00:39,590
+software development processes and
+encode them directly into the agent.
+
+36
+00:00:39,590 --> 00:00:39,600
+encode them directly into the agent.
+ 
+
+37
+00:00:39,600 --> 00:00:42,150
+encode them directly into the agent.
+Whereas I think that you as the user,
+
+38
+00:00:42,150 --> 00:00:42,160
+Whereas I think that you as the user,
+ 
+
+39
+00:00:42,160 --> 00:00:43,630
+Whereas I think that you as the user,
+you should be in control. You should
+
+40
+00:00:43,630 --> 00:00:43,640
+you should be in control. You should
+ 
+
+41
+00:00:43,640 --> 00:00:45,470
+you should be in control. You should
+have your hand on the steering wheel and
+
+42
+00:00:45,470 --> 00:00:45,480
+have your hand on the steering wheel and
+ 
+
+43
+00:00:45,480 --> 00:00:47,470
+have your hand on the steering wheel and
+I think that skills should be there to
+
+44
+00:00:47,470 --> 00:00:47,480
+I think that skills should be there to
+ 
+
+45
+00:00:47,480 --> 00:00:49,990
+I think that skills should be there to
+help you, not necessarily help the
+
+46
+00:00:49,990 --> 00:00:50,000
+help you, not necessarily help the
+ 
+
+47
+00:00:50,000 --> 00:00:51,790
+help you, not necessarily help the
+agent. In other words, you're encoding
+
+48
+00:00:51,790 --> 00:00:51,800
+agent. In other words, you're encoding
+ 
+
+49
+00:00:51,800 --> 00:00:54,230
+agent. In other words, you're encoding
+your processes into repeatable things
+
+50
+00:00:54,230 --> 00:00:54,240
+your processes into repeatable things
+ 
+
+51
+00:00:54,240 --> 00:00:55,670
+your processes into repeatable things
+that you can do again and again. So I
+
+52
+00:00:55,670 --> 00:00:55,680
+that you can do again and again. So I
+ 
+
+53
+00:00:55,680 --> 00:00:57,150
+that you can do again and again. So I
+think skill hell is when you're just
+
+54
+00:00:57,150 --> 00:00:57,160
+think skill hell is when you're just
+ 
+
+55
+00:00:57,160 --> 00:00:59,990
+think skill hell is when you're just
+smacking a bunch of stuff into the same
+
+56
+00:00:59,990 --> 00:01:00,000
+smacking a bunch of stuff into the same
+ 
+
+57
+00:01:00,000 --> 00:01:02,070
+smacking a bunch of stuff into the same
+context window, a bunch of different
+
+58
+00:01:02,070 --> 00:01:02,080
+context window, a bunch of different
+ 
+
+59
+00:01:02,080 --> 00:01:03,950
+context window, a bunch of different
+skills all at once, you know, not even
+
+60
+00:01:03,950 --> 00:01:03,960
+skills all at once, you know, not even
+ 
+
+61
+00:01:03,960 --> 00:01:05,790
+skills all at once, you know, not even
+reading them, just trying to just check
+
+62
+00:01:05,790 --> 00:01:05,800
+reading them, just trying to just check
+ 
+
+63
+00:01:05,800 --> 00:01:08,270
+reading them, just trying to just check
+if they work and it overloads the model
+
+64
+00:01:08,270 --> 00:01:08,280
+if they work and it overloads the model
+ 
+
+65
+00:01:08,280 --> 00:01:10,070
+if they work and it overloads the model
+and you end up in sort of massive
+
+66
+00:01:10,070 --> 00:01:10,080
+and you end up in sort of massive
+ 
+
+67
+00:01:10,080 --> 00:01:12,430
+and you end up in sort of massive
+context load. Whereas if you, the user,
+
+68
+00:01:12,430 --> 00:01:12,440
+context load. Whereas if you, the user,
+ 
+
+69
+00:01:12,440 --> 00:01:14,390
+context load. Whereas if you, the user,
+are driving the skills, then you have
+
+70
+00:01:14,390 --> 00:01:14,400
+are driving the skills, then you have
+ 
+
+71
+00:01:14,400 --> 00:01:16,790
+are driving the skills, then you have
+the feeling of control. You understand
+
+72
+00:01:16,790 --> 00:01:16,800
+the feeling of control. You understand
+ 
+
+73
+00:01:16,800 --> 00:01:18,870
+the feeling of control. You understand
+each stage in the process. You can guide
+
+74
+00:01:18,870 --> 00:01:18,880
+each stage in the process. You can guide
+ 
+
+75
+00:01:18,880 --> 00:01:20,670
+each stage in the process. You can guide
+the agent and you don't necessarily have
+
+76
+00:01:20,670 --> 00:01:20,680
+the agent and you don't necessarily have
+ 
+
+77
+00:01:20,680 --> 00:01:22,110
+the agent and you don't necessarily have
+to stay in the loop for the whole thing.
+
+78
+00:01:22,110 --> 00:01:22,120
+to stay in the loop for the whole thing.
+ 
+
+79
+00:01:22,120 --> 00:01:24,430
+to stay in the loop for the whole thing.
+You can still delegate to AFK, but you
+
+80
+00:01:24,430 --> 00:01:24,440
+You can still delegate to AFK, but you
+ 
+
+81
+00:01:24,440 --> 00:01:26,350
+You can still delegate to AFK, but you
+are in control of the process, of the
+
+82
+00:01:26,350 --> 00:01:26,360
+are in control of the process, of the
+ 
+
+83
+00:01:26,360 --> 00:01:28,950
+are in control of the process, of the
+loops. Yeah, from skill hell to skill
+
+84
+00:01:28,950 --> 00:01:28,960
+loops. Yeah, from skill hell to skill
+ 
+
+85
+00:01:28,960 --> 00:01:32,440
+loops. Yeah, from skill hell to skill
+hala. Does that work?
+
