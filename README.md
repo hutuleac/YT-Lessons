@@ -32,7 +32,7 @@ The page is the lesson at reading detail: `mechanism` prose, capped at a 63ch me
 
 The deck is the same lesson at presenting detail: `skeleton` alone, one full-viewport slide per
 concept plus a slide per diagram, paged by CSS scroll-snap with no JavaScript. Arrow keys and
-`Page Down` work, and printing gives one slide per page. That is why prose in `skeleton` breaks
+`Page Down` work, and printing page-breaks between slides. That is why prose in `skeleton` breaks
 things — it is the deck's only text.
 
 ## The concept graph is enforced

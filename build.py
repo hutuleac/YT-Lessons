@@ -455,7 +455,8 @@ def build_index(all_lessons):
         .ix i{display:block;font-style:normal;color:var(--muted);font-size:17px;max-width:60ch}
         .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted);margin-top:14px}
         .dk{margin:0 0 30px}
-        .dk a{font:400 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
+        /* .ix a matches this link too and only it declares display/padding — restate both. */
+        .dk a{display:inline;padding:0;font:400 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
               color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
         .dk a:hover{color:var(--signal);border-color:var(--signal)}
         </style>\n</head>\n<body>\n<div class="ix">
