@@ -12,6 +12,7 @@ LESSON = {
     "notes": [
         "strategic-load",
         "review-checkpoints",
+        "auto-mode",
         "effort-levels",
         "model-cost-curve",
         "concise-output",
@@ -22,6 +23,9 @@ LESSON = {
     "bridges": {
         "review-checkpoints": "If the day is all decisions, the first question is which decisions"
                               " are actually yours. That is a placement problem, not a trust one.",
+        "auto-mode": "That is where you decide the checkpoint belongs. The harness has its own"
+                     " answer, it changed recently, and it is now on by default — so it is worth"
+                     " knowing what it lets through.",
         "effort-levels": "Checkpoints decide where you spend attention. The next dial decides"
                          " what you spend on the agent — and most people have it turned up too"
                          " far.",

@@ -1,0 +1,1205 @@
+1
+00:00:00,000 --> 00:00:01,510
+
+From now on, auto mode will be the
+
+2
+00:00:01,510 --> 00:00:01,520
+From now on, auto mode will be the
+ 
+
+3
+00:00:01,520 --> 00:00:03,710
+From now on, auto mode will be the
+default in CloudCode. But, what is auto
+
+4
+00:00:03,710 --> 00:00:03,720
+default in CloudCode. But, what is auto
+ 
+
+5
+00:00:03,720 --> 00:00:05,710
+default in CloudCode. But, what is auto
+mode and why you should even care? But
+
+6
+00:00:05,710 --> 00:00:05,720
+mode and why you should even care? But
+ 
+
+7
+00:00:05,720 --> 00:00:07,550
+mode and why you should even care? But
+first, we need the right context. In
+
+8
+00:00:07,550 --> 00:00:07,560
+first, we need the right context. In
+ 
+
+9
+00:00:07,560 --> 00:00:10,110
+first, we need the right context. In
+CloudCode, we have six permission modes.
+
+10
+00:00:10,110 --> 00:00:10,120
+CloudCode, we have six permission modes.
+ 
+
+11
+00:00:10,120 --> 00:00:11,550
+CloudCode, we have six permission modes.
+Permission mode is a setting in
+
+12
+00:00:11,550 --> 00:00:11,560
+Permission mode is a setting in
+ 
+
+13
+00:00:11,560 --> 00:00:14,110
+Permission mode is a setting in
+CloudCode that controls how much it asks
+
+14
+00:00:14,110 --> 00:00:14,120
+CloudCode that controls how much it asks
+ 
+
+15
+00:00:14,120 --> 00:00:16,350
+CloudCode that controls how much it asks
+you before doing anything. Before the
+
+16
+00:00:16,350 --> 00:00:16,360
+you before doing anything. Before the
+ 
+
+17
+00:00:16,360 --> 00:00:18,430
+you before doing anything. Before the
+recent change, the default was manual
+
+18
+00:00:18,430 --> 00:00:18,440
+recent change, the default was manual
+ 
+
+19
+00:00:18,440 --> 00:00:20,910
+recent change, the default was manual
+approval. The new default is auto mode
+
+20
+00:00:20,910 --> 00:00:20,920
+approval. The new default is auto mode
+ 
+
+21
+00:00:20,920 --> 00:00:23,270
+approval. The new default is auto mode
+and it does almost everything. It uses
+
+22
+00:00:23,270 --> 00:00:23,280
+and it does almost everything. It uses
+ 
+
+23
+00:00:23,280 --> 00:00:25,710
+and it does almost everything. It uses
+something called AI classifier that
+
+24
+00:00:25,710 --> 00:00:25,720
+something called AI classifier that
+ 
+
+25
+00:00:25,720 --> 00:00:27,870
+something called AI classifier that
+we're going to dive into in a second and
+
+26
+00:00:27,870 --> 00:00:27,880
+we're going to dive into in a second and
+ 
+
+27
+00:00:27,880 --> 00:00:30,550
+we're going to dive into in a second and
+it aims to block dangerous actions. If
+
+28
+00:00:30,550 --> 00:00:30,560
+it aims to block dangerous actions. If
+ 
+
+29
+00:00:30,560 --> 00:00:32,350
+it aims to block dangerous actions. If
+you want to switch between permissions
+
+30
+00:00:32,350 --> 00:00:32,360
+you want to switch between permissions
+ 
+
+31
+00:00:32,360 --> 00:00:34,390
+you want to switch between permissions
+while you use CloudCode, you can use the
+
+32
+00:00:34,390 --> 00:00:34,400
+while you use CloudCode, you can use the
+ 
+
+33
+00:00:34,400 --> 00:00:36,230
+while you use CloudCode, you can use the
+shift tab. You can see that I'm using
+
+34
+00:00:36,230 --> 00:00:36,240
+shift tab. You can see that I'm using
+ 
+
+35
+00:00:36,240 --> 00:00:39,030
+shift tab. You can see that I'm using
+the manual mode. I can switch to accept
+
+36
+00:00:39,030 --> 00:00:39,040
+the manual mode. I can switch to accept
+ 
+
+37
+00:00:39,040 --> 00:00:42,230
+the manual mode. I can switch to accept
+edits mode, plan mode, and auto mode.
+
+38
+00:00:42,230 --> 00:00:42,240
+edits mode, plan mode, and auto mode.
+ 
+
+39
+00:00:42,240 --> 00:00:43,910
+edits mode, plan mode, and auto mode.
+There are two more permissions modes
+
+40
+00:00:43,910 --> 00:00:43,920
+There are two more permissions modes
+ 
+
+41
+00:00:43,920 --> 00:00:45,910
+There are two more permissions modes
+that you are not able to change while
+
+42
+00:00:45,910 --> 00:00:45,920
+that you are not able to change while
+ 
+
+43
+00:00:45,920 --> 00:00:48,230
+that you are not able to change while
+CloudCode is running. The first one is
+
+44
+00:00:48,230 --> 00:00:48,240
+CloudCode is running. The first one is
+ 
+
+45
+00:00:48,240 --> 00:00:50,430
+CloudCode is running. The first one is
+don't ask. With this mode, you can
+
+46
+00:00:50,430 --> 00:00:50,440
+don't ask. With this mode, you can
+ 
+
+47
+00:00:50,440 --> 00:00:53,550
+don't ask. With this mode, you can
+execute only pre-approved actions and
+
+48
+00:00:53,550 --> 00:00:53,560
+execute only pre-approved actions and
+ 
+
+49
+00:00:53,560 --> 00:00:56,070
+execute only pre-approved actions and
+everything else is auto denied. So, if
+
+50
+00:00:56,070 --> 00:00:56,080
+everything else is auto denied. So, if
+ 
+
+51
+00:00:56,080 --> 00:00:57,870
+everything else is auto denied. So, if
+you have a strong list of allowed
+
+52
+00:00:57,870 --> 00:00:57,880
+you have a strong list of allowed
+ 
+
+53
+00:00:57,880 --> 00:01:00,030
+you have a strong list of allowed
+permissions, it can work for you. The
+
+54
+00:01:00,030 --> 00:01:00,040
+permissions, it can work for you. The
+ 
+
+55
+00:01:00,040 --> 00:01:02,470
+permissions, it can work for you. The
+second mode is very popular, which is
+
+56
+00:01:02,470 --> 00:01:02,480
+second mode is very popular, which is
+ 
+
+57
+00:01:02,480 --> 00:01:05,189
+second mode is very popular, which is
+bypass permission. It skips all the
+
+58
+00:01:05,189 --> 00:01:05,199
+bypass permission. It skips all the
+ 
+
+59
+00:01:05,199 --> 00:01:07,670
+bypass permission. It skips all the
+checks and allows CloudCode to do
+
+60
+00:01:07,670 --> 00:01:07,680
+checks and allows CloudCode to do
+ 
+
+61
+00:01:07,680 --> 00:01:10,550
+checks and allows CloudCode to do
+everything it wants, fetch the web, edit
+
+62
+00:01:10,550 --> 00:01:10,560
+everything it wants, fetch the web, edit
+ 
+
+63
+00:01:10,560 --> 00:01:13,550
+everything it wants, fetch the web, edit
+files, execute bash commands, and so on.
+
+64
+00:01:13,550 --> 00:01:13,560
+files, execute bash commands, and so on.
+ 
+
+65
+00:01:13,560 --> 00:01:15,510
+files, execute bash commands, and so on.
+Unlike other YouTube channels, I don't
+
+66
+00:01:15,510 --> 00:01:15,520
+Unlike other YouTube channels, I don't
+ 
+
+67
+00:01:15,520 --> 00:01:17,710
+Unlike other YouTube channels, I don't
+recommend to use this option. You need
+
+68
+00:01:17,710 --> 00:01:17,720
+recommend to use this option. You need
+ 
+
+69
+00:01:17,720 --> 00:01:20,030
+recommend to use this option. You need
+to have control over the agent. But
+
+70
+00:01:20,030 --> 00:01:20,040
+to have control over the agent. But
+ 
+
+71
+00:01:20,040 --> 00:01:22,030
+to have control over the agent. But
+before we continue, I want to talk about
+
+72
+00:01:22,030 --> 00:01:22,040
+before we continue, I want to talk about
+ 
+
+73
+00:01:22,040 --> 00:01:24,590
+before we continue, I want to talk about
+the difference between auto mode, accept
+
+74
+00:01:24,590 --> 00:01:24,600
+the difference between auto mode, accept
+ 
+
+75
+00:01:24,600 --> 00:01:27,230
+the difference between auto mode, accept
+edits, and bypass permissions. Well,
+
+76
+00:01:27,230 --> 00:01:27,240
+edits, and bypass permissions. Well,
+ 
+
+77
+00:01:27,240 --> 00:01:29,230
+edits, and bypass permissions. Well,
+bypass permissions gives the agent
+
+78
+00:01:29,230 --> 00:01:29,240
+bypass permissions gives the agent
+ 
+
+79
+00:01:29,240 --> 00:01:31,590
+bypass permissions gives the agent
+everything it wants to execute.
+
+80
+00:01:31,590 --> 00:01:31,600
+everything it wants to execute.
+ 
+
+81
+00:01:31,600 --> 00:01:34,310
+everything it wants to execute.
+every command immediately without asking
+
+82
+00:01:34,310 --> 00:01:34,320
+every command immediately without asking
+ 
+
+83
+00:01:34,320 --> 00:01:37,190
+every command immediately without asking
+for our approval. With the accept edits,
+
+84
+00:01:37,190 --> 00:01:37,200
+for our approval. With the accept edits,
+ 
+
+85
+00:01:37,200 --> 00:01:39,670
+for our approval. With the accept edits,
+we give it permission to edit the files
+
+86
+00:01:39,670 --> 00:01:39,680
+we give it permission to edit the files
+ 
+
+87
+00:01:39,680 --> 00:01:41,830
+we give it permission to edit the files
+in our current folder. You can change
+
+88
+00:01:41,830 --> 00:01:41,840
+in our current folder. You can change
+ 
+
+89
+00:01:41,840 --> 00:01:44,030
+in our current folder. You can change
+your default permission mode by editing
+
+90
+00:01:44,030 --> 00:01:44,040
+your default permission mode by editing
+ 
+
+91
+00:01:44,040 --> 00:01:46,830
+your default permission mode by editing
+your settings in Cloud. You need to have
+
+92
+00:01:46,830 --> 00:01:46,840
+your settings in Cloud. You need to have
+ 
+
+93
+00:01:46,840 --> 00:01:49,230
+your settings in Cloud. You need to have
+this part in your JSON. But it's not the
+
+94
+00:01:49,230 --> 00:01:49,240
+this part in your JSON. But it's not the
+ 
+
+95
+00:01:49,240 --> 00:01:51,470
+this part in your JSON. But it's not the
+only way. You can start your CloudCode
+
+96
+00:01:51,470 --> 00:01:51,480
+only way. You can start your CloudCode
+ 
+
+97
+00:01:51,480 --> 00:01:53,630
+only way. You can start your CloudCode
+with any permission you want with these
+
+98
+00:01:53,630 --> 00:01:53,640
+with any permission you want with these
+ 
+
+99
+00:01:53,640 --> 00:01:56,190
+with any permission you want with these
+commands. But how does auto mode work? I
+
+100
+00:01:56,190 --> 00:01:56,200
+commands. But how does auto mode work? I
+ 
+
+101
+00:01:56,200 --> 00:01:57,950
+commands. But how does auto mode work? I
+took this diagram from the official
+
+102
+00:01:57,950 --> 00:01:57,960
+took this diagram from the official
+ 
+
+103
+00:01:57,960 --> 00:02:00,030
+took this diagram from the official
+video. So, let's say I started a new
+
+104
+00:02:00,030 --> 00:02:00,040
+video. So, let's say I started a new
+ 
+
+105
+00:02:00,040 --> 00:02:02,670
+video. So, let's say I started a new
+Claude code session and I wrote my first
+
+106
+00:02:02,670 --> 00:02:02,680
+Claude code session and I wrote my first
+ 
+
+107
+00:02:02,680 --> 00:02:04,870
+Claude code session and I wrote my first
+prompt and now Claude code wants to
+
+108
+00:02:04,870 --> 00:02:04,880
+prompt and now Claude code wants to
+ 
+
+109
+00:02:04,880 --> 00:02:07,910
+prompt and now Claude code wants to
+execute its first action. An action can
+
+110
+00:02:07,910 --> 00:02:07,920
+execute its first action. An action can
+ 
+
+111
+00:02:07,920 --> 00:02:11,230
+execute its first action. An action can
+be editing files, fetch websites, or
+
+112
+00:02:11,230 --> 00:02:11,240
+be editing files, fetch websites, or
+ 
+
+113
+00:02:11,240 --> 00:02:13,870
+be editing files, fetch websites, or
+even executing bash commands. If we're
+
+114
+00:02:13,870 --> 00:02:13,880
+even executing bash commands. If we're
+ 
+
+115
+00:02:13,880 --> 00:02:16,350
+even executing bash commands. If we're
+in auto mode, the first step is looking
+
+116
+00:02:16,350 --> 00:02:16,360
+in auto mode, the first step is looking
+ 
+
+117
+00:02:16,360 --> 00:02:18,790
+in auto mode, the first step is looking
+in our rules. These rules lives in a
+
+118
+00:02:18,790 --> 00:02:18,800
+in our rules. These rules lives in a
+ 
+
+119
+00:02:18,800 --> 00:02:20,550
+in our rules. These rules lives in a
+setting file that we're going to see in
+
+120
+00:02:20,550 --> 00:02:20,560
+setting file that we're going to see in
+ 
+
+121
+00:02:20,560 --> 00:02:22,470
+setting file that we're going to see in
+a second. If there's an exact
+
+122
+00:02:22,470 --> 00:02:22,480
+a second. If there's an exact
+ 
+
+123
+00:02:22,480 --> 00:02:25,030
+a second. If there's an exact
+instruction and Claude code knows how to
+
+124
+00:02:25,030 --> 00:02:25,040
+instruction and Claude code knows how to
+ 
+
+125
+00:02:25,040 --> 00:02:27,550
+instruction and Claude code knows how to
+handle this action to deny or approve
+
+126
+00:02:27,550 --> 00:02:27,560
+handle this action to deny or approve
+ 
+
+127
+00:02:27,560 --> 00:02:30,430
+handle this action to deny or approve
+it, you won't get into the classifier.
+
+128
+00:02:30,430 --> 00:02:30,440
+it, you won't get into the classifier.
+ 
+
+129
+00:02:30,440 --> 00:02:32,790
+it, you won't get into the classifier.
+For example, I can config that Claude
+
+130
+00:02:32,790 --> 00:02:32,800
+For example, I can config that Claude
+ 
+
+131
+00:02:32,800 --> 00:02:35,710
+For example, I can config that Claude
+code can fetch the web whatever it wants
+
+132
+00:02:35,710 --> 00:02:35,720
+code can fetch the web whatever it wants
+ 
+
+133
+00:02:35,720 --> 00:02:38,470
+code can fetch the web whatever it wants
+and search any website it needs. But on
+
+134
+00:02:38,470 --> 00:02:38,480
+and search any website it needs. But on
+ 
+
+135
+00:02:38,480 --> 00:02:40,310
+and search any website it needs. But on
+the other hand, it won't be able to
+
+136
+00:02:40,310 --> 00:02:40,320
+the other hand, it won't be able to
+ 
+
+137
+00:02:40,320 --> 00:02:42,830
+the other hand, it won't be able to
+execute any git push command. Anthropic
+
+138
+00:02:42,830 --> 00:02:42,840
+execute any git push command. Anthropic
+ 
+
+139
+00:02:42,840 --> 00:02:45,270
+execute any git push command. Anthropic
+described it perfectly in their video.
+
+140
+00:02:45,270 --> 00:02:45,280
+described it perfectly in their video.
+ 
+
+141
+00:02:45,280 --> 00:02:46,790
+described it perfectly in their video.
+>> Use the environment field to describe
+
+142
+00:02:46,790 --> 00:02:46,800
+>> Use the environment field to describe
+ 
+
+143
+00:02:46,800 --> 00:02:48,949
+>> Use the environment field to describe
+your infrastructure in plain English,
+
+144
+00:02:48,949 --> 00:02:48,959
+your infrastructure in plain English,
+ 
+
+145
+00:02:48,959 --> 00:02:51,430
+your infrastructure in plain English,
+such as your GitHub org, cloud buckets,
+
+146
+00:02:51,430 --> 00:02:51,440
+such as your GitHub org, cloud buckets,
+ 
+
+147
+00:02:51,440 --> 00:02:53,470
+such as your GitHub org, cloud buckets,
+and internal services. Setting
+
+148
+00:02:53,470 --> 00:02:53,480
+and internal services. Setting
+ 
+
+149
+00:02:53,480 --> 00:02:55,150
+and internal services. Setting
+environment for places Claude's built-in
+
+150
+00:02:55,150 --> 00:02:55,160
+environment for places Claude's built-in
+ 
+
+151
+00:02:55,160 --> 00:02:57,630
+environment for places Claude's built-in
+entries. So, add a default string to
+
+152
+00:02:57,630 --> 00:02:57,640
+entries. So, add a default string to
+ 
+
+153
+00:02:57,640 --> 00:02:58,830
+entries. So, add a default string to
+keep them.
+
+154
+00:02:58,830 --> 00:02:58,840
+keep them.
+ 
+
+155
+00:02:58,840 --> 00:03:00,990
+keep them.
+If you need more fine-grained control,
+
+156
+00:03:00,990 --> 00:03:01,000
+If you need more fine-grained control,
+ 
+
+157
+00:03:01,000 --> 00:03:03,670
+If you need more fine-grained control,
+use allow for exceptions, soft deny for
+
+158
+00:03:03,670 --> 00:03:03,680
+use allow for exceptions, soft deny for
+ 
+
+159
+00:03:03,680 --> 00:03:05,270
+use allow for exceptions, soft deny for
+actions that should be blocked unless we
+
+160
+00:03:05,270 --> 00:03:05,280
+actions that should be blocked unless we
+ 
+
+161
+00:03:05,280 --> 00:03:07,710
+actions that should be blocked unless we
+explicitly ask, and hard deny for
+
+162
+00:03:07,710 --> 00:03:07,720
+explicitly ask, and hard deny for
+ 
+
+163
+00:03:07,720 --> 00:03:09,670
+explicitly ask, and hard deny for
+actions that should be blocked no matter
+
+164
+00:03:09,670 --> 00:03:09,680
+actions that should be blocked no matter
+ 
+
+165
+00:03:09,680 --> 00:03:11,830
+actions that should be blocked no matter
+what you ask. These fields are guidance
+
+166
+00:03:11,830 --> 00:03:11,840
+what you ask. These fields are guidance
+ 
+
+167
+00:03:11,840 --> 00:03:13,949
+what you ask. These fields are guidance
+the classifier factors into each check,
+
+168
+00:03:13,949 --> 00:03:13,959
+the classifier factors into each check,
+ 
+
+169
+00:03:13,959 --> 00:03:16,310
+the classifier factors into each check,
+not hard rules. For hard limits, add
+
+170
+00:03:16,310 --> 00:03:16,320
+not hard rules. For hard limits, add
+ 
+
+171
+00:03:16,320 --> 00:03:18,830
+not hard rules. For hard limits, add
+deny rules to block matching tool calls,
+
+172
+00:03:18,830 --> 00:03:18,840
+deny rules to block matching tool calls,
+ 
+
+173
+00:03:18,840 --> 00:03:21,150
+deny rules to block matching tool calls,
+and ask rules to force a prompt even in
+
+174
+00:03:21,150 --> 00:03:21,160
+and ask rules to force a prompt even in
+ 
+
+175
+00:03:21,160 --> 00:03:23,670
+and ask rules to force a prompt even in
+auto mode. Allow rules also work, too.
+
+176
+00:03:23,670 --> 00:03:23,680
+auto mode. Allow rules also work, too.
+ 
+
+177
+00:03:23,680 --> 00:03:25,750
+auto mode. Allow rules also work, too.
+>> If you want to see full tutorial on this
+
+178
+00:03:25,750 --> 00:03:25,760
+>> If you want to see full tutorial on this
+ 
+
+179
+00:03:25,760 --> 00:03:27,509
+>> If you want to see full tutorial on this
+configuration file, tell me in the
+
+180
+00:03:27,509 --> 00:03:27,519
+configuration file, tell me in the
+ 
+
+181
+00:03:27,519 --> 00:03:29,750
+configuration file, tell me in the
+comments. But if Claude doesn't know how
+
+182
+00:03:29,750 --> 00:03:29,760
+comments. But if Claude doesn't know how
+ 
+
+183
+00:03:29,760 --> 00:03:32,110
+comments. But if Claude doesn't know how
+to handle this action after reading the
+
+184
+00:03:32,110 --> 00:03:32,120
+to handle this action after reading the
+ 
+
+185
+00:03:32,120 --> 00:03:34,870
+to handle this action after reading the
+rules, it will go into the classifier. A
+
+186
+00:03:34,870 --> 00:03:34,880
+rules, it will go into the classifier. A
+ 
+
+187
+00:03:34,880 --> 00:03:37,470
+rules, it will go into the classifier. A
+classifier is just an AI model.
+
+188
+00:03:37,470 --> 00:03:37,480
+classifier is just an AI model.
+ 
+
+189
+00:03:37,480 --> 00:03:39,910
+classifier is just an AI model.
+According to these commands, it is just
+
+190
+00:03:39,910 --> 00:03:39,920
+According to these commands, it is just
+ 
+
+191
+00:03:39,920 --> 00:03:42,470
+According to these commands, it is just
+Sonnet 5. This model lives in a separate
+
+192
+00:03:42,470 --> 00:03:42,480
+Sonnet 5. This model lives in a separate
+ 
+
+193
+00:03:42,480 --> 00:03:44,270
+Sonnet 5. This model lives in a separate
+context and with every permission
+
+194
+00:03:44,270 --> 00:03:44,280
+context and with every permission
+ 
+
+195
+00:03:44,280 --> 00:03:46,550
+context and with every permission
+request from Claude, it tries to answer
+
+196
+00:03:46,550 --> 00:03:46,560
+request from Claude, it tries to answer
+ 
+
+197
+00:03:46,560 --> 00:03:49,509
+request from Claude, it tries to answer
+two questions. First, does this action
+
+198
+00:03:49,509 --> 00:03:49,519
+two questions. First, does this action
+ 
+
+199
+00:03:49,519 --> 00:03:51,710
+two questions. First, does this action
+can lead to a security issue? And
+
+200
+00:03:51,710 --> 00:03:51,720
+can lead to a security issue? And
+ 
+
+201
+00:03:51,720 --> 00:03:54,390
+can lead to a security issue? And
+second, does this action is dangerous
+
+202
+00:03:54,390 --> 00:03:54,400
+second, does this action is dangerous
+ 
+
+203
+00:03:54,400 --> 00:03:57,350
+second, does this action is dangerous
+and irreversible? For example, deleting
+
+204
+00:03:57,350 --> 00:03:57,360
+and irreversible? For example, deleting
+ 
+
+205
+00:03:57,360 --> 00:04:00,310
+and irreversible? For example, deleting
+the files in your folder. If both of the
+
+206
+00:04:00,310 --> 00:04:00,320
+the files in your folder. If both of the
+ 
+
+207
+00:04:00,320 --> 00:04:02,870
+the files in your folder. If both of the
+answers are no, it will give permission
+
+208
+00:04:02,870 --> 00:04:02,880
+answers are no, it will give permission
+ 
+
+209
+00:04:02,880 --> 00:04:06,150
+answers are no, it will give permission
+to Cloud Code to execute this action. If
+
+210
+00:04:06,150 --> 00:04:06,160
+to Cloud Code to execute this action. If
+ 
+
+211
+00:04:06,160 --> 00:04:08,870
+to Cloud Code to execute this action. If
+one of them is yes, the request will be
+
+212
+00:04:08,870 --> 00:04:08,880
+one of them is yes, the request will be
+ 
+
+213
+00:04:08,880 --> 00:04:11,190
+one of them is yes, the request will be
+denied. So, we understand the classifier
+
+214
+00:04:11,190 --> 00:04:11,200
+denied. So, we understand the classifier
+ 
+
+215
+00:04:11,200 --> 00:04:13,630
+denied. So, we understand the classifier
+is a crucial part in auto mode, but is
+
+216
+00:04:13,630 --> 00:04:13,640
+is a crucial part in auto mode, but is
+ 
+
+217
+00:04:13,640 --> 00:04:15,910
+is a crucial part in auto mode, but is
+the classifier's decision logged? Yes
+
+218
+00:04:15,910 --> 00:04:15,920
+the classifier's decision logged? Yes
+ 
+
+219
+00:04:15,920 --> 00:04:18,430
+the classifier's decision logged? Yes
+and no, and I'll explain. You can track
+
+220
+00:04:18,430 --> 00:04:18,440
+and no, and I'll explain. You can track
+ 
+
+221
+00:04:18,440 --> 00:04:20,430
+and no, and I'll explain. You can track
+these decisions by using the open
+
+222
+00:04:20,430 --> 00:04:20,440
+these decisions by using the open
+ 
+
+223
+00:04:20,440 --> 00:04:22,710
+these decisions by using the open
+telemetry, but in order to do so, you
+
+224
+00:04:22,710 --> 00:04:22,720
+telemetry, but in order to do so, you
+ 
+
+225
+00:04:22,720 --> 00:04:24,590
+telemetry, but in order to do so, you
+need to have the right background, and
+
+226
+00:04:24,590 --> 00:04:24,600
+need to have the right background, and
+ 
+
+227
+00:04:24,600 --> 00:04:27,150
+need to have the right background, and
+it's almost impossible for the regular
+
+228
+00:04:27,150 --> 00:04:27,160
+it's almost impossible for the regular
+ 
+
+229
+00:04:27,160 --> 00:04:29,870
+it's almost impossible for the regular
+Cloud Code user. So, practically, you
+
+230
+00:04:29,870 --> 00:04:29,880
+Cloud Code user. So, practically, you
+ 
+
+231
+00:04:29,880 --> 00:04:32,150
+Cloud Code user. So, practically, you
+don't have an option to see the previous
+
+232
+00:04:32,150 --> 00:04:32,160
+don't have an option to see the previous
+ 
+
+233
+00:04:32,160 --> 00:04:34,710
+don't have an option to see the previous
+decisions. Auto mode is great, but if
+
+234
+00:04:34,710 --> 00:04:34,720
+decisions. Auto mode is great, but if
+ 
+
+235
+00:04:34,720 --> 00:04:36,270
+decisions. Auto mode is great, but if
+you want to take Cloud to the next
+
+236
+00:04:36,270 --> 00:04:36,280
+you want to take Cloud to the next
+ 
+
+237
+00:04:36,280 --> 00:04:39,030
+you want to take Cloud to the next
+level, you must master Cloud skills.
+
+238
+00:04:39,030 --> 00:04:39,040
+level, you must master Cloud skills.
+ 
+
+239
+00:04:39,040 --> 00:04:41,510
+level, you must master Cloud skills.
+Luckily, here are seven ways to do just
+
+240
+00:04:41,510 --> 00:04:41,520
+Luckily, here are seven ways to do just
+ 
+
+241
+00:04:41,520 --> 00:04:43,919
+Luckily, here are seven ways to do just
+that.
+
