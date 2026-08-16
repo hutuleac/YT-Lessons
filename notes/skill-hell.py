@@ -85,6 +85,41 @@ NOTE = {
   <text x="0" y="196" class="d-label">one stage at a time, each in a window that fits it</text>
 </svg>''',
         },
+        {
+            "title": "Who holds the steering wheel",
+            "caption": "The same skill, two directions. Encoded into the agent it replaces your"
+                       " judgement; driven by you it makes your judgement repeatable.",
+            "svg": '''<svg viewBox="0 0 460 210" role="img"
+  aria-label="Top: your process is encoded into the agent, which then drives all stages while you wait for the result. Bottom: your process becomes a skill you drive, running one stage at a time with the option to delegate each stage.">
+  <text x="0" y="12" class="d-label">PROCESS ENCODED INTO THE AGENT</text>
+  <rect x="0" y="24" width="104" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="52" y="49" class="d-node" text-anchor="middle">your process</text>
+  <path d="M108 44 H150" stroke="var(--interference)" stroke-width="1.6"/>
+  <rect x="154" y="18" width="140" height="52" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="224" y="40" class="d-node" text-anchor="middle">the agent</text>
+  <text x="224" y="58" class="d-label" text-anchor="middle">decides every stage</text>
+  <path d="M298 44 H340" stroke="var(--interference)" stroke-width="1.6"/>
+  <rect x="344" y="24" width="116" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="402" y="49" class="d-node" text-anchor="middle">you wait</text>
+  <text x="0" y="88" class="d-label">autonomy handed over &#8212; and every framework you stacked is loaded at once</text>
+
+  <text x="0" y="128" class="d-label">PROCESS MADE REPEATABLE FOR YOU</text>
+  <rect x="0" y="140" width="104" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="52" y="165" class="d-node" text-anchor="middle">your process</text>
+  <path d="M108 160 H150" stroke="var(--signal)" stroke-width="1.6"/>
+  <rect x="154" y="140" width="70" height="40" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="189" y="165" class="d-label" text-anchor="middle">stage 1</text>
+  <rect x="230" y="140" width="70" height="40" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="265" y="165" class="d-label" text-anchor="middle">stage 2</text>
+  <rect x="306" y="140" width="70" height="40" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="341" y="165" class="d-label" text-anchor="middle">stage 3</text>
+  <path d="M154 134 H376" stroke="var(--signal)" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="386" y="138" class="d-fix">you drive</text>
+  <text x="386" y="165" class="d-label">delegate</text>
+  <text x="386" y="178" class="d-label">a stage, go AFK</text>
+  <text x="0" y="202" class="d-label">each stage loads only what it needs &#8212; the window never has to hold all of it</text>
+</svg>''',
+        },
     ],
 
     "source": {

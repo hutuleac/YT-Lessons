@@ -283,6 +283,36 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="473" y="160" class="d-label" text-anchor="middle">room</text>
   <text x="0" y="196" class="d-label">one stage at a time, each in a window that fits it</text>
 </svg></div><figcaption><b>Same skills, two ways of loading them</b><span>Stacked, they compete for one window and push the work into the dumb zone. Sequenced, each stage gets a window that fits it.</span></figcaption></figure>
+<figure><div class="plate"><svg viewBox="0 0 460 210" role="img"
+  aria-label="Top: your process is encoded into the agent, which then drives all stages while you wait for the result. Bottom: your process becomes a skill you drive, running one stage at a time with the option to delegate each stage.">
+  <text x="0" y="12" class="d-label">PROCESS ENCODED INTO THE AGENT</text>
+  <rect x="0" y="24" width="104" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="52" y="49" class="d-node" text-anchor="middle">your process</text>
+  <path d="M108 44 H150" stroke="var(--interference)" stroke-width="1.6"/>
+  <rect x="154" y="18" width="140" height="52" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="224" y="40" class="d-node" text-anchor="middle">the agent</text>
+  <text x="224" y="58" class="d-label" text-anchor="middle">decides every stage</text>
+  <path d="M298 44 H340" stroke="var(--interference)" stroke-width="1.6"/>
+  <rect x="344" y="24" width="116" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="402" y="49" class="d-node" text-anchor="middle">you wait</text>
+  <text x="0" y="88" class="d-label">autonomy handed over &#8212; and every framework you stacked is loaded at once</text>
+
+  <text x="0" y="128" class="d-label">PROCESS MADE REPEATABLE FOR YOU</text>
+  <rect x="0" y="140" width="104" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="52" y="165" class="d-node" text-anchor="middle">your process</text>
+  <path d="M108 160 H150" stroke="var(--signal)" stroke-width="1.6"/>
+  <rect x="154" y="140" width="70" height="40" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="189" y="165" class="d-label" text-anchor="middle">stage 1</text>
+  <rect x="230" y="140" width="70" height="40" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="265" y="165" class="d-label" text-anchor="middle">stage 2</text>
+  <rect x="306" y="140" width="70" height="40" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="341" y="165" class="d-label" text-anchor="middle">stage 3</text>
+  <path d="M154 134 H376" stroke="var(--signal)" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="386" y="138" class="d-fix">you drive</text>
+  <text x="386" y="165" class="d-label">delegate</text>
+  <text x="386" y="178" class="d-label">a stage, go AFK</text>
+  <text x="0" y="202" class="d-label">each stage loads only what it needs &#8212; the window never has to hold all of it</text>
+</svg></div><figcaption><b>Who holds the steering wheel</b><span>The same skill, two directions. Encoded into the agent it replaces your judgement; driven by you it makes your judgement repeatable.</span></figcaption></figure>
 <div class="analogy"><q>You should have your hand on the steering wheel.</q><p>The test for any skill or framework: does it give you a repeatable version of your own process, or does it hand the process to the agent and ask you to trust the result?</p></div>
 <div class="do"><h3>What to do</h3><ul>
 <li>Run one framework properly instead of three partially — overlap is what floods the window.</li>
@@ -335,6 +365,42 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="310" y="199" class="d-fix" text-anchor="middle">leave the dumb zone</text>
   <text x="310" y="213" class="d-label" text-anchor="middle">clear · compact · hand off</text>
 </svg></div><figcaption><b>One question, two hallucinations</b><span>The split is diagnostic, not academic — the two branches have entirely different fixes, and re-prompting only helps on the left.</span></figcaption></figure>
+<figure><div class="plate"><svg viewBox="0 0 460 186" role="img"
+  aria-label="Left: a database with three crisp rows, returning an exact match or nothing. Right: the same three rows blurred, returning a plausible but wrong result that looks like the real thing.">
+  <defs>
+    <filter id="fz" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+  </defs>
+
+  <text x="0" y="12" class="d-label">DATABASE &#183; stores and retrieves</text>
+  <g>
+    <rect x="0" y="22" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="10" y="39" class="d-node">createUser()</text>
+    <rect x="0" y="50" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="10" y="67" class="d-node">deleteUser()</text>
+    <rect x="0" y="78" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="10" y="95" class="d-node">listUsers()</text>
+  </g>
+  <text x="0" y="126" class="d-label">query &#8594; exact row, or nothing</text>
+  <rect x="0" y="136" width="196" height="30" rx="4" fill="none" stroke="var(--signal)"/>
+  <text x="98" y="156" class="d-fix" text-anchor="middle">createUser()</text>
+
+  <text x="264" y="12" class="d-label">MODEL &#183; a fuzzy JPEG of all of it</text>
+  <g filter="url(#fz)">
+    <rect x="264" y="22" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="274" y="39" class="d-node">createUser()</text>
+    <rect x="264" y="50" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="274" y="67" class="d-node">deleteUser()</text>
+    <rect x="264" y="78" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="274" y="95" class="d-node">listUsers()</text>
+  </g>
+  <text x="264" y="126" class="d-label">ask &#8594; the right shape, wrong specifics</text>
+  <rect x="264" y="136" width="196" height="30" rx="4" fill="none" stroke="var(--interference)"/>
+  <text x="362" y="156" class="d-node" text-anchor="middle">createUsr()</text>
+
+  <text x="0" y="182" class="d-label">the shapes survive, the details do not &#8212; that is what an unsourced answer is</text>
+</svg></div><figcaption><b>Why a model can be confidently wrong about specifics</b><span>A database returns the row or nothing. A model returns the shape of the row, which is why the invented API looks exactly like a real one.</span></figcaption></figure>
 <div class="analogy"><q>It's more like they have a fuzzy JPEG of the entirety of human knowledge.</q><p>They know the basic shapes of things and cannot give you specifics — which is exactly the failure mode you see when a model invents a plausible API that does not exist.</p></div>
 <div class="do"><h3>What to do</h3><ul>
 <li>Before fixing anything, check whether the information was ever in the context window.</li>

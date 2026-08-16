@@ -85,6 +85,47 @@ NOTE = {
   <text x="310" y="213" class="d-label" text-anchor="middle">clear · compact · hand off</text>
 </svg>''',
         },
+        {
+            "title": "Why a model can be confidently wrong about specifics",
+            "caption": "A database returns the row or nothing. A model returns the shape of the"
+                       " row, which is why the invented API looks exactly like a real one.",
+            "svg": '''<svg viewBox="0 0 460 186" role="img"
+  aria-label="Left: a database with three crisp rows, returning an exact match or nothing. Right: the same three rows blurred, returning a plausible but wrong result that looks like the real thing.">
+  <defs>
+    <filter id="fz" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+  </defs>
+
+  <text x="0" y="12" class="d-label">DATABASE &#183; stores and retrieves</text>
+  <g>
+    <rect x="0" y="22" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="10" y="39" class="d-node">createUser()</text>
+    <rect x="0" y="50" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="10" y="67" class="d-node">deleteUser()</text>
+    <rect x="0" y="78" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="10" y="95" class="d-node">listUsers()</text>
+  </g>
+  <text x="0" y="126" class="d-label">query &#8594; exact row, or nothing</text>
+  <rect x="0" y="136" width="196" height="30" rx="4" fill="none" stroke="var(--signal)"/>
+  <text x="98" y="156" class="d-fix" text-anchor="middle">createUser()</text>
+
+  <text x="264" y="12" class="d-label">MODEL &#183; a fuzzy JPEG of all of it</text>
+  <g filter="url(#fz)">
+    <rect x="264" y="22" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="274" y="39" class="d-node">createUser()</text>
+    <rect x="264" y="50" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="274" y="67" class="d-node">deleteUser()</text>
+    <rect x="264" y="78" width="196" height="24" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="274" y="95" class="d-node">listUsers()</text>
+  </g>
+  <text x="264" y="126" class="d-label">ask &#8594; the right shape, wrong specifics</text>
+  <rect x="264" y="136" width="196" height="30" rx="4" fill="none" stroke="var(--interference)"/>
+  <text x="362" y="156" class="d-node" text-anchor="middle">createUsr()</text>
+
+  <text x="0" y="182" class="d-label">the shapes survive, the details do not &#8212; that is what an unsourced answer is</text>
+</svg>''',
+        },
     ],
 
     "source": {
