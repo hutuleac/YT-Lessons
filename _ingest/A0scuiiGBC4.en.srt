@@ -1,0 +1,435 @@
+1
+00:00:00,000 --> 00:00:01,550
+
+Yeah, I actually don't recommend doing
+
+2
+00:00:01,550 --> 00:00:01,560
+Yeah, I actually don't recommend doing
+ 
+
+3
+00:00:01,560 --> 00:00:04,990
+Yeah, I actually don't recommend doing
+that at all. I recommend almost deleting
+
+4
+00:00:04,990 --> 00:00:05,000
+that at all. I recommend almost deleting
+ 
+
+5
+00:00:05,000 --> 00:00:07,910
+that at all. I recommend almost deleting
+everything that the agent saves in its
+
+6
+00:00:07,910 --> 00:00:07,920
+everything that the agent saves in its
+ 
+
+7
+00:00:07,920 --> 00:00:09,390
+everything that the agent saves in its
+own memory banks. In Claude code, you
+
+8
+00:00:09,390 --> 00:00:09,400
+own memory banks. In Claude code, you
+ 
+
+9
+00:00:09,400 --> 00:00:11,430
+own memory banks. In Claude code, you
+can do this by going into memory and
+
+10
+00:00:11,430 --> 00:00:11,440
+can do this by going into memory and
+ 
+
+11
+00:00:11,440 --> 00:00:13,830
+can do this by going into memory and
+just basically turning auto memory off
+
+12
+00:00:13,830 --> 00:00:13,840
+just basically turning auto memory off
+ 
+
+13
+00:00:13,840 --> 00:00:15,590
+just basically turning auto memory off
+there. I just have it off completely.
+
+14
+00:00:15,590 --> 00:00:15,600
+there. I just have it off completely.
+ 
+
+15
+00:00:15,600 --> 00:00:17,630
+there. I just have it off completely.
+When this is on, it saves it into a
+
+16
+00:00:17,630 --> 00:00:17,640
+When this is on, it saves it into a
+ 
+
+17
+00:00:17,640 --> 00:00:20,590
+When this is on, it saves it into a
+local file called uppercase memory.md
+
+18
+00:00:20,590 --> 00:00:20,600
+local file called uppercase memory.md
+ 
+
+19
+00:00:20,600 --> 00:00:22,470
+local file called uppercase memory.md
+and it uses this to remember your
+
+20
+00:00:22,470 --> 00:00:22,480
+and it uses this to remember your
+ 
+
+21
+00:00:22,480 --> 00:00:25,390
+and it uses this to remember your
+preferences. Except it's just way too
+
+22
+00:00:25,390 --> 00:00:25,400
+preferences. Except it's just way too
+ 
+
+23
+00:00:25,400 --> 00:00:27,750
+preferences. Except it's just way too
+freaking eager to remember your
+
+24
+00:00:27,750 --> 00:00:27,760
+freaking eager to remember your
+ 
+
+25
+00:00:27,760 --> 00:00:29,470
+freaking eager to remember your
+preferences and save them some. And so
+
+26
+00:00:29,470 --> 00:00:29,480
+preferences and save them some. And so
+ 
+
+27
+00:00:29,480 --> 00:00:30,990
+preferences and save them some. And so
+you will have some kind of preference
+
+28
+00:00:30,990 --> 00:00:31,000
+you will have some kind of preference
+ 
+
+29
+00:00:31,000 --> 00:00:32,950
+you will have some kind of preference
+about a specific feature and how that
+
+30
+00:00:32,950 --> 00:00:32,960
+about a specific feature and how that
+ 
+
+31
+00:00:32,960 --> 00:00:34,710
+about a specific feature and how that
+feature needs to be built and then that
+
+32
+00:00:34,710 --> 00:00:34,720
+feature needs to be built and then that
+ 
+
+33
+00:00:34,720 --> 00:00:36,590
+feature needs to be built and then that
+will go into your memory banks and just
+
+34
+00:00:36,590 --> 00:00:36,600
+will go into your memory banks and just
+ 
+
+35
+00:00:36,600 --> 00:00:39,030
+will go into your memory banks and just
+go everywhere and influence every single
+
+36
+00:00:39,030 --> 00:00:39,040
+go everywhere and influence every single
+ 
+
+37
+00:00:39,040 --> 00:00:40,790
+go everywhere and influence every single
+conversation that you then have with the
+
+38
+00:00:40,790 --> 00:00:40,800
+conversation that you then have with the
+ 
+
+39
+00:00:40,800 --> 00:00:43,030
+conversation that you then have with the
+agent. I much prefer my agent to be
+
+40
+00:00:43,030 --> 00:00:43,040
+agent. I much prefer my agent to be
+ 
+
+41
+00:00:43,040 --> 00:00:45,190
+agent. I much prefer my agent to be
+completely stateless because when it's
+
+42
+00:00:45,190 --> 00:00:45,200
+completely stateless because when it's
+ 
+
+43
+00:00:45,200 --> 00:00:46,950
+completely stateless because when it's
+stateless, you know, it doesn't remember
+
+44
+00:00:46,950 --> 00:00:46,960
+stateless, you know, it doesn't remember
+ 
+
+45
+00:00:46,960 --> 00:00:48,910
+stateless, you know, it doesn't remember
+anything from previous sessions, then
+
+46
+00:00:48,910 --> 00:00:48,920
+anything from previous sessions, then
+ 
+
+47
+00:00:48,920 --> 00:00:51,430
+anything from previous sessions, then
+it's much more predictable. I know how
+
+48
+00:00:51,430 --> 00:00:51,440
+it's much more predictable. I know how
+ 
+
+49
+00:00:51,440 --> 00:00:53,110
+it's much more predictable. I know how
+it's going to behave because I work from
+
+50
+00:00:53,110 --> 00:00:53,120
+it's going to behave because I work from
+ 
+
+51
+00:00:53,120 --> 00:00:55,070
+it's going to behave because I work from
+a consistent base every time. Whereas if
+
+52
+00:00:55,070 --> 00:00:55,080
+a consistent base every time. Whereas if
+ 
+
+53
+00:00:55,080 --> 00:00:57,150
+a consistent base every time. Whereas if
+you have this memory build-up, this kind
+
+54
+00:00:57,150 --> 00:00:57,160
+you have this memory build-up, this kind
+ 
+
+55
+00:00:57,160 --> 00:00:58,390
+you have this memory build-up, this kind
+of like
+
+56
+00:00:58,390 --> 00:00:58,400
+of like
+ 
+
+57
+00:00:58,400 --> 00:01:00,150
+of like
+of all this kludge building up over
+
+58
+00:01:00,150 --> 00:01:00,160
+of all this kludge building up over
+ 
+
+59
+00:01:00,160 --> 00:01:02,630
+of all this kludge building up over
+time, then every time you use it, it's
+
+60
+00:01:02,630 --> 00:01:02,640
+time, then every time you use it, it's
+ 
+
+61
+00:01:02,640 --> 00:01:04,070
+time, then every time you use it, it's
+going to be slightly different, slightly
+
+62
+00:01:04,070 --> 00:01:04,080
+going to be slightly different, slightly
+ 
+
+63
+00:01:04,080 --> 00:01:05,990
+going to be slightly different, slightly
+less predictable. You should be in
+
+64
+00:01:05,990 --> 00:01:06,000
+less predictable. You should be in
+ 
+
+65
+00:01:06,000 --> 00:01:08,270
+less predictable. You should be in
+control of the steering. You should be
+
+66
+00:01:08,270 --> 00:01:08,280
+control of the steering. You should be
+ 
+
+67
+00:01:08,280 --> 00:01:10,470
+control of the steering. You should be
+in control of choosing where you go and
+
+68
+00:01:10,470 --> 00:01:10,480
+in control of choosing where you go and
+ 
+
+69
+00:01:10,480 --> 00:01:12,790
+in control of choosing where you go and
+that means if you have something at a
+
+70
+00:01:12,790 --> 00:01:12,800
+that means if you have something at a
+ 
+
+71
+00:01:12,800 --> 00:01:13,790
+that means if you have something at a
+preference that you want to be
+
+72
+00:01:13,790 --> 00:01:13,800
+preference that you want to be
+ 
+
+73
+00:01:13,800 --> 00:01:15,830
+preference that you want to be
+expressed, then you should do it. Just
+
+74
+00:01:15,830 --> 00:01:15,840
+expressed, then you should do it. Just
+ 
+
+75
+00:01:15,840 --> 00:01:18,470
+expressed, then you should do it. Just
+like, you know, edit your claw.md or
+
+76
+00:01:18,470 --> 00:01:18,480
+like, you know, edit your claw.md or
+ 
+
+77
+00:01:18,480 --> 00:01:19,950
+like, you know, edit your claw.md or
+make a little doc in your repo or
+
+78
+00:01:19,950 --> 00:01:19,960
+make a little doc in your repo or
+ 
+
+79
+00:01:19,960 --> 00:01:21,270
+make a little doc in your repo or
+something. People are obsessed by this
+
+80
+00:01:21,270 --> 00:01:21,280
+something. People are obsessed by this
+ 
+
+81
+00:01:21,280 --> 00:01:23,670
+something. People are obsessed by this
+idea that agents should just remember
+
+82
+00:01:23,670 --> 00:01:23,680
+idea that agents should just remember
+ 
+
+83
+00:01:23,680 --> 00:01:26,430
+idea that agents should just remember
+things over time, but actually I find it
+
+84
+00:01:26,430 --> 00:01:26,440
+things over time, but actually I find it
+ 
+
+85
+00:01:26,440 --> 00:01:28,350
+things over time, but actually I find it
+just works better if you kill the memory
+
+86
+00:01:28,350 --> 00:01:28,360
+just works better if you kill the memory
+ 
+
+87
+00:01:28,360 --> 00:01:30,960
+just works better if you kill the memory
+completely.
+

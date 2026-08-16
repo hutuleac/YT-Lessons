@@ -30,10 +30,13 @@ Writes `<lesson-id>.html`, `<lesson-id>-deck.html` and `index.html` to the repo 
 
 The page is the lesson at reading detail: `mechanism` prose, capped at a 63ch measure.
 
-The deck is the same lesson at presenting detail: `skeleton` alone, one full-viewport slide per
-concept plus a slide per diagram, paged by CSS scroll-snap with no JavaScript. Arrow keys and
-`Page Down` work, and printing page-breaks between slides. That is why prose in `skeleton` breaks
-things — it is the deck's only text.
+The deck is the same lesson at presenting detail: full-viewport slides paged by CSS scroll-snap,
+no JavaScript. Arrow keys and `Page Down` work, and printing page-breaks between slides.
+
+Each note becomes a run of slides — a numbered divider, its `skeleton` as bullets, a slide per
+diagram, then `numbers`, `analogy` and `practice` where the note has them. `mechanism` never
+appears: its paragraphs are what make the page a page, and putting them on a slide would just
+rebuild the page in a worse font size. That is also why prose in `skeleton` breaks the deck.
 
 ## The concept graph is enforced
 

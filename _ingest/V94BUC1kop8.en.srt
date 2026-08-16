@@ -1,0 +1,905 @@
+1
+00:00:00,080 --> 00:00:01,750
+
+So many devs are using coding assistants
+
+2
+00:00:01,750 --> 00:00:01,760
+So many devs are using coding assistants
+ 
+
+3
+00:00:01,760 --> 00:00:03,669
+So many devs are using coding assistants
+now, but they don't even know how tools
+
+4
+00:00:03,669 --> 00:00:03,679
+now, but they don't even know how tools
+ 
+
+5
+00:00:03,679 --> 00:00:05,510
+now, but they don't even know how tools
+work. So, let's talk about how tools
+
+6
+00:00:05,510 --> 00:00:05,520
+work. So, let's talk about how tools
+ 
+
+7
+00:00:05,520 --> 00:00:07,110
+work. So, let's talk about how tools
+work and how you can make the most of
+
+8
+00:00:07,110 --> 00:00:07,120
+work and how you can make the most of
+ 
+
+9
+00:00:07,120 --> 00:00:09,509
+work and how you can make the most of
+them. Giving the LLM tools is done via
+
+10
+00:00:09,509 --> 00:00:09,519
+them. Giving the LLM tools is done via
+ 
+
+11
+00:00:09,519 --> 00:00:11,509
+them. Giving the LLM tools is done via
+the system prompt. The system prompt is
+
+12
+00:00:11,509 --> 00:00:11,519
+the system prompt. The system prompt is
+ 
+
+13
+00:00:11,519 --> 00:00:12,950
+the system prompt. The system prompt is
+just another message in the message
+
+14
+00:00:12,950 --> 00:00:12,960
+just another message in the message
+ 
+
+15
+00:00:12,960 --> 00:00:15,190
+just another message in the message
+history which describes the LM what it's
+
+16
+00:00:15,190 --> 00:00:15,200
+history which describes the LM what it's
+ 
+
+17
+00:00:15,200 --> 00:00:16,870
+history which describes the LM what it's
+supposed to be doing and in this case,
+
+18
+00:00:16,870 --> 00:00:16,880
+supposed to be doing and in this case,
+ 
+
+19
+00:00:16,880 --> 00:00:19,750
+supposed to be doing and in this case,
+what tools it can call. If we zoom into
+
+20
+00:00:19,750 --> 00:00:19,760
+what tools it can call. If we zoom into
+ 
+
+21
+00:00:19,760 --> 00:00:22,150
+what tools it can call. If we zoom into
+write file here, this is a tool which
+
+22
+00:00:22,150 --> 00:00:22,160
+write file here, this is a tool which
+ 
+
+23
+00:00:22,160 --> 00:00:23,910
+write file here, this is a tool which
+writes a file to the file system and it
+
+24
+00:00:23,910 --> 00:00:23,920
+writes a file to the file system and it
+ 
+
+25
+00:00:23,920 --> 00:00:26,070
+writes a file to the file system and it
+has two input parameters, a path which
+
+26
+00:00:26,070 --> 00:00:26,080
+has two input parameters, a path which
+ 
+
+27
+00:00:26,080 --> 00:00:28,150
+has two input parameters, a path which
+is a string and content which is also a
+
+28
+00:00:28,150 --> 00:00:28,160
+is a string and content which is also a
+ 
+
+29
+00:00:28,160 --> 00:00:29,910
+is a string and content which is also a
+string. So we're providing three things
+
+30
+00:00:29,910 --> 00:00:29,920
+string. So we're providing three things
+ 
+
+31
+00:00:29,920 --> 00:00:32,069
+string. So we're providing three things
+per tool really. The name of the tool
+
+32
+00:00:32,069 --> 00:00:32,079
+per tool really. The name of the tool
+ 
+
+33
+00:00:32,079 --> 00:00:33,830
+per tool really. The name of the tool
+here, write file, a description of the
+
+34
+00:00:33,830 --> 00:00:33,840
+here, write file, a description of the
+ 
+
+35
+00:00:33,840 --> 00:00:35,750
+here, write file, a description of the
+tool and the parameters that it takes
+
+36
+00:00:35,750 --> 00:00:35,760
+tool and the parameters that it takes
+ 
+
+37
+00:00:35,760 --> 00:00:37,510
+tool and the parameters that it takes
+and the types of those parameters. These
+
+38
+00:00:37,510 --> 00:00:37,520
+and the types of those parameters. These
+ 
+
+39
+00:00:37,520 --> 00:00:39,510
+and the types of those parameters. These
+are specified in JSON schema. So we can
+
+40
+00:00:39,510 --> 00:00:39,520
+are specified in JSON schema. So we can
+ 
+
+41
+00:00:39,520 --> 00:00:41,350
+are specified in JSON schema. So we can
+pass anything that JSON schema supports
+
+42
+00:00:41,350 --> 00:00:41,360
+pass anything that JSON schema supports
+ 
+
+43
+00:00:41,360 --> 00:00:43,030
+pass anything that JSON schema supports
+like objects and arrays and things.
+
+44
+00:00:43,030 --> 00:00:43,040
+like objects and arrays and things.
+ 
+
+45
+00:00:43,040 --> 00:00:45,110
+like objects and arrays and things.
+These then get injected into the system
+
+46
+00:00:45,110 --> 00:00:45,120
+These then get injected into the system
+ 
+
+47
+00:00:45,120 --> 00:00:46,950
+These then get injected into the system
+prompt and any other info that you've
+
+48
+00:00:46,950 --> 00:00:46,960
+prompt and any other info that you've
+ 
+
+49
+00:00:46,960 --> 00:00:48,310
+prompt and any other info that you've
+provided to the system prompt just goes
+
+50
+00:00:48,310 --> 00:00:48,320
+provided to the system prompt just goes
+ 
+
+51
+00:00:48,320 --> 00:00:49,430
+provided to the system prompt just goes
+below it. So there's nothing
+
+52
+00:00:49,430 --> 00:00:49,440
+below it. So there's nothing
+ 
+
+53
+00:00:49,440 --> 00:00:51,350
+below it. So there's nothing
+particularly fancy here going on. It's
+
+54
+00:00:51,350 --> 00:00:51,360
+particularly fancy here going on. It's
+ 
+
+55
+00:00:51,360 --> 00:00:53,590
+particularly fancy here going on. It's
+just tool definitions inside the system
+
+56
+00:00:53,590 --> 00:00:53,600
+just tool definitions inside the system
+ 
+
+57
+00:00:53,600 --> 00:00:55,110
+just tool definitions inside the system
+prompt. The magic happens when we ask
+
+58
+00:00:55,110 --> 00:00:55,120
+prompt. The magic happens when we ask
+ 
+
+59
+00:00:55,120 --> 00:00:57,189
+prompt. The magic happens when we ask
+the LLM to choose a tool. We've got our
+
+60
+00:00:57,189 --> 00:00:57,199
+the LLM to choose a tool. We've got our
+ 
+
+61
+00:00:57,199 --> 00:00:58,549
+the LLM to choose a tool. We've got our
+system prompt up here saying you have
+
+62
+00:00:58,549 --> 00:00:58,559
+system prompt up here saying you have
+ 
+
+63
+00:00:58,559 --> 00:01:00,229
+system prompt up here saying you have
+access to the following tools. And then
+
+64
+00:01:00,229 --> 00:01:00,239
+access to the following tools. And then
+ 
+
+65
+00:01:00,239 --> 00:01:02,549
+access to the following tools. And then
+we add a user message which says write a
+
+66
+00:01:02,549 --> 00:01:02,559
+we add a user message which says write a
+ 
+
+67
+00:01:02,559 --> 00:01:04,469
+we add a user message which says write a
+new file called git ignore. We then
+
+68
+00:01:04,469 --> 00:01:04,479
+new file called git ignore. We then
+ 
+
+69
+00:01:04,479 --> 00:01:06,870
+new file called git ignore. We then
+receive back an assistant message with a
+
+70
+00:01:06,870 --> 00:01:06,880
+receive back an assistant message with a
+ 
+
+71
+00:01:06,880 --> 00:01:09,270
+receive back an assistant message with a
+tool call inside. This is just an
+
+72
+00:01:09,270 --> 00:01:09,280
+tool call inside. This is just an
+ 
+
+73
+00:01:09,280 --> 00:01:11,510
+tool call inside. This is just an
+instruction from the LLM which tool to
+
+74
+00:01:11,510 --> 00:01:11,520
+instruction from the LLM which tool to
+ 
+
+75
+00:01:11,520 --> 00:01:13,670
+instruction from the LLM which tool to
+call. It's got an ID on it and it's also
+
+76
+00:01:13,670 --> 00:01:13,680
+call. It's got an ID on it and it's also
+ 
+
+77
+00:01:13,680 --> 00:01:15,670
+call. It's got an ID on it and it's also
+got the required parameters. In other
+
+78
+00:01:15,670 --> 00:01:15,680
+got the required parameters. In other
+ 
+
+79
+00:01:15,680 --> 00:01:17,830
+got the required parameters. In other
+words, here it's writing an empty file
+
+80
+00:01:17,830 --> 00:01:17,840
+words, here it's writing an empty file
+ 
+
+81
+00:01:17,840 --> 00:01:19,910
+words, here it's writing an empty file
+to the path getit ignore. Now this tool
+
+82
+00:01:19,910 --> 00:01:19,920
+to the path getit ignore. Now this tool
+ 
+
+83
+00:01:19,920 --> 00:01:22,149
+to the path getit ignore. Now this tool
+call is just an instruction for which
+
+84
+00:01:22,149 --> 00:01:22,159
+call is just an instruction for which
+ 
+
+85
+00:01:22,159 --> 00:01:24,230
+call is just an instruction for which
+tool should be called. Nothing has
+
+86
+00:01:24,230 --> 00:01:24,240
+tool should be called. Nothing has
+ 
+
+87
+00:01:24,240 --> 00:01:25,830
+tool should be called. Nothing has
+happened yet. The assistant has just
+
+88
+00:01:25,830 --> 00:01:25,840
+happened yet. The assistant has just
+ 
+
+89
+00:01:25,840 --> 00:01:27,910
+happened yet. The assistant has just
+produced a message. That's it. The tool
+
+90
+00:01:27,910 --> 00:01:27,920
+produced a message. That's it. The tool
+ 
+
+91
+00:01:27,920 --> 00:01:30,230
+produced a message. That's it. The tool
+then needs to be executed on our
+
+92
+00:01:30,230 --> 00:01:30,240
+then needs to be executed on our
+ 
+
+93
+00:01:30,240 --> 00:01:32,550
+then needs to be executed on our
+machine. So the LLM's created this
+
+94
+00:01:32,550 --> 00:01:32,560
+machine. So the LLM's created this
+ 
+
+95
+00:01:32,560 --> 00:01:34,630
+machine. So the LLM's created this
+message. We then need to actually
+
+96
+00:01:34,630 --> 00:01:34,640
+message. We then need to actually
+ 
+
+97
+00:01:34,640 --> 00:01:36,550
+message. We then need to actually
+execute the creation of the file on our
+
+98
+00:01:36,550 --> 00:01:36,560
+execute the creation of the file on our
+ 
+
+99
+00:01:36,560 --> 00:01:37,990
+execute the creation of the file on our
+machine. This means that for every
+
+100
+00:01:37,990 --> 00:01:38,000
+machine. This means that for every
+ 
+
+101
+00:01:38,000 --> 00:01:39,670
+machine. This means that for every
+single tool in the system prompt, we're
+
+102
+00:01:39,670 --> 00:01:39,680
+single tool in the system prompt, we're
+ 
+
+103
+00:01:39,680 --> 00:01:41,350
+single tool in the system prompt, we're
+going to have functions in our codebase
+
+104
+00:01:41,350 --> 00:01:41,360
+going to have functions in our codebase
+ 
+
+105
+00:01:41,360 --> 00:01:42,950
+going to have functions in our codebase
+that match up to those. If that's
+
+106
+00:01:42,950 --> 00:01:42,960
+that match up to those. If that's
+ 
+
+107
+00:01:42,960 --> 00:01:44,630
+that match up to those. If that's
+successful, we're then going to send
+
+108
+00:01:44,630 --> 00:01:44,640
+successful, we're then going to send
+ 
+
+109
+00:01:44,640 --> 00:01:47,030
+successful, we're then going to send
+back a user message to the LLM. It's
+
+110
+00:01:47,030 --> 00:01:47,040
+back a user message to the LLM. It's
+ 
+
+111
+00:01:47,040 --> 00:01:48,950
+back a user message to the LLM. It's
+going to have the same ID as the
+
+112
+00:01:48,950 --> 00:01:48,960
+going to have the same ID as the
+ 
+
+113
+00:01:48,960 --> 00:01:50,310
+going to have the same ID as the
+previous tool call, and we're going to
+
+114
+00:01:50,310 --> 00:01:50,320
+previous tool call, and we're going to
+ 
+
+115
+00:01:50,320 --> 00:01:51,910
+previous tool call, and we're going to
+send it a message saying what happened
+
+116
+00:01:51,910 --> 00:01:51,920
+send it a message saying what happened
+ 
+
+117
+00:01:51,920 --> 00:01:53,830
+send it a message saying what happened
+when we executed the tool. This, by the
+
+118
+00:01:53,830 --> 00:01:53,840
+when we executed the tool. This, by the
+ 
+
+119
+00:01:53,840 --> 00:01:55,270
+when we executed the tool. This, by the
+way, is really important. If there are
+
+120
+00:01:55,270 --> 00:01:55,280
+way, is really important. If there are
+ 
+
+121
+00:01:55,280 --> 00:01:57,270
+way, is really important. If there are
+any errors when the tool is executed,
+
+122
+00:01:57,270 --> 00:01:57,280
+any errors when the tool is executed,
+ 
+
+123
+00:01:57,280 --> 00:01:59,109
+any errors when the tool is executed,
+then we need to show that error message
+
+124
+00:01:59,109 --> 00:01:59,119
+then we need to show that error message
+ 
+
+125
+00:01:59,119 --> 00:02:00,870
+then we need to show that error message
+to the LLM so that it can do something
+
+126
+00:02:00,870 --> 00:02:00,880
+to the LLM so that it can do something
+ 
+
+127
+00:02:00,880 --> 00:02:02,550
+to the LLM so that it can do something
+differently. So, a tool result could be
+
+128
+00:02:02,550 --> 00:02:02,560
+differently. So, a tool result could be
+ 
+
+129
+00:02:02,560 --> 00:02:04,310
+differently. So, a tool result could be
+a success or it could be a failure.
+
+130
+00:02:04,310 --> 00:02:04,320
+a success or it could be a failure.
+ 
+
+131
+00:02:04,320 --> 00:02:05,670
+a success or it could be a failure.
+Let's go one more time through the
+
+132
+00:02:05,670 --> 00:02:05,680
+Let's go one more time through the
+ 
+
+133
+00:02:05,680 --> 00:02:07,190
+Let's go one more time through the
+entire flow just so you get it in your
+
+134
+00:02:07,190 --> 00:02:07,200
+entire flow just so you get it in your
+ 
+
+135
+00:02:07,200 --> 00:02:09,109
+entire flow just so you get it in your
+head. We specify the tool in the system
+
+136
+00:02:09,109 --> 00:02:09,119
+head. We specify the tool in the system
+ 
+
+137
+00:02:09,119 --> 00:02:10,309
+head. We specify the tool in the system
+prompt saying you have access to the
+
+138
+00:02:10,309 --> 00:02:10,319
+prompt saying you have access to the
+ 
+
+139
+00:02:10,319 --> 00:02:11,670
+prompt saying you have access to the
+following tools, passing it a bunch of
+
+140
+00:02:11,670 --> 00:02:11,680
+following tools, passing it a bunch of
+ 
+
+141
+00:02:11,680 --> 00:02:13,670
+following tools, passing it a bunch of
+JSON schema. We then send it a user
+
+142
+00:02:13,670 --> 00:02:13,680
+JSON schema. We then send it a user
+ 
+
+143
+00:02:13,680 --> 00:02:15,510
+JSON schema. We then send it a user
+message saying write a new file called
+
+144
+00:02:15,510 --> 00:02:15,520
+message saying write a new file called
+ 
+
+145
+00:02:15,520 --> 00:02:17,510
+message saying write a new file called
+get ignore. Note that we don't have to
+
+146
+00:02:17,510 --> 00:02:17,520
+get ignore. Note that we don't have to
+ 
+
+147
+00:02:17,520 --> 00:02:20,070
+get ignore. Note that we don't have to
+specifically say call this tool. The LLM
+
+148
+00:02:20,070 --> 00:02:20,080
+specifically say call this tool. The LLM
+ 
+
+149
+00:02:20,080 --> 00:02:22,390
+specifically say call this tool. The LLM
+itself decides which tool to call. It
+
+150
+00:02:22,390 --> 00:02:22,400
+itself decides which tool to call. It
+ 
+
+151
+00:02:22,400 --> 00:02:24,229
+itself decides which tool to call. It
+then produces this tool call message
+
+152
+00:02:24,229 --> 00:02:24,239
+then produces this tool call message
+ 
+
+153
+00:02:24,239 --> 00:02:26,150
+then produces this tool call message
+with all the right stuff inside. We then
+
+154
+00:02:26,150 --> 00:02:26,160
+with all the right stuff inside. We then
+ 
+
+155
+00:02:26,160 --> 00:02:27,750
+with all the right stuff inside. We then
+see this tool call message and we
+
+156
+00:02:27,750 --> 00:02:27,760
+see this tool call message and we
+ 
+
+157
+00:02:27,760 --> 00:02:29,910
+see this tool call message and we
+execute it on our machine. We then send
+
+158
+00:02:29,910 --> 00:02:29,920
+execute it on our machine. We then send
+ 
+
+159
+00:02:29,920 --> 00:02:31,830
+execute it on our machine. We then send
+the result back with a message saying
+
+160
+00:02:31,830 --> 00:02:31,840
+the result back with a message saying
+ 
+
+161
+00:02:31,840 --> 00:02:33,430
+the result back with a message saying
+what happened and then the LLM will see
+
+162
+00:02:33,430 --> 00:02:33,440
+what happened and then the LLM will see
+ 
+
+163
+00:02:33,440 --> 00:02:35,589
+what happened and then the LLM will see
+this entire history and just respond
+
+164
+00:02:35,589 --> 00:02:35,599
+this entire history and just respond
+ 
+
+165
+00:02:35,599 --> 00:02:37,190
+this entire history and just respond
+with a summary. In this case, it said
+
+166
+00:02:37,190 --> 00:02:37,200
+with a summary. In this case, it said
+ 
+
+167
+00:02:37,200 --> 00:02:38,710
+with a summary. In this case, it said
+done and what should go in there. So
+
+168
+00:02:38,710 --> 00:02:38,720
+done and what should go in there. So
+ 
+
+169
+00:02:38,720 --> 00:02:40,229
+done and what should go in there. So
+that's what tools are. They're just ways
+
+170
+00:02:40,229 --> 00:02:40,239
+that's what tools are. They're just ways
+ 
+
+171
+00:02:40,239 --> 00:02:42,229
+that's what tools are. They're just ways
+of getting LLMs to produce certain types
+
+172
+00:02:42,229 --> 00:02:42,239
+of getting LLMs to produce certain types
+ 
+
+173
+00:02:42,239 --> 00:02:44,309
+of getting LLMs to produce certain types
+of messages which you can then intercept
+
+174
+00:02:44,309 --> 00:02:44,319
+of messages which you can then intercept
+ 
+
+175
+00:02:44,319 --> 00:02:46,229
+of messages which you can then intercept
+and execute on your machine and give
+
+176
+00:02:46,229 --> 00:02:46,239
+and execute on your machine and give
+ 
+
+177
+00:02:46,239 --> 00:02:47,910
+and execute on your machine and give
+those results back to the LLM. And with
+
+178
+00:02:47,910 --> 00:02:47,920
+those results back to the LLM. And with
+ 
+
+179
+00:02:47,920 --> 00:02:49,830
+those results back to the LLM. And with
+that simple loop, you can build really,
+
+180
+00:02:49,830 --> 00:02:49,840
+that simple loop, you can build really,
+ 
+
+181
+00:02:49,840 --> 00:02:52,560
+that simple loop, you can build really,
+really powerful
+

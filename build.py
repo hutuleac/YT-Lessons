@@ -181,52 +181,117 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
 """
 
-# The deck is the same notes at deck detail: `skeleton` only, never `mechanism`. It shares the
-# palette and type tokens above and overrides the page's reading measure — a slide uses the whole
-# viewport, where a lesson page is deliberately capped at 63ch.
+# The deck is the lesson at presenting detail. It reads the slide-shaped fields — `skeleton`,
+# `numbers`, `analogy`, `practice`, `diagrams` — and never `mechanism`, whose paragraphs would
+# turn a slide back into the page. It shares the palette and type tokens above and drops the
+# page's reading measure: a slide uses the whole viewport.
 DECK_CSS = """
-html{scroll-snap-type:y mandatory}
+html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
 body{font-family:var(--sans)}
 .slide{
-  min-height:100dvh; scroll-snap-align:start; display:flex; flex-direction:column;
-  justify-content:center; padding:clamp(30px,5vw,80px); border-bottom:1px solid var(--line);
-  position:relative
+  min-height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(58px,7vh,96px) clamp(30px,5vw,86px); position:relative; overflow:hidden
 }
 .slide>*{max-width:none}
+
+/* ---- slide chrome: the same bar on every slide, the way a deck master works ---- */
 .tick{
-  position:absolute; top:clamp(20px,3vw,40px); left:clamp(30px,5vw,80px); right:clamp(30px,5vw,80px);
-  display:flex; justify-content:space-between; gap:20px;
+  position:absolute; top:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
   font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
 }
 .tick s{text-decoration:none; color:var(--signal)}
-.slide h1{font-size:clamp(34px,7vw,86px); margin:0 0 clamp(20px,3vh,34px)}
-.slide h2{font-size:clamp(30px,6vw,72px); margin:0 0 clamp(18px,3vh,30px)}
-.slide .lead{
-  font-family:var(--serif); font-size:clamp(19px,2.4vw,30px); line-height:1.45;
-  color:var(--muted); margin:0; max-width:34ch
+.foot{
+  position:absolute; bottom:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  align-items:center; font:400 11px/1 var(--mono); color:var(--muted)
 }
-.slide .lead em{font-style:normal; color:var(--ink)}
-.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.2vh,26px)}
+.foot em{font-style:normal; letter-spacing:.06em}
+.bar{position:absolute; left:0; right:0; bottom:0; height:3px; background:var(--line)}
+.bar i{display:block; height:100%; background:var(--signal)}
+
+/* ---- kinds ---- */
+.k-title, .k-section, .k-close{background:var(--surface)}
+/* The divider is the one slide with room to spare, so it splits: number left, concept right. */
+@media (min-width:1000px){
+  .k-section{display:grid; grid-template-columns:minmax(200px,22%) 1fr;
+             gap:clamp(30px,4vw,70px); align-items:center; align-content:center}
+  .k-section .idx{grid-row:1 / span 3; align-self:start; margin:0}
+  .k-section h2, .k-section .lead, .k-section .src{grid-column:2}
+}
+.k-section .idx{
+  font:600 clamp(64px,13vw,180px)/0.82 var(--mono); letter-spacing:-.05em;
+  color:var(--line); margin:0 0 clamp(14px,2vh,26px)
+}
+.slide h1{font-size:clamp(34px,6.4vw,84px); margin:0 0 clamp(18px,3vh,32px)}
+.slide h2{font-size:clamp(28px,5vw,64px); margin:0 0 clamp(16px,2.6vh,28px)}
+.k-bullets h2, .k-do h2, .k-figs h2{font-size:clamp(22px,3.2vw,40px); color:var(--muted)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.3vw,30px); line-height:1.42;
+  color:var(--muted); margin:0; max-width:36ch
+}
+.k-close .lead{color:var(--ink); max-width:44ch}
+.k-title .audience{margin-top:clamp(20px,3vh,36px); font-size:clamp(12px,1.2vw,15px)}
+
+/* ---- bullets ---- */
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.6vh,30px); counter-reset:b}
 .bul li{
-  font-size:clamp(20px,2.8vw,38px); line-height:1.25; padding-left:1.4em; position:relative;
-  text-wrap:balance
+  font-size:clamp(21px,2.9vw,42px); line-height:1.22; padding-left:1.5em; position:relative;
+  text-wrap:balance; counter-increment:b
 }
 .bul li::before{
-  content:counter(list-item); position:absolute; left:0; top:.28em;
-  font:500 .45em var(--mono); color:var(--signal); letter-spacing:.1em
+  content:counter(b); position:absolute; left:0; top:.3em;
+  font:500 .42em var(--mono); color:var(--signal); letter-spacing:.1em
 }
+
+/* ---- big numbers ---- */
+.nums{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(20px,3vw,44px)}
+.nums div{border-top:2px solid var(--line); padding-top:clamp(12px,2vh,20px)}
+.nums b{display:block; font:600 clamp(34px,5.4vw,68px)/1 var(--mono); letter-spacing:-.04em; color:var(--sand)}
+.nums i{display:block; font:400 clamp(12px,1.2vw,15px) var(--mono); font-style:normal; color:var(--muted); margin:10px 0 8px}
+.nums span{font-size:clamp(13px,1.3vw,17px); line-height:1.4; color:var(--muted)}
+
+/* ---- quote ---- */
+.k-quote q{
+  display:block; quotes:none; font-family:var(--serif); font-size:clamp(28px,4.6vw,62px);
+  line-height:1.22; border-left:3px solid var(--signal); padding-left:clamp(20px,2.6vw,40px);
+  text-wrap:balance
+}
+.k-quote p{
+  margin:clamp(18px,3vh,32px) 0 0 clamp(23px,2.9vw,43px); color:var(--muted);
+  font-size:clamp(14px,1.5vw,20px); max-width:52ch
+}
+
+/* ---- what to do ---- */
+.acts{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.4vh,26px);
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.acts li{
+  font-size:clamp(16px,1.8vw,24px); line-height:1.35; padding-left:1.5em; position:relative;
+  background:var(--surface-2); border-radius:8px; padding:clamp(16px,2vh,24px) clamp(18px,2vw,26px)
+              clamp(16px,2vh,24px) clamp(38px,3.4vw,52px)
+}
+.acts li::before{
+  content:"\\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
+  color:var(--interference); font-family:var(--mono)
+}
+
+/* ---- diagrams ---- */
 /* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
    Twice the page's cap is the ceiling that stays proportionate on a projector. */
-.slide .plate{padding:clamp(20px,3vw,40px); max-width:1120px; margin:0 auto; width:100%}
+.slide figure{margin:0 auto; padding:0; max-width:1180px; width:100%}
+.slide .plate{padding:clamp(20px,3vw,42px); width:100%}
 .slide .plate svg{max-width:1040px}
-.slide figcaption{max-width:1120px; margin:22px auto 0; text-align:center}
-.slide figcaption b{font-size:clamp(14px,1.4vw,20px)}
+.slide figcaption{margin:clamp(16px,2.4vh,26px) auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(15px,1.5vw,21px)}
 .slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
-.slide figure{margin:0; padding:0; max-width:none}
-.end{background:var(--surface)}
-.end .lead{max-width:44ch; color:var(--ink)}
-.slide .src{max-width:none; margin:clamp(24px,4vh,44px) 0 0; padding:0}
-@media print{html{scroll-snap-type:none} .slide{min-height:auto; page-break-after:always}}
+
+.slide .src{max-width:none; margin:clamp(22px,4vh,44px) 0 0; padding:0}
+@media print{
+  html{scroll-snap-type:none}
+  .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
+  .bar{display:none}
+}
 """
 
 RAIL_JS = """
@@ -303,44 +368,83 @@ def render_note(n, idx, total, bridge):
 
 
 def build_deck(L, notes):
-    """The same lesson at deck detail: `skeleton` lines only, one slide per concept."""
-    slides = []  # (label, extra class, inner html)
+    """The lesson as slides: one kind of slide per slide-shaped field of the note.
+
+    `mechanism` is deliberately absent — its paragraphs are what make a page a page.
+    """
+    slides = []  # (label, kind, inner html)
     slides.append((
-        L["subject"], "",
-        f'<h1>{e(L["title"])}</h1><p class="lead">{e(L["standfirst"])}</p>',
+        L["subject"], "title",
+        f'<h1>{e(L["title"])}</h1><p class="lead">{e(L["standfirst"])}</p>'
+        f'<p class="audience">{e(L["audience"])}</p>',
     ))
-    for nid in L["notes"]:
+
+    for i, nid in enumerate(L["notes"], 1):
         n = notes[nid]
         if not n.get("skeleton"):
             raise SystemExit(f"notes/{nid}.py: empty 'skeleton' — the deck has nothing to show")
-        items = "".join(f"<li>{e(s)}</li>" for s in n["skeleton"])
+        label = n["concept"]
         s = n["source"]
+
+        # Divider: the number carries the position so the concept slide doesn't have to.
         slides.append((
-            n["concept"], "",
-            f'<h2>{e(n["concept"])}</h2><ol class="bul">{items}</ol>'
+            label, "section",
+            f'<p class="idx">{i:02d}</p><h2>{e(n["concept"])}</h2>'
+            f'<p class="lead">{e(n["one_liner"])}</p>'
             f'<div class="src"><a href="{e(s["url"])}" target="_blank" rel="noopener">'
-            f'{e(s["channel"])} &middot; {e(s["title"])} &#8599;</a></div>',
+            f'{e(s["channel"])} &middot; {e(s["title"])} &middot; {e(s["duration"])} &#8599;</a></div>',
+        ))
+        slides.append((
+            label, "bullets",
+            f'<h2>{e(n["concept"])}</h2><ol class="bul">'
+            + "".join(f"<li>{e(x)}</li>" for x in n["skeleton"])
+            + "</ol>",
         ))
         for d in n.get("diagrams") or []:
             slides.append((
-                n["concept"], "",
+                label, "figs",
                 f'<figure><div class="plate">{d["svg"]}</div>'
                 f'<figcaption><b>{e(d["title"])}</b><span>{e(d["caption"])}</span>'
                 f"</figcaption></figure>",
             ))
+        if n.get("numbers"):
+            slides.append((
+                label, "nums",
+                '<h2>By the numbers</h2><div class="nums">'
+                + "".join(
+                    f'<div><b>{e(f["value"])}</b><i>{e(f.get("unit",""))}</i>'
+                    f'<span>{e(f["label"])}</span></div>'
+                    for f in n["numbers"]
+                )
+                + "</div>",
+            ))
+        a = n.get("analogy")
+        if a:
+            slides.append((label, "quote", f'<q>{e(a["text"])}</q><p>{e(a["note"])}</p>'))
+        if n.get("practice"):
+            slides.append((
+                label, "do",
+                '<h2>What to do</h2><ul class="acts">'
+                + "".join(f"<li>{e(x)}</li>" for x in n["practice"])
+                + "</ul>",
+            ))
+
     c = L.get("closing")
     if c:
         slides.append((
-            "In one move", "end",
+            "In one move", "close",
             f'<h2>{e(c["title"])}</h2><p class="lead">{e(c["body"])}</p>',
         ))
 
     total = len(slides)
     body = []
-    for i, (label, cls, inner) in enumerate(slides, 1):
+    for i, (label, kind, inner) in enumerate(slides, 1):
         body.append(
-            f'<section class="slide {cls}">'
-            f'<div class="tick"><span>{e(label)}</span><s>{i} / {total}</s></div>{inner}</section>'
+            f'<section class="slide k-{kind}">'
+            f'<div class="tick"><span>{e(label)}</span><s>{i} / {total}</s></div>'
+            f"{inner}"
+            f'<div class="foot"><em>{e(L["subject"])}</em><em>{e(L["title"])}</em></div>'
+            f'<div class="bar"><i style="width:{i / total * 100:.1f}%"></i></div></section>'
         )
 
     doc = (

@@ -1,0 +1,605 @@
+1
+00:00:00,000 --> 00:00:01,030
+
+There's this really annoying pattern
+
+2
+00:00:01,030 --> 00:00:01,040
+There's this really annoying pattern
+ 
+
+3
+00:00:01,040 --> 00:00:02,590
+There's this really annoying pattern
+that I see people do everywhere that I
+
+4
+00:00:02,590 --> 00:00:02,600
+that I see people do everywhere that I
+ 
+
+5
+00:00:02,600 --> 00:00:05,270
+that I see people do everywhere that I
+think is making their AI coding output
+
+6
+00:00:05,270 --> 00:00:05,280
+think is making their AI coding output
+ 
+
+7
+00:00:05,280 --> 00:00:07,310
+think is making their AI coding output
+worse, not better, and costing them
+
+8
+00:00:07,310 --> 00:00:07,320
+worse, not better, and costing them
+ 
+
+9
+00:00:07,320 --> 00:00:09,470
+worse, not better, and costing them
+tokens. Now, most of the time when I let
+
+10
+00:00:09,470 --> 00:00:09,480
+tokens. Now, most of the time when I let
+ 
+
+11
+00:00:09,480 --> 00:00:11,910
+tokens. Now, most of the time when I let
+AI explore my codebase, the only thing
+
+12
+00:00:11,910 --> 00:00:11,920
+AI explore my codebase, the only thing
+ 
+
+13
+00:00:11,920 --> 00:00:14,790
+AI explore my codebase, the only thing
+AI has to go on is the code itself. And
+
+14
+00:00:14,790 --> 00:00:14,800
+AI has to go on is the code itself. And
+ 
+
+15
+00:00:14,800 --> 00:00:16,870
+AI has to go on is the code itself. And
+it the code is supposed to be sort of
+
+16
+00:00:16,870 --> 00:00:16,880
+it the code is supposed to be sort of
+ 
+
+17
+00:00:16,880 --> 00:00:19,430
+it the code is supposed to be sort of
+self-explanatory. It's supposed to be
+
+18
+00:00:19,430 --> 00:00:19,440
+self-explanatory. It's supposed to be
+ 
+
+19
+00:00:19,440 --> 00:00:21,030
+self-explanatory. It's supposed to be
+have enough information in the code so
+
+20
+00:00:21,030 --> 00:00:21,040
+have enough information in the code so
+ 
+
+21
+00:00:21,040 --> 00:00:22,550
+have enough information in the code so
+that AI can interpret it. That puts a
+
+22
+00:00:22,550 --> 00:00:22,560
+that AI can interpret it. That puts a
+ 
+
+23
+00:00:22,560 --> 00:00:24,190
+that AI can interpret it. That puts a
+lot of burden on my code, so I need to
+
+24
+00:00:24,190 --> 00:00:24,200
+lot of burden on my code, so I need to
+ 
+
+25
+00:00:24,200 --> 00:00:26,030
+lot of burden on my code, so I need to
+make sure my code is well-formatted,
+
+26
+00:00:26,030 --> 00:00:26,040
+make sure my code is well-formatted,
+ 
+
+27
+00:00:26,040 --> 00:00:28,430
+make sure my code is well-formatted,
+that it's in the right file systems,
+
+28
+00:00:28,430 --> 00:00:28,440
+that it's in the right file systems,
+ 
+
+29
+00:00:28,440 --> 00:00:30,150
+that it's in the right file systems,
+that it's organized into reasonable
+
+30
+00:00:30,150 --> 00:00:30,160
+that it's organized into reasonable
+ 
+
+31
+00:00:30,160 --> 00:00:32,269
+that it's organized into reasonable
+chunks so the AI can look at it, that
+
+32
+00:00:32,269 --> 00:00:32,279
+chunks so the AI can look at it, that
+ 
+
+33
+00:00:32,279 --> 00:00:34,110
+chunks so the AI can look at it, that
+there's interfaces and implementations
+
+34
+00:00:34,110 --> 00:00:34,120
+there's interfaces and implementations
+ 
+
+35
+00:00:34,120 --> 00:00:35,950
+there's interfaces and implementations
+and they're separated so AI can just
+
+36
+00:00:35,950 --> 00:00:35,960
+and they're separated so AI can just
+ 
+
+37
+00:00:35,960 --> 00:00:37,550
+and they're separated so AI can just
+take what it needs. However, a lot of
+
+38
+00:00:37,550 --> 00:00:37,560
+take what it needs. However, a lot of
+ 
+
+39
+00:00:37,560 --> 00:00:39,230
+take what it needs. However, a lot of
+folks are not doing this. They are
+
+40
+00:00:39,230 --> 00:00:39,240
+folks are not doing this. They are
+ 
+
+41
+00:00:39,240 --> 00:00:41,550
+folks are not doing this. They are
+taking a layer of docs, so they're
+
+42
+00:00:41,550 --> 00:00:41,560
+taking a layer of docs, so they're
+ 
+
+43
+00:00:41,560 --> 00:00:44,150
+taking a layer of docs, so they're
+creating docs for their code and getting
+
+44
+00:00:44,150 --> 00:00:44,160
+creating docs for their code and getting
+ 
+
+45
+00:00:44,160 --> 00:00:46,790
+creating docs for their code and getting
+the AI to primarily rely on those docs.
+
+46
+00:00:46,790 --> 00:00:46,800
+the AI to primarily rely on those docs.
+ 
+
+47
+00:00:46,800 --> 00:00:48,390
+the AI to primarily rely on those docs.
+The issue I have with this is those
+
+48
+00:00:48,390 --> 00:00:48,400
+The issue I have with this is those
+ 
+
+49
+00:00:48,400 --> 00:00:50,710
+The issue I have with this is those
+docs, like markdown files inside the
+
+50
+00:00:50,710 --> 00:00:50,720
+docs, like markdown files inside the
+ 
+
+51
+00:00:50,720 --> 00:00:52,430
+docs, like markdown files inside the
+repository, they're usually not
+
+52
+00:00:52,430 --> 00:00:52,440
+repository, they're usually not
+ 
+
+53
+00:00:52,440 --> 00:00:54,790
+repository, they're usually not
+executable. They're not testable against
+
+54
+00:00:54,790 --> 00:00:54,800
+executable. They're not testable against
+ 
+
+55
+00:00:54,800 --> 00:00:57,310
+executable. They're not testable against
+the code. And so they can drift away
+
+56
+00:00:57,310 --> 00:00:57,320
+the code. And so they can drift away
+ 
+
+57
+00:00:57,320 --> 00:00:59,230
+the code. And so they can drift away
+from the code. The docs can say one
+
+58
+00:00:59,230 --> 00:00:59,240
+from the code. The docs can say one
+ 
+
+59
+00:00:59,240 --> 00:01:00,990
+from the code. The docs can say one
+thing, but the actual code, the source
+
+60
+00:01:00,990 --> 00:01:01,000
+thing, but the actual code, the source
+ 
+
+61
+00:01:01,000 --> 00:01:02,750
+thing, but the actual code, the source
+of truth, can say another. And this is
+
+62
+00:01:02,750 --> 00:01:02,760
+of truth, can say another. And this is
+ 
+
+63
+00:01:02,760 --> 00:01:04,189
+of truth, can say another. And this is
+really bad because if there are two
+
+64
+00:01:04,189 --> 00:01:04,199
+really bad because if there are two
+ 
+
+65
+00:01:04,199 --> 00:01:06,230
+really bad because if there are two
+sources of truth and they conflict, then
+
+66
+00:01:06,230 --> 00:01:06,240
+sources of truth and they conflict, then
+ 
+
+67
+00:01:06,240 --> 00:01:08,630
+sources of truth and they conflict, then
+AI won't know which one is the real one.
+
+68
+00:01:08,630 --> 00:01:08,640
+AI won't know which one is the real one.
+ 
+
+69
+00:01:08,640 --> 00:01:10,470
+AI won't know which one is the real one.
+And so I consider this a really, really
+
+70
+00:01:10,470 --> 00:01:10,480
+And so I consider this a really, really
+ 
+
+71
+00:01:10,480 --> 00:01:12,790
+And so I consider this a really, really
+big problem and a massive antipattern to
+
+72
+00:01:12,790 --> 00:01:12,800
+big problem and a massive antipattern to
+ 
+
+73
+00:01:12,800 --> 00:01:15,110
+big problem and a massive antipattern to
+build this whole layer of docs just to
+
+74
+00:01:15,110 --> 00:01:15,120
+build this whole layer of docs just to
+ 
+
+75
+00:01:15,120 --> 00:01:16,910
+build this whole layer of docs just to
+explain what the code can anyway. Now,
+
+76
+00:01:16,910 --> 00:01:16,920
+explain what the code can anyway. Now,
+ 
+
+77
+00:01:16,920 --> 00:01:18,230
+explain what the code can anyway. Now,
+some people will read this and think
+
+78
+00:01:18,230 --> 00:01:18,240
+some people will read this and think
+ 
+
+79
+00:01:18,240 --> 00:01:20,390
+some people will read this and think
+that I'm against all docs, that the only
+
+80
+00:01:20,390 --> 00:01:20,400
+that I'm against all docs, that the only
+ 
+
+81
+00:01:20,400 --> 00:01:21,670
+that I'm against all docs, that the only
+thing you should have in your repo is
+
+82
+00:01:21,670 --> 00:01:21,680
+thing you should have in your repo is
+ 
+
+83
+00:01:21,680 --> 00:01:24,110
+thing you should have in your repo is
+code. No, that's not true. Code should
+
+84
+00:01:24,110 --> 00:01:24,120
+code. No, that's not true. Code should
+ 
+
+85
+00:01:24,120 --> 00:01:25,790
+code. No, that's not true. Code should
+be self-explanatory, but there are some
+
+86
+00:01:25,790 --> 00:01:25,800
+be self-explanatory, but there are some
+ 
+
+87
+00:01:25,800 --> 00:01:28,390
+be self-explanatory, but there are some
+things that code can't explain. code
+
+88
+00:01:28,390 --> 00:01:28,400
+things that code can't explain. code
+ 
+
+89
+00:01:28,400 --> 00:01:30,430
+things that code can't explain. code
+can't tell you what alternatives were
+
+90
+00:01:30,430 --> 00:01:30,440
+can't tell you what alternatives were
+ 
+
+91
+00:01:30,440 --> 00:01:32,150
+can't tell you what alternatives were
+considered instead of the code that's
+
+92
+00:01:32,150 --> 00:01:32,160
+considered instead of the code that's
+ 
+
+93
+00:01:32,160 --> 00:01:34,150
+considered instead of the code that's
+there. And so you need architectural
+
+94
+00:01:34,150 --> 00:01:34,160
+there. And so you need architectural
+ 
+
+95
+00:01:34,160 --> 00:01:35,990
+there. And so you need architectural
+decision records in your repo to capture
+
+96
+00:01:35,990 --> 00:01:36,000
+decision records in your repo to capture
+ 
+
+97
+00:01:36,000 --> 00:01:38,270
+decision records in your repo to capture
+those. It also can't really explain the
+
+98
+00:01:38,270 --> 00:01:38,280
+those. It also can't really explain the
+ 
+
+99
+00:01:38,280 --> 00:01:40,510
+those. It also can't really explain the
+domain language that you're using to
+
+100
+00:01:40,510 --> 00:01:40,520
+domain language that you're using to
+ 
+
+101
+00:01:40,520 --> 00:01:42,590
+domain language that you're using to
+work with your code. Does it know what
+
+102
+00:01:42,590 --> 00:01:42,600
+work with your code. Does it know what
+ 
+
+103
+00:01:42,600 --> 00:01:45,310
+work with your code. Does it know what
+an order is in your codebase? Probably
+
+104
+00:01:45,310 --> 00:01:45,320
+an order is in your codebase? Probably
+ 
+
+105
+00:01:45,320 --> 00:01:47,910
+an order is in your codebase? Probably
+not. And so a glossary is extremely
+
+106
+00:01:47,910 --> 00:01:47,920
+not. And so a glossary is extremely
+ 
+
+107
+00:01:47,920 --> 00:01:49,830
+not. And so a glossary is extremely
+helpful. And finally, a thin layer of
+
+108
+00:01:49,830 --> 00:01:49,840
+helpful. And finally, a thin layer of
+ 
+
+109
+00:01:49,840 --> 00:01:52,070
+helpful. And finally, a thin layer of
+docs just to navigate around the main
+
+110
+00:01:52,070 --> 00:01:52,080
+docs just to navigate around the main
+ 
+
+111
+00:01:52,080 --> 00:01:54,670
+docs just to navigate around the main
+aspects of your code is really helpful
+
+112
+00:01:54,670 --> 00:01:54,680
+aspects of your code is really helpful
+ 
+
+113
+00:01:54,680 --> 00:01:56,950
+aspects of your code is really helpful
+just to speed up AI's exploration of
+
+114
+00:01:56,950 --> 00:01:56,960
+just to speed up AI's exploration of
+ 
+
+115
+00:01:56,960 --> 00:01:59,030
+just to speed up AI's exploration of
+your code. But the concept of docs as
+
+116
+00:01:59,030 --> 00:01:59,040
+your code. But the concept of docs as
+ 
+
+117
+00:01:59,040 --> 00:02:01,190
+your code. But the concept of docs as
+the source of truth, as the thing that
+
+118
+00:02:01,190 --> 00:02:01,200
+the source of truth, as the thing that
+ 
+
+119
+00:02:01,200 --> 00:02:02,990
+the source of truth, as the thing that
+you read to understand the code, no, I
+
+120
+00:02:02,990 --> 00:02:03,000
+you read to understand the code, no, I
+ 
+
+121
+00:02:03,000 --> 00:02:05,880
+you read to understand the code, no, I
+don't like that at all.
+

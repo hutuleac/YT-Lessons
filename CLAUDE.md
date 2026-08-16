@@ -39,9 +39,13 @@ Things that are easy to get wrong and are not obvious from the code:
 python3 build.py lessons/<id>.py   # one lesson + refresh index
 python3 build.py --all             # everything
 ```
-Every build writes two files per lesson: the scrollable page (`<id>.html`, from `mechanism`) and
-the deck (`<id>-deck.html`, from `skeleton` alone — full-viewport scroll-snapped slides). A note
-with an empty `skeleton` fails the build, because it would render a blank slide.
+Every build writes two files per lesson: the scrollable page (`<id>.html`) and the deck
+(`<id>-deck.html`, full-viewport scroll-snapped slides).
+
+The deck reads the slide-shaped fields — `skeleton`, `numbers`, `analogy`, `practice`,
+`diagrams` — and **never `mechanism`**, whose paragraphs are exactly what makes a page a page.
+One note becomes a divider, a bullets slide, a slide per diagram, and a slide per non-empty
+field. A note with an empty `skeleton` fails the build, because it would render a blank slide.
 
 `build.py` is the renderer for every lesson and is **never edited per lesson** — per-video
 changes go in notes. Same rule as `generate.py` in the brief repo.

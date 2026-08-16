@@ -1,0 +1,665 @@
+1
+00:00:00,080 --> 00:00:01,910
+
+Understanding the context window is like
+
+2
+00:00:01,910 --> 00:00:01,920
+Understanding the context window is like
+ 
+
+3
+00:00:01,920 --> 00:00:04,230
+Understanding the context window is like
+the most key information you can
+
+4
+00:00:04,230 --> 00:00:04,240
+the most key information you can
+ 
+
+5
+00:00:04,240 --> 00:00:06,150
+the most key information you can
+possibly take on if you're a dev working
+
+6
+00:00:06,150 --> 00:00:06,160
+possibly take on if you're a dev working
+ 
+
+7
+00:00:06,160 --> 00:00:08,390
+possibly take on if you're a dev working
+with AI. And yet, a lot of devs are not
+
+8
+00:00:08,390 --> 00:00:08,400
+with AI. And yet, a lot of devs are not
+ 
+
+9
+00:00:08,400 --> 00:00:10,070
+with AI. And yet, a lot of devs are not
+really clear on what a context window
+
+10
+00:00:10,070 --> 00:00:10,080
+really clear on what a context window
+ 
+
+11
+00:00:10,080 --> 00:00:12,390
+really clear on what a context window
+is. If that is you, you are in the right
+
+12
+00:00:12,390 --> 00:00:12,400
+is. If that is you, you are in the right
+ 
+
+13
+00:00:12,400 --> 00:00:14,310
+is. If that is you, you are in the right
+place. The context window is made up of
+
+14
+00:00:14,310 --> 00:00:14,320
+place. The context window is made up of
+ 
+
+15
+00:00:14,320 --> 00:00:16,870
+place. The context window is made up of
+input and output tokens. The input
+
+16
+00:00:16,870 --> 00:00:16,880
+input and output tokens. The input
+ 
+
+17
+00:00:16,880 --> 00:00:18,870
+input and output tokens. The input
+tokens might include a system prompt
+
+18
+00:00:18,870 --> 00:00:18,880
+tokens might include a system prompt
+ 
+
+19
+00:00:18,880 --> 00:00:21,109
+tokens might include a system prompt
+here and let's say a user prompt, the
+
+20
+00:00:21,109 --> 00:00:21,119
+here and let's say a user prompt, the
+ 
+
+21
+00:00:21,119 --> 00:00:22,470
+here and let's say a user prompt, the
+message from the user, and then the
+
+22
+00:00:22,470 --> 00:00:22,480
+message from the user, and then the
+ 
+
+23
+00:00:22,480 --> 00:00:24,630
+message from the user, and then the
+output tokens is whatever the assistant
+
+24
+00:00:24,630 --> 00:00:24,640
+output tokens is whatever the assistant
+ 
+
+25
+00:00:24,640 --> 00:00:26,310
+output tokens is whatever the assistant
+comes back with. This might involve
+
+26
+00:00:26,310 --> 00:00:26,320
+comes back with. This might involve
+ 
+
+27
+00:00:26,320 --> 00:00:28,790
+comes back with. This might involve
+reasoning tokens as well or just pure
+
+28
+00:00:28,790 --> 00:00:28,800
+reasoning tokens as well or just pure
+ 
+
+29
+00:00:28,800 --> 00:00:30,870
+reasoning tokens as well or just pure
+output tokens. The context window is not
+
+30
+00:00:30,870 --> 00:00:30,880
+output tokens. The context window is not
+ 
+
+31
+00:00:30,880 --> 00:00:33,510
+output tokens. The context window is not
+any part of this. It's the whole thing.
+
+32
+00:00:33,510 --> 00:00:33,520
+any part of this. It's the whole thing.
+ 
+
+33
+00:00:33,520 --> 00:00:35,910
+any part of this. It's the whole thing.
+The input and output tokens make up the
+
+34
+00:00:35,910 --> 00:00:35,920
+The input and output tokens make up the
+ 
+
+35
+00:00:35,920 --> 00:00:37,510
+The input and output tokens make up the
+context window. Now, as the conversation
+
+36
+00:00:37,510 --> 00:00:37,520
+context window. Now, as the conversation
+ 
+
+37
+00:00:37,520 --> 00:00:39,430
+context window. Now, as the conversation
+gets longer, as more and more messages
+
+38
+00:00:39,430 --> 00:00:39,440
+gets longer, as more and more messages
+ 
+
+39
+00:00:39,440 --> 00:00:41,110
+gets longer, as more and more messages
+get put into the conversation, the
+
+40
+00:00:41,110 --> 00:00:41,120
+get put into the conversation, the
+ 
+
+41
+00:00:41,120 --> 00:00:43,430
+get put into the conversation, the
+number of tokens used grows. And as you
+
+42
+00:00:43,430 --> 00:00:43,440
+number of tokens used grows. And as you
+ 
+
+43
+00:00:43,440 --> 00:00:45,670
+number of tokens used grows. And as you
+can imagine, this can't go on forever.
+
+44
+00:00:45,670 --> 00:00:45,680
+can imagine, this can't go on forever.
+ 
+
+45
+00:00:45,680 --> 00:00:47,670
+can imagine, this can't go on forever.
+Every model has a hard-coded limit for
+
+46
+00:00:47,670 --> 00:00:47,680
+Every model has a hard-coded limit for
+ 
+
+47
+00:00:47,680 --> 00:00:49,270
+Every model has a hard-coded limit for
+the number of tokens it can see at any
+
+48
+00:00:49,270 --> 00:00:49,280
+the number of tokens it can see at any
+ 
+
+49
+00:00:49,280 --> 00:00:51,590
+the number of tokens it can see at any
+one time. And if we imagine a super long
+
+50
+00:00:51,590 --> 00:00:51,600
+one time. And if we imagine a super long
+ 
+
+51
+00:00:51,600 --> 00:00:53,590
+one time. And if we imagine a super long
+conversation here, eventually we will
+
+52
+00:00:53,590 --> 00:00:53,600
+conversation here, eventually we will
+ 
+
+53
+00:00:53,600 --> 00:00:55,910
+conversation here, eventually we will
+hit a limit. And if you try to query the
+
+54
+00:00:55,910 --> 00:00:55,920
+hit a limit. And if you try to query the
+ 
+
+55
+00:00:55,920 --> 00:00:58,229
+hit a limit. And if you try to query the
+LLM with this super long conversation
+
+56
+00:00:58,229 --> 00:00:58,239
+LLM with this super long conversation
+ 
+
+57
+00:00:58,239 --> 00:00:59,990
+LLM with this super long conversation
+and you hit the limit, then you will
+
+58
+00:00:59,990 --> 00:01:00,000
+and you hit the limit, then you will
+ 
+
+59
+00:01:00,000 --> 00:01:01,270
+and you hit the limit, then you will
+probably get some kind of error back
+
+60
+00:01:01,270 --> 00:01:01,280
+probably get some kind of error back
+ 
+
+61
+00:01:01,280 --> 00:01:03,189
+probably get some kind of error back
+from the API. You might even hit the
+
+62
+00:01:03,189 --> 00:01:03,199
+from the API. You might even hit the
+ 
+
+63
+00:01:03,199 --> 00:01:05,429
+from the API. You might even hit the
+limit during the generation of a
+
+64
+00:01:05,429 --> 00:01:05,439
+limit during the generation of a
+ 
+
+65
+00:01:05,439 --> 00:01:07,510
+limit during the generation of a
+message. So this message might start
+
+66
+00:01:07,510 --> 00:01:07,520
+message. So this message might start
+ 
+
+67
+00:01:07,520 --> 00:01:09,590
+message. So this message might start
+outside the context window limit, but as
+
+68
+00:01:09,590 --> 00:01:09,600
+outside the context window limit, but as
+ 
+
+69
+00:01:09,600 --> 00:01:11,429
+outside the context window limit, but as
+it goes, oh, it carries on carries on
+
+70
+00:01:11,429 --> 00:01:11,439
+it goes, oh, it carries on carries on
+ 
+
+71
+00:01:11,439 --> 00:01:13,270
+it goes, oh, it carries on carries on
+until it hits the context window limit.
+
+72
+00:01:13,270 --> 00:01:13,280
+until it hits the context window limit.
+ 
+
+73
+00:01:13,280 --> 00:01:15,270
+until it hits the context window limit.
+The model itself isn't quite smart
+
+74
+00:01:15,270 --> 00:01:15,280
+The model itself isn't quite smart
+ 
+
+75
+00:01:15,280 --> 00:01:17,030
+The model itself isn't quite smart
+enough to work around its own context
+
+76
+00:01:17,030 --> 00:01:17,040
+enough to work around its own context
+ 
+
+77
+00:01:17,040 --> 00:01:19,109
+enough to work around its own context
+window limits. And so you will hit
+
+78
+00:01:19,109 --> 00:01:19,119
+window limits. And so you will hit
+ 
+
+79
+00:01:19,119 --> 00:01:20,950
+window limits. And so you will hit
+issues like this sometimes. But the
+
+80
+00:01:20,950 --> 00:01:20,960
+issues like this sometimes. But the
+ 
+
+81
+00:01:20,960 --> 00:01:22,550
+issues like this sometimes. But the
+biggest issue with context windows is
+
+82
+00:01:22,550 --> 00:01:22,560
+biggest issue with context windows is
+ 
+
+83
+00:01:22,560 --> 00:01:24,469
+biggest issue with context windows is
+that the bigger they get, the more
+
+84
+00:01:24,469 --> 00:01:24,479
+that the bigger they get, the more
+ 
+
+85
+00:01:24,479 --> 00:01:26,630
+that the bigger they get, the more
+lostinthe-middle issues you get. If we
+
+86
+00:01:26,630 --> 00:01:26,640
+lostinthe-middle issues you get. If we
+ 
+
+87
+00:01:26,640 --> 00:01:28,390
+lostinthe-middle issues you get. If we
+imagine a huge conversation here where
+
+88
+00:01:28,390 --> 00:01:28,400
+imagine a huge conversation here where
+ 
+
+89
+00:01:28,400 --> 00:01:30,149
+imagine a huge conversation here where
+these rings are the individual messages,
+
+90
+00:01:30,149 --> 00:01:30,159
+these rings are the individual messages,
+ 
+
+91
+00:01:30,159 --> 00:01:32,069
+these rings are the individual messages,
+the messages at the start of the history
+
+92
+00:01:32,069 --> 00:01:32,079
+the messages at the start of the history
+ 
+
+93
+00:01:32,079 --> 00:01:33,830
+the messages at the start of the history
+have quite a big impact on the output
+
+94
+00:01:33,830 --> 00:01:33,840
+have quite a big impact on the output
+ 
+
+95
+00:01:33,840 --> 00:01:36,149
+have quite a big impact on the output
+and the ones at the end do too, but the
+
+96
+00:01:36,149 --> 00:01:36,159
+and the ones at the end do too, but the
+ 
+
+97
+00:01:36,159 --> 00:01:38,230
+and the ones at the end do too, but the
+stuff in the middle the LLM pays a bit
+
+98
+00:01:38,230 --> 00:01:38,240
+stuff in the middle the LLM pays a bit
+ 
+
+99
+00:01:38,240 --> 00:01:39,910
+stuff in the middle the LLM pays a bit
+less attention to. This is a well-known
+
+100
+00:01:39,910 --> 00:01:39,920
+less attention to. This is a well-known
+ 
+
+101
+00:01:39,920 --> 00:01:41,830
+less attention to. This is a well-known
+phenomenon and it's much more pronounced
+
+102
+00:01:41,830 --> 00:01:41,840
+phenomenon and it's much more pronounced
+ 
+
+103
+00:01:41,840 --> 00:01:44,069
+phenomenon and it's much more pronounced
+the larger the context window gets. So
+
+104
+00:01:44,069 --> 00:01:44,079
+the larger the context window gets. So
+ 
+
+105
+00:01:44,079 --> 00:01:45,429
+the larger the context window gets. So
+when you're assessing a model, you
+
+106
+00:01:45,429 --> 00:01:45,439
+when you're assessing a model, you
+ 
+
+107
+00:01:45,439 --> 00:01:46,950
+when you're assessing a model, you
+shouldn't just think, "Wow, this context
+
+108
+00:01:46,950 --> 00:01:46,960
+shouldn't just think, "Wow, this context
+ 
+
+109
+00:01:46,960 --> 00:01:48,630
+shouldn't just think, "Wow, this context
+window limit's huge. That's incredible.
+
+110
+00:01:48,630 --> 00:01:48,640
+window limit's huge. That's incredible.
+ 
+
+111
+00:01:48,640 --> 00:01:50,149
+window limit's huge. That's incredible.
+I can put so much stuff in there." that
+
+112
+00:01:50,149 --> 00:01:50,159
+I can put so much stuff in there." that
+ 
+
+113
+00:01:50,159 --> 00:01:51,990
+I can put so much stuff in there." that
+model will still probably have lost in
+
+114
+00:01:51,990 --> 00:01:52,000
+model will still probably have lost in
+ 
+
+115
+00:01:52,000 --> 00:01:53,830
+model will still probably have lost in
+the middle issues. It may even have
+
+116
+00:01:53,830 --> 00:01:53,840
+the middle issues. It may even have
+ 
+
+117
+00:01:53,840 --> 00:01:55,749
+the middle issues. It may even have
+trouble retrieving information from its
+
+118
+00:01:55,749 --> 00:01:55,759
+trouble retrieving information from its
+ 
+
+119
+00:01:55,759 --> 00:01:57,590
+trouble retrieving information from its
+own context window. And so even if that
+
+120
+00:01:57,590 --> 00:01:57,600
+own context window. And so even if that
+ 
+
+121
+00:01:57,600 --> 00:01:59,590
+own context window. And so even if that
+model supports a big context window,
+
+122
+00:01:59,590 --> 00:01:59,600
+model supports a big context window,
+ 
+
+123
+00:01:59,600 --> 00:02:01,190
+model supports a big context window,
+you'll definitely still get better
+
+124
+00:02:01,190 --> 00:02:01,200
+you'll definitely still get better
+ 
+
+125
+00:02:01,200 --> 00:02:03,350
+you'll definitely still get better
+results from using fewer tokens in the
+
+126
+00:02:03,350 --> 00:02:03,360
+results from using fewer tokens in the
+ 
+
+127
+00:02:03,360 --> 00:02:04,709
+results from using fewer tokens in the
+context. So that's what the context
+
+128
+00:02:04,709 --> 00:02:04,719
+context. So that's what the context
+ 
+
+129
+00:02:04,719 --> 00:02:06,630
+context. So that's what the context
+window is and what its limitations are.
+
+130
+00:02:06,630 --> 00:02:06,640
+window is and what its limitations are.
+ 
+
+131
+00:02:06,640 --> 00:02:07,910
+window is and what its limitations are.
+Thanks for watching and I will see you
+
+132
+00:02:07,910 --> 00:02:07,920
+Thanks for watching and I will see you
+ 
+
+133
+00:02:07,920 --> 00:02:10,319
+Thanks for watching and I will see you
+in the next
+

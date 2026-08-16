@@ -1,0 +1,695 @@
+1
+00:00:00,080 --> 00:00:02,070
+
+So many devs are using LLM, but they
+
+2
+00:00:02,070 --> 00:00:02,080
+So many devs are using LLM, but they
+ 
+
+3
+00:00:02,080 --> 00:00:03,669
+So many devs are using LLM, but they
+don't have the first idea about how
+
+4
+00:00:03,669 --> 00:00:03,679
+don't have the first idea about how
+ 
+
+5
+00:00:03,679 --> 00:00:05,829
+don't have the first idea about how
+conversations with them actually work.
+
+6
+00:00:05,829 --> 00:00:05,839
+conversations with them actually work.
+ 
+
+7
+00:00:05,839 --> 00:00:07,990
+conversations with them actually work.
+What is a user message? What is a system
+
+8
+00:00:07,990 --> 00:00:08,000
+What is a user message? What is a system
+ 
+
+9
+00:00:08,000 --> 00:00:10,070
+What is a user message? What is a system
+prompt? What are tool calls? What are
+
+10
+00:00:10,070 --> 00:00:10,080
+prompt? What are tool calls? What are
+ 
+
+11
+00:00:10,080 --> 00:00:12,150
+prompt? What are tool calls? What are
+reasoning tokens? Let's break it down.
+
+12
+00:00:12,150 --> 00:00:12,160
+reasoning tokens? Let's break it down.
+ 
+
+13
+00:00:12,160 --> 00:00:14,230
+reasoning tokens? Let's break it down.
+Now, a simple conversation with an LLM
+
+14
+00:00:14,230 --> 00:00:14,240
+Now, a simple conversation with an LLM
+ 
+
+15
+00:00:14,240 --> 00:00:16,390
+Now, a simple conversation with an LLM
+might look like this. You have user
+
+16
+00:00:16,390 --> 00:00:16,400
+might look like this. You have user
+ 
+
+17
+00:00:16,400 --> 00:00:18,230
+might look like this. You have user
+messages, which are messages from you,
+
+18
+00:00:18,230 --> 00:00:18,240
+messages, which are messages from you,
+ 
+
+19
+00:00:18,240 --> 00:00:20,390
+messages, which are messages from you,
+the user. And LLM messages are called
+
+20
+00:00:20,390 --> 00:00:20,400
+the user. And LLM messages are called
+ 
+
+21
+00:00:20,400 --> 00:00:21,830
+the user. And LLM messages are called
+assistant messages. Now, in this
+
+22
+00:00:21,830 --> 00:00:21,840
+assistant messages. Now, in this
+ 
+
+23
+00:00:21,840 --> 00:00:23,269
+assistant messages. Now, in this
+situation, we're just talking to the
+
+24
+00:00:23,269 --> 00:00:23,279
+situation, we're just talking to the
+ 
+
+25
+00:00:23,279 --> 00:00:25,109
+situation, we're just talking to the
+bare model that the model provider gives
+
+26
+00:00:25,109 --> 00:00:25,119
+bare model that the model provider gives
+ 
+
+27
+00:00:25,119 --> 00:00:26,710
+bare model that the model provider gives
+us. But if we want to customize the
+
+28
+00:00:26,710 --> 00:00:26,720
+us. But if we want to customize the
+ 
+
+29
+00:00:26,720 --> 00:00:29,269
+us. But if we want to customize the
+LLM's behavior, then we can use a system
+
+30
+00:00:29,269 --> 00:00:29,279
+LLM's behavior, then we can use a system
+ 
+
+31
+00:00:29,279 --> 00:00:31,269
+LLM's behavior, then we can use a system
+prompt. These are just messages at the
+
+32
+00:00:31,269 --> 00:00:31,279
+prompt. These are just messages at the
+ 
+
+33
+00:00:31,279 --> 00:00:32,950
+prompt. These are just messages at the
+very start of the history which are
+
+34
+00:00:32,950 --> 00:00:32,960
+very start of the history which are
+ 
+
+35
+00:00:32,960 --> 00:00:35,350
+very start of the history which are
+visible to the LLM, but usually not to
+
+36
+00:00:35,350 --> 00:00:35,360
+visible to the LLM, but usually not to
+ 
+
+37
+00:00:35,360 --> 00:00:37,030
+visible to the LLM, but usually not to
+the user. And they're powerful, too. The
+
+38
+00:00:37,030 --> 00:00:37,040
+the user. And they're powerful, too. The
+ 
+
+39
+00:00:37,040 --> 00:00:38,950
+the user. And they're powerful, too. The
+LLM, if there's a conflict between the
+
+40
+00:00:38,950 --> 00:00:38,960
+LLM, if there's a conflict between the
+ 
+
+41
+00:00:38,960 --> 00:00:40,950
+LLM, if there's a conflict between the
+user and the system prompt, will usually
+
+42
+00:00:40,950 --> 00:00:40,960
+user and the system prompt, will usually
+ 
+
+43
+00:00:40,960 --> 00:00:42,630
+user and the system prompt, will usually
+obey the system prompt. For instance, we
+
+44
+00:00:42,630 --> 00:00:42,640
+obey the system prompt. For instance, we
+ 
+
+45
+00:00:42,640 --> 00:00:44,630
+obey the system prompt. For instance, we
+can tell it to respond in Morse code,
+
+46
+00:00:44,630 --> 00:00:44,640
+can tell it to respond in Morse code,
+ 
+
+47
+00:00:44,640 --> 00:00:46,709
+can tell it to respond in Morse code,
+and then even if we say stop doing Morse
+
+48
+00:00:46,709 --> 00:00:46,719
+and then even if we say stop doing Morse
+ 
+
+49
+00:00:46,719 --> 00:00:49,430
+and then even if we say stop doing Morse
+code, it will reply in Morse code. Of
+
+50
+00:00:49,430 --> 00:00:49,440
+code, it will reply in Morse code. Of
+ 
+
+51
+00:00:49,440 --> 00:00:50,709
+code, it will reply in Morse code. Of
+course, this doesn't always work, and
+
+52
+00:00:50,709 --> 00:00:50,719
+course, this doesn't always work, and
+ 
+
+53
+00:00:50,719 --> 00:00:52,150
+course, this doesn't always work, and
+there's plenty of examples of people
+
+54
+00:00:52,150 --> 00:00:52,160
+there's plenty of examples of people
+ 
+
+55
+00:00:52,160 --> 00:00:53,990
+there's plenty of examples of people
+jailbreaking the system prompt, but this
+
+56
+00:00:53,990 --> 00:00:54,000
+jailbreaking the system prompt, but this
+ 
+
+57
+00:00:54,000 --> 00:00:56,069
+jailbreaking the system prompt, but this
+is at least the theory. Lots of models
+
+58
+00:00:56,069 --> 00:00:56,079
+is at least the theory. Lots of models
+ 
+
+59
+00:00:56,079 --> 00:00:58,470
+is at least the theory. Lots of models
+can send back reasoning tokens where the
+
+60
+00:00:58,470 --> 00:00:58,480
+can send back reasoning tokens where the
+ 
+
+61
+00:00:58,480 --> 00:01:00,069
+can send back reasoning tokens where the
+model appears to think through its
+
+62
+00:01:00,069 --> 00:01:00,079
+model appears to think through its
+ 
+
+63
+00:01:00,079 --> 00:01:01,590
+model appears to think through its
+output before it responds. These
+
+64
+00:01:01,590 --> 00:01:01,600
+output before it responds. These
+ 
+
+65
+00:01:01,600 --> 00:01:03,670
+output before it responds. These
+reasoning tokens are just another part
+
+66
+00:01:03,670 --> 00:01:03,680
+reasoning tokens are just another part
+ 
+
+67
+00:01:03,680 --> 00:01:05,590
+reasoning tokens are just another part
+of the assistant message. This is an
+
+68
+00:01:05,590 --> 00:01:05,600
+of the assistant message. This is an
+ 
+
+69
+00:01:05,600 --> 00:01:07,350
+of the assistant message. This is an
+important concept here that messages can
+
+70
+00:01:07,350 --> 00:01:07,360
+important concept here that messages can
+ 
+
+71
+00:01:07,360 --> 00:01:09,590
+important concept here that messages can
+contain multiple parts. This is useful
+
+72
+00:01:09,590 --> 00:01:09,600
+contain multiple parts. This is useful
+ 
+
+73
+00:01:09,600 --> 00:01:11,590
+contain multiple parts. This is useful
+for file parts, too, where you can send
+
+74
+00:01:11,590 --> 00:01:11,600
+for file parts, too, where you can send
+ 
+
+75
+00:01:11,600 --> 00:01:13,510
+for file parts, too, where you can send
+files to LLMs or like in image
+
+76
+00:01:13,510 --> 00:01:13,520
+files to LLMs or like in image
+ 
+
+77
+00:01:13,520 --> 00:01:15,350
+files to LLMs or like in image
+generation use cases, you can get files
+
+78
+00:01:15,350 --> 00:01:15,360
+generation use cases, you can get files
+ 
+
+79
+00:01:15,360 --> 00:01:17,109
+generation use cases, you can get files
+back from LLMs. For instance, here we're
+
+80
+00:01:17,109 --> 00:01:17,119
+back from LLMs. For instance, here we're
+ 
+
+81
+00:01:17,119 --> 00:01:18,550
+back from LLMs. For instance, here we're
+sending a file to an LLM saying,
+
+82
+00:01:18,550 --> 00:01:18,560
+sending a file to an LLM saying,
+ 
+
+83
+00:01:18,560 --> 00:01:20,630
+sending a file to an LLM saying,
+"Summarize this PDF." And it replies
+
+84
+00:01:20,630 --> 00:01:20,640
+"Summarize this PDF." And it replies
+ 
+
+85
+00:01:20,640 --> 00:01:22,149
+"Summarize this PDF." And it replies
+with a summary. Finally, let's talk
+
+86
+00:01:22,149 --> 00:01:22,159
+with a summary. Finally, let's talk
+ 
+
+87
+00:01:22,159 --> 00:01:24,149
+with a summary. Finally, let's talk
+about tools. With tools, you have the
+
+88
+00:01:24,149 --> 00:01:24,159
+about tools. With tools, you have the
+ 
+
+89
+00:01:24,159 --> 00:01:26,310
+about tools. With tools, you have the
+ability to say, "You have access to a
+
+90
+00:01:26,310 --> 00:01:26,320
+ability to say, "You have access to a
+ 
+
+91
+00:01:26,320 --> 00:01:28,630
+ability to say, "You have access to a
+write file tool to the LLM." This might
+
+92
+00:01:28,630 --> 00:01:28,640
+write file tool to the LLM." This might
+ 
+
+93
+00:01:28,640 --> 00:01:30,390
+write file tool to the LLM." This might
+write a file to our file system or
+
+94
+00:01:30,390 --> 00:01:30,400
+write a file to our file system or
+ 
+
+95
+00:01:30,400 --> 00:01:31,510
+write a file to our file system or
+something. Then the user is going to
+
+96
+00:01:31,510 --> 00:01:31,520
+something. Then the user is going to
+ 
+
+97
+00:01:31,520 --> 00:01:34,390
+something. Then the user is going to
+say, "Write a to-do.md file." The
+
+98
+00:01:34,390 --> 00:01:34,400
+say, "Write a to-do.md file." The
+ 
+
+99
+00:01:34,400 --> 00:01:36,469
+say, "Write a to-do.md file." The
+assistant then produces a tool call
+
+100
+00:01:36,469 --> 00:01:36,479
+assistant then produces a tool call
+ 
+
+101
+00:01:36,479 --> 00:01:39,429
+assistant then produces a tool call
+message. That tool call has an ID on it.
+
+102
+00:01:39,429 --> 00:01:39,439
+message. That tool call has an ID on it.
+ 
+
+103
+00:01:39,439 --> 00:01:41,830
+message. That tool call has an ID on it.
+And it also has an instruction to write
+
+104
+00:01:41,830 --> 00:01:41,840
+And it also has an instruction to write
+ 
+
+105
+00:01:41,840 --> 00:01:44,789
+And it also has an instruction to write
+a file to-do.md with empty contents. Now
+
+106
+00:01:44,789 --> 00:01:44,799
+a file to-do.md with empty contents. Now
+ 
+
+107
+00:01:44,799 --> 00:01:46,870
+a file to-do.md with empty contents. Now
+we in our applications take that tool
+
+108
+00:01:46,870 --> 00:01:46,880
+we in our applications take that tool
+ 
+
+109
+00:01:46,880 --> 00:01:49,270
+we in our applications take that tool
+call and execute it and we send back to
+
+110
+00:01:49,270 --> 00:01:49,280
+call and execute it and we send back to
+ 
+
+111
+00:01:49,280 --> 00:01:52,069
+call and execute it and we send back to
+the LLM a tool result with the same ID
+
+112
+00:01:52,069 --> 00:01:52,079
+the LLM a tool result with the same ID
+ 
+
+113
+00:01:52,079 --> 00:01:54,310
+the LLM a tool result with the same ID
+as the tool call and the result of what
+
+114
+00:01:54,310 --> 00:01:54,320
+as the tool call and the result of what
+ 
+
+115
+00:01:54,320 --> 00:01:56,149
+as the tool call and the result of what
+happened usually as a string. We get
+
+116
+00:01:56,149 --> 00:01:56,159
+happened usually as a string. We get
+ 
+
+117
+00:01:56,159 --> 00:01:57,749
+happened usually as a string. We get
+back from the assistant a summary of
+
+118
+00:01:57,749 --> 00:01:57,759
+back from the assistant a summary of
+ 
+
+119
+00:01:57,759 --> 00:01:59,910
+back from the assistant a summary of
+what happened wrote a to-do.md file
+
+120
+00:01:59,910 --> 00:01:59,920
+what happened wrote a to-do.md file
+ 
+
+121
+00:01:59,920 --> 00:02:01,749
+what happened wrote a to-do.md file
+successfully. So tools are kind of like
+
+122
+00:02:01,749 --> 00:02:01,759
+successfully. So tools are kind of like
+ 
+
+123
+00:02:01,759 --> 00:02:04,069
+successfully. So tools are kind of like
+a conversation between the LLM and our
+
+124
+00:02:04,069 --> 00:02:04,079
+a conversation between the LLM and our
+ 
+
+125
+00:02:04,079 --> 00:02:05,990
+a conversation between the LLM and our
+system where the tool call is the LLM
+
+126
+00:02:05,990 --> 00:02:06,000
+system where the tool call is the LLM
+ 
+
+127
+00:02:06,000 --> 00:02:07,670
+system where the tool call is the LLM
+asking us for something and the tool
+
+128
+00:02:07,670 --> 00:02:07,680
+asking us for something and the tool
+ 
+
+129
+00:02:07,680 --> 00:02:09,350
+asking us for something and the tool
+result is us giving it the information
+
+130
+00:02:09,350 --> 00:02:09,360
+result is us giving it the information
+ 
+
+131
+00:02:09,360 --> 00:02:11,270
+result is us giving it the information
+it needs. That's how AI powered apps
+
+132
+00:02:11,270 --> 00:02:11,280
+it needs. That's how AI powered apps
+ 
+
+133
+00:02:11,280 --> 00:02:13,190
+it needs. That's how AI powered apps
+like claw code and cursor can do things
+
+134
+00:02:13,190 --> 00:02:13,200
+like claw code and cursor can do things
+ 
+
+135
+00:02:13,200 --> 00:02:14,710
+like claw code and cursor can do things
+on your system. If you dig this, then
+
+136
+00:02:14,710 --> 00:02:14,720
+on your system. If you dig this, then
+ 
+
+137
+00:02:14,720 --> 00:02:15,910
+on your system. If you dig this, then
+I've been sharing a lot of this stuff on
+
+138
+00:02:15,910 --> 00:02:15,920
+I've been sharing a lot of this stuff on
+ 
+
+139
+00:02:15,920 --> 00:02:18,800
+I've been sharing a lot of this stuff on
+aihero.dev.
+

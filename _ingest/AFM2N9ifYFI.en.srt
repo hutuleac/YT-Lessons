@@ -1,0 +1,395 @@
+1
+00:00:00,080 --> 00:00:01,670
+
+Most people think that LLMs can really
+
+2
+00:00:01,670 --> 00:00:01,680
+Most people think that LLMs can really
+ 
+
+3
+00:00:01,680 --> 00:00:03,590
+Most people think that LLMs can really
+only produce text and they don't think
+
+4
+00:00:03,590 --> 00:00:03,600
+only produce text and they don't think
+ 
+
+5
+00:00:03,600 --> 00:00:05,110
+only produce text and they don't think
+about the second thing they're really
+
+6
+00:00:05,110 --> 00:00:05,120
+about the second thing they're really
+ 
+
+7
+00:00:05,120 --> 00:00:07,190
+about the second thing they're really
+good at, which is producing structured
+
+8
+00:00:07,190 --> 00:00:07,200
+good at, which is producing structured
+ 
+
+9
+00:00:07,200 --> 00:00:09,430
+good at, which is producing structured
+outputs. I have here an invoice that I'm
+
+10
+00:00:09,430 --> 00:00:09,440
+outputs. I have here an invoice that I'm
+ 
+
+11
+00:00:09,440 --> 00:00:11,350
+outputs. I have here an invoice that I'm
+going to pass to the LLM to extract out
+
+12
+00:00:11,350 --> 00:00:11,360
+going to pass to the LLM to extract out
+ 
+
+13
+00:00:11,360 --> 00:00:13,110
+going to pass to the LLM to extract out
+the information because it's in a PDF
+
+14
+00:00:13,110 --> 00:00:13,120
+the information because it's in a PDF
+ 
+
+15
+00:00:13,120 --> 00:00:15,190
+the information because it's in a PDF
+and I can't put a PDF in a database to
+
+16
+00:00:15,190 --> 00:00:15,200
+and I can't put a PDF in a database to
+ 
+
+17
+00:00:15,200 --> 00:00:16,550
+and I can't put a PDF in a database to
+work out when the last time I bought
+
+18
+00:00:16,550 --> 00:00:16,560
+work out when the last time I bought
+ 
+
+19
+00:00:16,560 --> 00:00:18,230
+work out when the last time I bought
+oranges was, for instance. I'm going to
+
+20
+00:00:18,230 --> 00:00:18,240
+oranges was, for instance. I'm going to
+ 
+
+21
+00:00:18,240 --> 00:00:19,830
+oranges was, for instance. I'm going to
+take that invoice and read it into
+
+22
+00:00:19,830 --> 00:00:19,840
+take that invoice and read it into
+ 
+
+23
+00:00:19,840 --> 00:00:21,670
+take that invoice and read it into
+memory here using Node. Then I'm going
+
+24
+00:00:21,670 --> 00:00:21,680
+memory here using Node. Then I'm going
+ 
+
+25
+00:00:21,680 --> 00:00:24,710
+memory here using Node. Then I'm going
+to pass that to Claude 3.7 Sonnet. Here
+
+26
+00:00:24,710 --> 00:00:24,720
+to pass that to Claude 3.7 Sonnet. Here
+ 
+
+27
+00:00:24,720 --> 00:00:27,029
+to pass that to Claude 3.7 Sonnet. Here
+I'm using the AISDK generate text and
+
+28
+00:00:27,029 --> 00:00:27,039
+I'm using the AISDK generate text and
+ 
+
+29
+00:00:27,039 --> 00:00:28,630
+I'm using the AISDK generate text and
+TypeScript. Of course, now we're using
+
+30
+00:00:28,630 --> 00:00:28,640
+TypeScript. Of course, now we're using
+ 
+
+31
+00:00:28,640 --> 00:00:30,070
+TypeScript. Of course, now we're using
+generate text here, which of course
+
+32
+00:00:30,070 --> 00:00:30,080
+generate text here, which of course
+ 
+
+33
+00:00:30,080 --> 00:00:31,830
+generate text here, which of course
+means we're going to get a text output.
+
+34
+00:00:31,830 --> 00:00:31,840
+means we're going to get a text output.
+ 
+
+35
+00:00:31,840 --> 00:00:33,270
+means we're going to get a text output.
+And that's fine. When I run this, I get
+
+36
+00:00:33,270 --> 00:00:33,280
+And that's fine. When I run this, I get
+ 
+
+37
+00:00:33,280 --> 00:00:34,709
+And that's fine. When I run this, I get
+a nice little summary of everything in
+
+38
+00:00:34,709 --> 00:00:34,719
+a nice little summary of everything in
+ 
+
+39
+00:00:34,719 --> 00:00:36,310
+a nice little summary of everything in
+the PDF, but instead I'm going to swap
+
+40
+00:00:36,310 --> 00:00:36,320
+the PDF, but instead I'm going to swap
+ 
+
+41
+00:00:36,320 --> 00:00:39,190
+the PDF, but instead I'm going to swap
+generate text for generate object. And
+
+42
+00:00:39,190 --> 00:00:39,200
+generate text for generate object. And
+ 
+
+43
+00:00:39,200 --> 00:00:40,950
+generate text for generate object. And
+I'm going to pass it a Zod schema for
+
+44
+00:00:40,950 --> 00:00:40,960
+I'm going to pass it a Zod schema for
+ 
+
+45
+00:00:40,960 --> 00:00:43,030
+I'm going to pass it a Zod schema for
+the things I want to get back from my
+
+46
+00:00:43,030 --> 00:00:43,040
+the things I want to get back from my
+ 
+
+47
+00:00:43,040 --> 00:00:44,869
+the things I want to get back from my
+query. I want to know all the items I
+
+48
+00:00:44,869 --> 00:00:44,879
+query. I want to know all the items I
+ 
+
+49
+00:00:44,879 --> 00:00:47,190
+query. I want to know all the items I
+purchased in an array of name, quantity,
+
+50
+00:00:47,190 --> 00:00:47,200
+purchased in an array of name, quantity,
+ 
+
+51
+00:00:47,200 --> 00:00:48,709
+purchased in an array of name, quantity,
+and price. I want to know the total
+
+52
+00:00:48,709 --> 00:00:48,719
+and price. I want to know the total
+ 
+
+53
+00:00:48,719 --> 00:00:49,990
+and price. I want to know the total
+amount I spent, and I want to know the
+
+54
+00:00:49,990 --> 00:00:50,000
+amount I spent, and I want to know the
+ 
+
+55
+00:00:50,000 --> 00:00:52,069
+amount I spent, and I want to know the
+currency. This will use the structured
+
+56
+00:00:52,069 --> 00:00:52,079
+currency. This will use the structured
+ 
+
+57
+00:00:52,079 --> 00:00:54,389
+currency. This will use the structured
+outputs feature of that model if it has
+
+58
+00:00:54,389 --> 00:00:54,399
+outputs feature of that model if it has
+ 
+
+59
+00:00:54,399 --> 00:00:56,310
+outputs feature of that model if it has
+it. It will convert this schema into
+
+60
+00:00:56,310 --> 00:00:56,320
+it. It will convert this schema into
+ 
+
+61
+00:00:56,320 --> 00:00:58,790
+it. It will convert this schema into
+JSON schema to pass it to the model and
+
+62
+00:00:58,790 --> 00:00:58,800
+JSON schema to pass it to the model and
+ 
+
+63
+00:00:58,800 --> 00:01:00,950
+JSON schema to pass it to the model and
+then we'll also use ZOD to validate the
+
+64
+00:01:00,950 --> 00:01:00,960
+then we'll also use ZOD to validate the
+ 
+
+65
+00:01:00,960 --> 00:01:02,470
+then we'll also use ZOD to validate the
+thing that we get back. This means that
+
+66
+00:01:02,470 --> 00:01:02,480
+thing that we get back. This means that
+ 
+
+67
+00:01:02,480 --> 00:01:04,789
+thing that we get back. This means that
+when we run this we get back this entire
+
+68
+00:01:04,789 --> 00:01:04,799
+when we run this we get back this entire
+ 
+
+69
+00:01:04,799 --> 00:01:06,789
+when we run this we get back this entire
+object which is both runtime safe
+
+70
+00:01:06,789 --> 00:01:06,799
+object which is both runtime safe
+ 
+
+71
+00:01:06,799 --> 00:01:08,789
+object which is both runtime safe
+because it's being validated by ZOD but
+
+72
+00:01:08,789 --> 00:01:08,799
+because it's being validated by ZOD but
+ 
+
+73
+00:01:08,799 --> 00:01:10,630
+because it's being validated by ZOD but
+also type safe because the types are
+
+74
+00:01:10,630 --> 00:01:10,640
+also type safe because the types are
+ 
+
+75
+00:01:10,640 --> 00:01:13,350
+also type safe because the types are
+being inferred from ZOD. Beautiful. So
+
+76
+00:01:13,350 --> 00:01:13,360
+being inferred from ZOD. Beautiful. So
+ 
+
+77
+00:01:13,360 --> 00:01:15,270
+being inferred from ZOD. Beautiful. So
+structured outputs with the ASDK is
+
+78
+00:01:15,270 --> 00:01:15,280
+structured outputs with the ASDK is
+ 
+
+79
+00:01:15,280 --> 00:01:18,880
+structured outputs with the ASDK is
+really simple and really powerful.
+

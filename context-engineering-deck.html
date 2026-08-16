@@ -137,54 +137,119 @@ footer a{color:var(--muted)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
 
-html{scroll-snap-type:y mandatory}
+html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
 body{font-family:var(--sans)}
 .slide{
-  min-height:100dvh; scroll-snap-align:start; display:flex; flex-direction:column;
-  justify-content:center; padding:clamp(30px,5vw,80px); border-bottom:1px solid var(--line);
-  position:relative
+  min-height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(58px,7vh,96px) clamp(30px,5vw,86px); position:relative; overflow:hidden
 }
 .slide>*{max-width:none}
+
+/* ---- slide chrome: the same bar on every slide, the way a deck master works ---- */
 .tick{
-  position:absolute; top:clamp(20px,3vw,40px); left:clamp(30px,5vw,80px); right:clamp(30px,5vw,80px);
-  display:flex; justify-content:space-between; gap:20px;
+  position:absolute; top:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
   font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
 }
 .tick s{text-decoration:none; color:var(--signal)}
-.slide h1{font-size:clamp(34px,7vw,86px); margin:0 0 clamp(20px,3vh,34px)}
-.slide h2{font-size:clamp(30px,6vw,72px); margin:0 0 clamp(18px,3vh,30px)}
-.slide .lead{
-  font-family:var(--serif); font-size:clamp(19px,2.4vw,30px); line-height:1.45;
-  color:var(--muted); margin:0; max-width:34ch
+.foot{
+  position:absolute; bottom:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  align-items:center; font:400 11px/1 var(--mono); color:var(--muted)
 }
-.slide .lead em{font-style:normal; color:var(--ink)}
-.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.2vh,26px)}
+.foot em{font-style:normal; letter-spacing:.06em}
+.bar{position:absolute; left:0; right:0; bottom:0; height:3px; background:var(--line)}
+.bar i{display:block; height:100%; background:var(--signal)}
+
+/* ---- kinds ---- */
+.k-title, .k-section, .k-close{background:var(--surface)}
+/* The divider is the one slide with room to spare, so it splits: number left, concept right. */
+@media (min-width:1000px){
+  .k-section{display:grid; grid-template-columns:minmax(200px,22%) 1fr;
+             gap:clamp(30px,4vw,70px); align-items:center; align-content:center}
+  .k-section .idx{grid-row:1 / span 3; align-self:start; margin:0}
+  .k-section h2, .k-section .lead, .k-section .src{grid-column:2}
+}
+.k-section .idx{
+  font:600 clamp(64px,13vw,180px)/0.82 var(--mono); letter-spacing:-.05em;
+  color:var(--line); margin:0 0 clamp(14px,2vh,26px)
+}
+.slide h1{font-size:clamp(34px,6.4vw,84px); margin:0 0 clamp(18px,3vh,32px)}
+.slide h2{font-size:clamp(28px,5vw,64px); margin:0 0 clamp(16px,2.6vh,28px)}
+.k-bullets h2, .k-do h2, .k-figs h2{font-size:clamp(22px,3.2vw,40px); color:var(--muted)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.3vw,30px); line-height:1.42;
+  color:var(--muted); margin:0; max-width:36ch
+}
+.k-close .lead{color:var(--ink); max-width:44ch}
+.k-title .audience{margin-top:clamp(20px,3vh,36px); font-size:clamp(12px,1.2vw,15px)}
+
+/* ---- bullets ---- */
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.6vh,30px); counter-reset:b}
 .bul li{
-  font-size:clamp(20px,2.8vw,38px); line-height:1.25; padding-left:1.4em; position:relative;
-  text-wrap:balance
+  font-size:clamp(21px,2.9vw,42px); line-height:1.22; padding-left:1.5em; position:relative;
+  text-wrap:balance; counter-increment:b
 }
 .bul li::before{
-  content:counter(list-item); position:absolute; left:0; top:.28em;
-  font:500 .45em var(--mono); color:var(--signal); letter-spacing:.1em
+  content:counter(b); position:absolute; left:0; top:.3em;
+  font:500 .42em var(--mono); color:var(--signal); letter-spacing:.1em
 }
+
+/* ---- big numbers ---- */
+.nums{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(20px,3vw,44px)}
+.nums div{border-top:2px solid var(--line); padding-top:clamp(12px,2vh,20px)}
+.nums b{display:block; font:600 clamp(34px,5.4vw,68px)/1 var(--mono); letter-spacing:-.04em; color:var(--sand)}
+.nums i{display:block; font:400 clamp(12px,1.2vw,15px) var(--mono); font-style:normal; color:var(--muted); margin:10px 0 8px}
+.nums span{font-size:clamp(13px,1.3vw,17px); line-height:1.4; color:var(--muted)}
+
+/* ---- quote ---- */
+.k-quote q{
+  display:block; quotes:none; font-family:var(--serif); font-size:clamp(28px,4.6vw,62px);
+  line-height:1.22; border-left:3px solid var(--signal); padding-left:clamp(20px,2.6vw,40px);
+  text-wrap:balance
+}
+.k-quote p{
+  margin:clamp(18px,3vh,32px) 0 0 clamp(23px,2.9vw,43px); color:var(--muted);
+  font-size:clamp(14px,1.5vw,20px); max-width:52ch
+}
+
+/* ---- what to do ---- */
+.acts{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.4vh,26px);
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.acts li{
+  font-size:clamp(16px,1.8vw,24px); line-height:1.35; padding-left:1.5em; position:relative;
+  background:var(--surface-2); border-radius:8px; padding:clamp(16px,2vh,24px) clamp(18px,2vw,26px)
+              clamp(16px,2vh,24px) clamp(38px,3.4vw,52px)
+}
+.acts li::before{
+  content:"\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
+  color:var(--interference); font-family:var(--mono)
+}
+
+/* ---- diagrams ---- */
 /* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
    Twice the page's cap is the ceiling that stays proportionate on a projector. */
-.slide .plate{padding:clamp(20px,3vw,40px); max-width:1120px; margin:0 auto; width:100%}
+.slide figure{margin:0 auto; padding:0; max-width:1180px; width:100%}
+.slide .plate{padding:clamp(20px,3vw,42px); width:100%}
 .slide .plate svg{max-width:1040px}
-.slide figcaption{max-width:1120px; margin:22px auto 0; text-align:center}
-.slide figcaption b{font-size:clamp(14px,1.4vw,20px)}
+.slide figcaption{margin:clamp(16px,2.4vh,26px) auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(15px,1.5vw,21px)}
 .slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
-.slide figure{margin:0; padding:0; max-width:none}
-.end{background:var(--surface)}
-.end .lead{max-width:44ch; color:var(--ink)}
-.slide .src{max-width:none; margin:clamp(24px,4vh,44px) 0 0; padding:0}
-@media print{html{scroll-snap-type:none} .slide{min-height:auto; page-break-after:always}}
+
+.slide .src{max-width:none; margin:clamp(22px,4vh,44px) 0 0; padding:0}
+@media print{
+  html{scroll-snap-type:none}
+  .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
+  .bar{display:none}
+}
 </style>
 </head>
 <body>
-<section class="slide "><div class="tick"><span>Context engineering</span><s>1 / 11</s></div><h1>Why your agent gets dumber the longer you talk to it</h1><p class="lead">Every model degrades as its context fills. Once you can see the mechanism, three unrelated-looking failures turn out to be the same problem — and the fixes stop being guesswork.</p></section>
-<section class="slide "><div class="tick"><span>The dumb zone</span><s>2 / 11</s></div><h2>The dumb zone</h2><ol class="bul"><li>A 1M-token window is not 1M tokens of usable work.</li><li>Add a token and the model tracks every relationship it has to every other token.</li><li>Performance sinks gradually — there is no cliff, so nothing warns you.</li><li>Rule of thumb: the dumb zone starts around 150k tokens.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/sOd7svdu_1I" target="_blank" rel="noopener">Matt Pocock &middot; What is the dumb zone? &#8599;</a></div></section>
-<section class="slide "><div class="tick"><span>The dumb zone</span><s>3 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 340 190" role="img"
+<section class="slide k-title"><div class="tick"><span>Context engineering</span><s>1 / 23</s></div><h1>Why your agent gets dumber the longer you talk to it</h1><p class="lead">Every model degrades as its context fills. Once you can see the mechanism, three unrelated-looking failures turn out to be the same problem — and the fixes stop being guesswork.</p><p class="audience">You use a coding agent daily and have watched it get worse mid-session without knowing why.</p><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:4.3%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>The dumb zone</span><s>2 / 23</s></div><p class="idx">01</p><h2>The dumb zone</h2><p class="lead">Every model degrades as its context window fills, so a large window has a usable region and a wasteful one — the dumb zone is where you stop getting your tokens' worth.</p><div class="src"><a href="https://www.youtube.com/shorts/sOd7svdu_1I" target="_blank" rel="noopener">Matt Pocock &middot; What is the dumb zone? &middot; 1:47 &#8599;</a></div><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:8.7%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>The dumb zone</span><s>3 / 23</s></div><h2>The dumb zone</h2><ol class="bul"><li>A 1M-token window is not 1M tokens of usable work.</li><li>Add a token and the model tracks every relationship it has to every other token.</li><li>Performance sinks gradually — there is no cliff, so nothing warns you.</li><li>Rule of thumb: the dumb zone starts around 150k tokens.</li></ol><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:13.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>The dumb zone</span><s>4 / 23</s></div><figure><div class="plate"><svg viewBox="0 0 340 190" role="img"
   aria-label="Two node graphs. Five nodes joined by ten lines; ten nodes joined by forty-five lines.">
   <g><line x1="78.0" y1="34.0" x2="127.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="78.0" y1="34.0" x2="108.6" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="78.0" y1="34.0" x2="47.4" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="78.0" y1="34.0" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="127.5" y1="69.9" x2="108.6" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="127.5" y1="69.9" x2="47.4" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="127.5" y1="69.9" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="108.6" y1="128.1" x2="47.4" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="108.6" y1="128.1" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="47.4" y1="128.1" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><circle cx="78.0" cy="34.0" r="5.5" fill="var(--signal)"/><circle cx="127.5" cy="69.9" r="5.5" fill="var(--signal)"/><circle cx="108.6" cy="128.1" r="5.5" fill="var(--signal)"/><circle cx="47.4" cy="128.1" r="5.5" fill="var(--signal)"/><circle cx="28.5" cy="69.9" r="5.5" fill="var(--signal)"/></g>
   <g><line x1="250.0" y1="24.0" x2="286.4" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="309.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="309.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="309.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="309.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="309.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="213.6" y1="136.2" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="213.6" y1="136.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="213.6" y1="136.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="191.0" y1="105.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="191.0" y1="105.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="191.0" y1="66.8" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><circle cx="250.0" cy="24.0" r="5.5" fill="var(--signal)"/><circle cx="286.4" cy="35.8" r="5.5" fill="var(--signal)"/><circle cx="309.0" cy="66.8" r="5.5" fill="var(--signal)"/><circle cx="309.0" cy="105.2" r="5.5" fill="var(--signal)"/><circle cx="286.4" cy="136.2" r="5.5" fill="var(--signal)"/><circle cx="250.0" cy="148.0" r="5.5" fill="var(--signal)"/><circle cx="213.6" cy="136.2" r="5.5" fill="var(--signal)"/><circle cx="191.0" cy="105.2" r="5.5" fill="var(--signal)"/><circle cx="191.0" cy="66.8" r="5.5" fill="var(--signal)"/><circle cx="213.6" cy="35.8" r="5.5" fill="var(--signal)"/></g>
@@ -192,8 +257,8 @@ body{font-family:var(--sans)}
   <text x="78" y="182" class="d-num" text-anchor="middle">10 relationships</text>
   <text x="250" y="168" class="d-label" text-anchor="middle">10 tokens</text>
   <text x="250" y="182" class="d-num" text-anchor="middle">45 relationships</text>
-</svg></div><figcaption><b>Tokens grow in a line. Relationships grow as a square.</b><span>5 tokens → 10 relationships. 10 tokens → 45. The model tracks the edges, not the dots, and the edges are what run out.</span></figcaption></figure></section>
-<section class="slide "><div class="tick"><span>The dumb zone</span><s>4 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 420 200" role="img"
+</svg></div><figcaption><b>Tokens grow in a line. Relationships grow as a square.</b><span>5 tokens → 10 relationships. 10 tokens → 45. The model tracks the edges, not the dots, and the edges are what run out.</span></figcaption></figure><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:17.4%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>The dumb zone</span><s>5 / 23</s></div><figure><div class="plate"><svg viewBox="0 0 420 200" role="img"
   aria-label="A curve of agent quality descending as context fills, with a smart zone on the left and a dumb zone on the right divided near 150k tokens.">
   <defs>
     <linearGradient id="zoneFade" x1="0" x2="1">
@@ -215,9 +280,12 @@ body{font-family:var(--sans)}
   <text x="322" y="160" class="d-label" text-anchor="middle">dumb zone</text>
   <text x="14" y="82" class="d-label" text-anchor="middle" transform="rotate(-90 14 82)">quality</text>
   <text x="216" y="186" class="d-label" text-anchor="middle">context window filling &#8594;</text>
-</svg></div><figcaption><b>There is no cliff, which is the problem</b><span>Quality sinks gradually as the window fills. Nothing errors and nothing warns you — you simply stop getting your tokens' worth.</span></figcaption></figure></section>
-<section class="slide "><div class="tick"><span>Tool definitions are context</span><s>5 / 11</s></div><h2>Tool definitions are context</h2><ol class="bul"><li>The more tools you give an LLM, the worse it performs.</li><li>A tool is not code to the model — it is a title, a description and a JSON schema.</li><li>All of it sits in the system prompt, above everything else you sent.</li><li>Six to eight is fine. Dozens fills the window before you have said anything.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/_1KrC_5Xv4s" target="_blank" rel="noopener">Matt Pocock &middot; Stop giving your LLM more tools &#8599;</a></div></section>
-<section class="slide "><div class="tick"><span>Tool definitions are context</span><s>6 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 420 176" role="img"
+</svg></div><figcaption><b>There is no cliff, which is the problem</b><span>Quality sinks gradually as the window fills. Nothing errors and nothing warns you — you simply stop getting your tokens' worth.</span></figcaption></figure><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:21.7%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>The dumb zone</span><s>6 / 23</s></div><h2>By the numbers</h2><div class="nums"><div><b>~150k</b><i>tokens</i><span>working rule of thumb for where the dumb zone starts</span></div><div><b>~100k</b><i>tokens</i><span>the same rule of thumb six months earlier — it is moving</span></div><div><b>10</b><i>relationships</i><span>produced by just 5 tokens</span></div><div><b>~50M</b><i>relationships</i><span>produced by 10,000 tokens</span></div></div><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:26.1%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The dumb zone</span><s>7 / 23</s></div><h2>What to do</h2><ul class="acts"><li>Break work into small chunks and run each in a fresh context window — fewer tokens spent, better results.</li><li>Treat arrival in the dumb zone as a signal to clear, compact, or hand off to a new session.</li><li>Not every task needs the smart zone. Cheap, mechanical work can run in the dumb zone on purpose.</li><li>Redesign workflows so tasks don't need that much context in the first place.</li></ul><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:30.4%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Tool definitions are context</span><s>8 / 23</s></div><p class="idx">02</p><h2>Tool definitions are context</h2><p class="lead">Every tool you hand an agent is text pinned to the top of its system prompt, so more tools means less room and worse tool choice — the opposite of what adding a tool is meant to do.</p><div class="src"><a href="https://www.youtube.com/shorts/_1KrC_5Xv4s" target="_blank" rel="noopener">Matt Pocock &middot; Stop giving your LLM more tools &middot; 1:12 &#8599;</a></div><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:34.8%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Tool definitions are context</span><s>9 / 23</s></div><h2>Tool definitions are context</h2><ol class="bul"><li>The more tools you give an LLM, the worse it performs.</li><li>A tool is not code to the model — it is a title, a description and a JSON schema.</li><li>All of it sits in the system prompt, above everything else you sent.</li><li>Six to eight is fine. Dozens fills the window before you have said anything.</li></ol><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:39.1%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Tool definitions are context</span><s>10 / 23</s></div><figure><div class="plate"><svg viewBox="0 0 420 176" role="img"
   aria-label="Two stacked bars representing a system prompt. With eight tools, definitions take a small top slice and most space is left for work. With forty tools, definitions consume most of the bar.">
   <text x="0" y="14" class="d-label">8 tools</text>
   <rect x="0" y="22" width="420" height="34" rx="3" fill="var(--surface-2)"/>
@@ -231,9 +299,12 @@ body{font-family:var(--sans)}
   <text x="165" y="123" class="d-num" text-anchor="middle">tool definitions</text>
   <text x="375" y="123" class="d-label" text-anchor="middle">what's left</text>
   <text x="0" y="164" class="d-label">Same window. The task now starts 78% of the way in.</text>
-</svg></div><figcaption><b>What a tool costs before it does anything</b><span>Definitions are pinned above your actual prompt. Add enough of them and the task arrives already deep in the window.</span></figcaption></figure></section>
-<section class="slide "><div class="tick"><span>Skill hell</span><s>7 / 11</s></div><h2>Skill hell</h2><ol class="bul"><li>After framework hell and tutorial hell: skill hell.</li><li>Cobbling several agent frameworks together until none of them works.</li><li>The failure is mechanical — it is all one context window.</li><li>Skills should empower the user, not the agent.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/32LyZyFQhCQ" target="_blank" rel="noopener">Matt Pocock &middot; Framework Hell, Tutorial Hell... now Skill Hell &#8599;</a></div></section>
-<section class="slide "><div class="tick"><span>Skill hell</span><s>8 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 520 214" role="img"
+</svg></div><figcaption><b>What a tool costs before it does anything</b><span>Definitions are pinned above your actual prompt. Add enough of them and the task arrives already deep in the window.</span></figcaption></figure><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:43.5%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Tool definitions are context</span><s>11 / 23</s></div><h2>By the numbers</h2><div class="nums"><div><b>6–8</b><i>tools</i><span>roughly where it still works, depending on the model</span></div><div><b>12</b><i>tools</i><span>enough to start causing selection problems</span></div></div><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:47.8%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Tool definitions are context</span><s>12 / 23</s></div><h2>What to do</h2><ul class="acts"><li>Keep only the tools a task actually needs in the system prompt.</li><li>Disable unused MCP tools — VS Code and Cursor both let you toggle them per tool, not just per server.</li><li>Audit after connecting a new MCP server: assume it added more than you think.</li></ul><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:52.2%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Skill hell</span><s>13 / 23</s></div><p class="idx">03</p><h2>Skill hell</h2><p class="lead">Stacking every agent framework you can find into one context window at once — the same overload as tool bloat, arriving through process instead of tools.</p><div class="src"><a href="https://www.youtube.com/shorts/32LyZyFQhCQ" target="_blank" rel="noopener">Matt Pocock &middot; Framework Hell, Tutorial Hell... now Skill Hell &middot; 1:30 &#8599;</a></div><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:56.5%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Skill hell</span><s>14 / 23</s></div><h2>Skill hell</h2><ol class="bul"><li>After framework hell and tutorial hell: skill hell.</li><li>Cobbling several agent frameworks together until none of them works.</li><li>The failure is mechanical — it is all one context window.</li><li>Skills should empower the user, not the agent.</li></ol><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:60.9%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Skill hell</span><s>15 / 23</s></div><figure><div class="plate"><svg viewBox="0 0 520 214" role="img"
   aria-label="Top: five skills loaded into a single context window that overflows. Bottom: the same skills run as three sequential stages, each in its own small context window.">
   <text x="0" y="12" class="d-label">ALL AT ONCE</text>
   <rect x="0" y="22" width="520" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
@@ -258,9 +329,12 @@ body{font-family:var(--sans)}
   <rect x="374" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
   <text x="473" y="160" class="d-label" text-anchor="middle">room</text>
   <text x="0" y="196" class="d-label">one stage at a time, each in a window that fits it</text>
-</svg></div><figcaption><b>Same skills, two ways of loading them</b><span>Stacked, they compete for one window and push the work into the dumb zone. Sequenced, each stage gets a window that fits it.</span></figcaption></figure></section>
-<section class="slide "><div class="tick"><span>Factuality vs faithfulness</span><s>9 / 11</s></div><h2>Factuality vs faithfulness</h2><ol class="bul"><li>Hallucinations are probably inherent to LLMs. Diagnose, don't hope.</li><li>Ask one question: was the information in context?</li><li>It wasn't → factuality. The model was recalling. Load the information.</li><li>It was → faithfulness. The model drifted. Get out of the dumb zone.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/H-JHumbpORI" target="_blank" rel="noopener">Matt Pocock &middot; My agent hallucinated - what do I do? &#8599;</a></div></section>
-<section class="slide "><div class="tick"><span>Factuality vs faithfulness</span><s>10 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 420 232" role="img"
+</svg></div><figcaption><b>Same skills, two ways of loading them</b><span>Stacked, they compete for one window and push the work into the dumb zone. Sequenced, each stage gets a window that fits it.</span></figcaption></figure><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:65.2%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Skill hell</span><s>16 / 23</s></div><q>You should have your hand on the steering wheel.</q><p>The test for any skill or framework: does it give you a repeatable version of your own process, or does it hand the process to the agent and ask you to trust the result?</p><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:69.6%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Skill hell</span><s>17 / 23</s></div><h2>What to do</h2><ul class="acts"><li>Run one framework properly instead of three partially — overlap is what floods the window.</li><li>Read a skill before installing it. Loading it to see if it works is the whole failure mode.</li><li>Judge a skill by whether it makes your process repeatable, not by how autonomous it is.</li><li>Sequence stages so each loads only what it needs, then delegate the stage and step away.</li></ul><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:73.9%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Factuality vs faithfulness</span><s>18 / 23</s></div><p class="idx">04</p><h2>Factuality vs faithfulness</h2><p class="lead">One question splits every hallucination into two kinds with two different fixes: was the information in the context window at all?</p><div class="src"><a href="https://www.youtube.com/shorts/H-JHumbpORI" target="_blank" rel="noopener">Matt Pocock &middot; My agent hallucinated - what do I do? &middot; 1:32 &#8599;</a></div><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:78.3%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Factuality vs faithfulness</span><s>19 / 23</s></div><h2>Factuality vs faithfulness</h2><ol class="bul"><li>Hallucinations are probably inherent to LLMs. Diagnose, don't hope.</li><li>Ask one question: was the information in context?</li><li>It wasn't → factuality. The model was recalling. Load the information.</li><li>It was → faithfulness. The model drifted. Get out of the dumb zone.</li></ol><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:82.6%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Factuality vs faithfulness</span><s>20 / 23</s></div><figure><div class="plate"><svg viewBox="0 0 420 232" role="img"
   aria-label="Decision tree. Starting from a hallucination, ask whether the information was in the context window. If no, it is a factuality hallucination, fixed by loading the information. If yes, it is a faithfulness hallucination, fixed by leaving the dumb zone.">
   <rect x="128" y="4" width="164" height="34" rx="17" fill="var(--surface-2)" stroke="var(--line)"/>
   <text x="210" y="26" class="d-node" text-anchor="middle">a hallucination</text>
@@ -289,7 +363,9 @@ body{font-family:var(--sans)}
   <rect x="212" y="180" width="196" height="40" rx="6" fill="none" stroke="var(--signal)"/>
   <text x="310" y="199" class="d-fix" text-anchor="middle">leave the dumb zone</text>
   <text x="310" y="213" class="d-label" text-anchor="middle">clear · compact · hand off</text>
-</svg></div><figcaption><b>One question, two hallucinations</b><span>The split is diagnostic, not academic — the two branches have entirely different fixes, and re-prompting only helps on the left.</span></figcaption></figure></section>
-<section class="slide end"><div class="tick"><span>In one move</span><s>11 / 11</s></div><h2>The whole lesson in one move</h2><p class="lead">There is one resource, it degrades as it fills, and almost every fix is the same fix: put less in the window. Fewer tools, smaller tasks, fresh sessions. The threshold moves as models improve — the mechanism doesn't.</p></section>
+</svg></div><figcaption><b>One question, two hallucinations</b><span>The split is diagnostic, not academic — the two branches have entirely different fixes, and re-prompting only helps on the left.</span></figcaption></figure><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:87.0%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Factuality vs faithfulness</span><s>21 / 23</s></div><q>It's more like they have a fuzzy JPEG of the entirety of human knowledge.</q><p>They know the basic shapes of things and cannot give you specifics — which is exactly the failure mode you see when a model invents a plausible API that does not exist.</p><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:91.3%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Factuality vs faithfulness</span><s>22 / 23</s></div><h2>What to do</h2><ul class="acts"><li>Before fixing anything, check whether the information was ever in the context window.</li><li>Factuality: load the source. Never trust an unsourced answer.</li><li>Faithfulness: clear, compact, or hand off — don't re-prompt into the same long window.</li><li>Read repeated faithfulness failures as a dumb-zone signal, not a model-quality signal.</li></ul><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:95.7%"></i></div></section>
+<section class="slide k-close"><div class="tick"><span>In one move</span><s>23 / 23</s></div><h2>The whole lesson in one move</h2><p class="lead">There is one resource, it degrades as it fills, and almost every fix is the same fix: put less in the window. Fewer tools, smaller tasks, fresh sessions. The threshold moves as models improve — the mechanism doesn't.</p><div class="foot"><em>Context engineering</em><em>Why your agent gets dumber the longer you talk to it</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
 </body>
 </html>

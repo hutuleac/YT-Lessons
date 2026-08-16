@@ -1,0 +1,245 @@
+1
+00:00:00,080 --> 00:00:01,990
+
+I've been thinking even more about LLM
+
+2
+00:00:01,990 --> 00:00:02,000
+I've been thinking even more about LLM
+ 
+
+3
+00:00:02,000 --> 00:00:03,669
+I've been thinking even more about LLM
+tokens and I've come up with a few
+
+4
+00:00:03,669 --> 00:00:03,679
+tokens and I've come up with a few
+ 
+
+5
+00:00:03,679 --> 00:00:05,349
+tokens and I've come up with a few
+little diagrams to explain how they
+
+6
+00:00:05,349 --> 00:00:05,359
+little diagrams to explain how they
+ 
+
+7
+00:00:05,359 --> 00:00:07,269
+little diagrams to explain how they
+work. Let's say you pass an input of
+
+8
+00:00:07,269 --> 00:00:07,279
+work. Let's say you pass an input of
+ 
+
+9
+00:00:07,279 --> 00:00:09,830
+work. Let's say you pass an input of
+hello to an LLM. That text hello won't
+
+10
+00:00:09,830 --> 00:00:09,840
+hello to an LLM. That text hello won't
+ 
+
+11
+00:00:09,840 --> 00:00:11,589
+hello to an LLM. That text hello won't
+be read by the LLM itself. It will be
+
+12
+00:00:11,589 --> 00:00:11,599
+be read by the LLM itself. It will be
+ 
+
+13
+00:00:11,599 --> 00:00:13,669
+be read by the LLM itself. It will be
+turned into a token or if you're using
+
+14
+00:00:13,669 --> 00:00:13,679
+turned into a token or if you're using
+ 
+
+15
+00:00:13,679 --> 00:00:15,990
+turned into a token or if you're using
+the technical term encoded into a token.
+
+16
+00:00:15,990 --> 00:00:16,000
+the technical term encoded into a token.
+ 
+
+17
+00:00:16,000 --> 00:00:18,230
+the technical term encoded into a token.
+The LLM will then produce output tokens
+
+18
+00:00:18,230 --> 00:00:18,240
+The LLM will then produce output tokens
+ 
+
+19
+00:00:18,240 --> 00:00:20,870
+The LLM will then produce output tokens
+which will then be decoded into text.
+
+20
+00:00:20,870 --> 00:00:20,880
+which will then be decoded into text.
+ 
+
+21
+00:00:20,880 --> 00:00:22,630
+which will then be decoded into text.
+And so the LLM is doing all of its
+
+22
+00:00:22,630 --> 00:00:22,640
+And so the LLM is doing all of its
+ 
+
+23
+00:00:22,640 --> 00:00:24,470
+And so the LLM is doing all of its
+thinking in terms of these numeric
+
+24
+00:00:24,470 --> 00:00:24,480
+thinking in terms of these numeric
+ 
+
+25
+00:00:24,480 --> 00:00:26,390
+thinking in terms of these numeric
+tokens. Here the whole process looks
+
+26
+00:00:26,390 --> 00:00:26,400
+tokens. Here the whole process looks
+ 
+
+27
+00:00:26,400 --> 00:00:28,390
+tokens. Here the whole process looks
+like this. We have some input text that
+
+28
+00:00:28,390 --> 00:00:28,400
+like this. We have some input text that
+ 
+
+29
+00:00:28,400 --> 00:00:31,109
+like this. We have some input text that
+gets turned into tokens. The LLM does a
+
+30
+00:00:31,109 --> 00:00:31,119
+gets turned into tokens. The LLM does a
+ 
+
+31
+00:00:31,119 --> 00:00:32,709
+gets turned into tokens. The LLM does a
+little bit of processing here and we
+
+32
+00:00:32,709 --> 00:00:32,719
+little bit of processing here and we
+ 
+
+33
+00:00:32,719 --> 00:00:34,549
+little bit of processing here and we
+start getting output tokens produced
+
+34
+00:00:34,549 --> 00:00:34,559
+start getting output tokens produced
+ 
+
+35
+00:00:34,559 --> 00:00:36,630
+start getting output tokens produced
+which are immediately decoded. And the
+
+36
+00:00:36,630 --> 00:00:36,640
+which are immediately decoded. And the
+ 
+
+37
+00:00:36,640 --> 00:00:38,470
+which are immediately decoded. And the
+input and output tokens, this is what
+
+38
+00:00:38,470 --> 00:00:38,480
+input and output tokens, this is what
+ 
+
+39
+00:00:38,480 --> 00:00:40,229
+input and output tokens, this is what
+you get build for because that's the
+
+40
+00:00:40,229 --> 00:00:40,239
+you get build for because that's the
+ 
+
+41
+00:00:40,239 --> 00:00:41,590
+you get build for because that's the
+closest representation of what's
+
+42
+00:00:41,590 --> 00:00:41,600
+closest representation of what's
+ 
+
+43
+00:00:41,600 --> 00:00:43,430
+closest representation of what's
+happening in the LLM's brain. If you
+
+44
+00:00:43,430 --> 00:00:43,440
+happening in the LLM's brain. If you
+ 
+
+45
+00:00:43,440 --> 00:00:45,030
+happening in the LLM's brain. If you
+enjoyed these, then I'll be sharing more
+
+46
+00:00:45,030 --> 00:00:45,040
+enjoyed these, then I'll be sharing more
+ 
+
+47
+00:00:45,040 --> 00:00:46,709
+enjoyed these, then I'll be sharing more
+of them. So follow along so you can keep
+
+48
+00:00:46,709 --> 00:00:46,719
+of them. So follow along so you can keep
+ 
+
+49
+00:00:46,719 --> 00:00:50,239
+of them. So follow along so you can keep
+in touch and I'll see you very
+
