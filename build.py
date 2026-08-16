@@ -487,7 +487,14 @@ def build_lesson(path):
     seen = []
     for nid in L["notes"]:
         for p in notes[nid].get("prerequisites") or []:
-            if p in L["notes"] and p not in seen:
+            if p not in L["notes"]:
+                # The heading renders "builds on <p>", so an absent prerequisite points the
+                # reader at a concept this lesson never teaches.
+                raise SystemExit(
+                    f"{path.name}: '{nid}' builds on '{p}', which the lesson never covers — "
+                    f"add '{p}' to 'notes' before it"
+                )
+            if p not in seen:
                 raise SystemExit(
                     f"{path.name}: '{nid}' needs '{p}' first — reorder 'notes' in the lesson"
                 )

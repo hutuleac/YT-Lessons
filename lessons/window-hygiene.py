@@ -9,6 +9,7 @@ LESSON = {
                 " eating the window before you have typed anything.",
 
     "notes": [
+        "tokens",
         "context-window",
         "dumb-zone",
         "tool-overload",
@@ -18,6 +19,8 @@ LESSON = {
     ],
 
     "bridges": {
+        "context-window": "Everything in this lesson is measured in one unit, so start there —"
+                          " then look at what the unit adds up to.",
         "dumb-zone": "The hard limit is the boring failure — it errors, so you see it. The"
                      " interesting one starts long before the limit and never announces itself.",
         "tool-overload": "So the window is a budget. The first thing spending it is the one you"

@@ -147,9 +147,55 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="standfirst">One pool of tokens, and four different things quietly filling it: the tools you added, the ones your harness shipped, the memories your agent saved itself, and a layer of docs nobody tests. Same resource, same fix.</p>
 <p class="audience">You already know your agent degrades in long sessions and want the list of things eating the window before you have typed anything.</p>
 </div></header>
+<section id="tokens">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 7 &middot; start here</span>
+<h2>Tokens, encoding and decoding</h2>
+<p class="oneline">A model never sees your text — it is encoded into numeric tokens, thought about as tokens, and decoded back into text, which is why tokens are also the unit you are billed in.</p>
+</div></div>
+<div class="wrap">
+<p>Pass the word "hello" to an LLM and the model does not receive those five letters. The text is encoded into a token — a number — and it is the number that enters the model. Everything the model does downstream happens in that numeric space.</p>
+<p>The return trip is the mirror image. The model produces output tokens, which are decoded back into text, and the decoding happens as they arrive rather than at the end. So the whole loop is: text in, encode, model, tokens out, decode, text out.</p>
+<p>That is why billing is denominated in input and output tokens rather than words or characters. Tokens are the closest available representation of what is actually happening inside the model, so they are the honest unit to count — and the unit every other limit in this lesson is expressed in.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 132" role="img"
+  aria-label="A pipeline: input text is encoded into input tokens, passed through the LLM, which produces output tokens that are decoded back into output text.">
+  <rect x="0" y="30" width="92" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="46" y="57" class="d-node" text-anchor="middle">"hello"</text>
+  <text x="46" y="92" class="d-label" text-anchor="middle">input text</text>
+
+  <text x="104" y="57" class="d-label">encode &#8594;</text>
+
+  <rect x="158" y="30" width="76" height="44" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="196" y="57" class="d-num" text-anchor="middle">15339</text>
+  <text x="196" y="92" class="d-label" text-anchor="middle">input tokens</text>
+
+  <rect x="248" y="18" width="64" height="68" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="280" y="57" class="d-node" text-anchor="middle">LLM</text>
+
+  <rect x="326" y="30" width="76" height="44" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="364" y="57" class="d-num" text-anchor="middle">2748</text>
+  <text x="364" y="92" class="d-label" text-anchor="middle">output tokens</text>
+
+  <text x="412" y="57" class="d-label">decode &#8594;</text>
+
+  <rect x="466" y="30" width="54" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="493" y="57" class="d-node" text-anchor="middle">"hi"</text>
+  <text x="493" y="92" class="d-label" text-anchor="middle">text</text>
+
+  <text x="0" y="122" class="d-label">billed on both token columns &#8212; the text at either end is just presentation</text>
+</svg></div><figcaption><b>Text in, tokens through the middle, text out</b><span>Encoding and decoding are the only places text exists. The model itself works entirely in numbers, which is what you are billed for.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Count tokens, not words, when you estimate cost or fit — they are what the API meters.</li>
+<li>Expect input and output tokens to be priced differently; check both before optimising.</li>
+<li>Treat any limit you meet (context window, rate limit, price) as a token limit.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/IVZ2OL8mU8c" target="_blank" rel="noopener">Matt Pocock &middot; Most devs don't know how LLM tokens work &middot; 0:49 &#8599;</a></div>
+</section>
+<p class="bridge">Everything in this lesson is measured in one unit, so start there — then look at what the unit adds up to.</p>
 <section id="context-window">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 6 &middot; builds on <s>tokens</s></span>
+<span class="cnum">2 / 7 &middot; builds on <s>tokens</s></span>
 <h2>The context window</h2>
 <p class="oneline">The context window is the whole conversation — input and output tokens together — capped by a hard per-model limit, and the fuller it gets the less attention the middle of it receives.</p>
 </div></div>
@@ -188,7 +234,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The hard limit is the boring failure — it errors, so you see it. The interesting one starts long before the limit and never announces itself.</p>
 <section id="dumb-zone">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 6 &middot; start here</span>
+<span class="cnum">3 / 7 &middot; start here</span>
 <h2>The dumb zone</h2>
 <p class="oneline">Every model degrades as its context window fills, so a large window has a usable region and a wasteful one — the dumb zone is where you stop getting your tokens' worth.</p>
 </div></div>
@@ -247,7 +293,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">So the window is a budget. The first thing spending it is the one you added on purpose, believing it made the agent more capable.</p>
 <section id="tool-overload">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 6 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">4 / 7 &middot; builds on <s>dumb-zone</s></span>
 <h2>Tool definitions are context</h2>
 <p class="oneline">Every tool you hand an agent is text pinned to the top of its system prompt, so more tools means less room and worse tool choice — the opposite of what adding a tool is meant to do.</p>
 </div></div>
@@ -286,7 +332,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">You did not add most of what is in there. The tool you code in shipped with its own tools, and they are re-sent on every request.</p>
 <section id="harness-bloat">
 <div class="wrap"><div class="chead">
-<span class="cnum">4 / 6 &middot; builds on <s>tool-overload</s></span>
+<span class="cnum">5 / 7 &middot; builds on <s>tool-overload</s></span>
 <h2>Harness bloat</h2>
 <p class="oneline">The tool you code in ships thousands of tokens of features you never use, all of it in the system prompt on every request — and most of it can be switched off in settings.</p>
 </div></div>
@@ -328,7 +374,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Tool definitions at least do something. The next occupant is material the agent chose to keep on your behalf.</p>
 <section id="agent-memory">
 <div class="wrap"><div class="chead">
-<span class="cnum">5 / 6 &middot; builds on <s>context-window</s></span>
+<span class="cnum">6 / 7 &middot; builds on <s>context-window</s></span>
 <h2>Kill the auto-memory</h2>
 <p class="oneline">Letting an agent save its own memories trades predictability for convenience — a stateless agent starts from the same base every time, and anything worth keeping belongs in a file you wrote.</p>
 </div></div>
@@ -350,7 +396,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The last one is written by you, with the best intentions, and it is the only one that can also be wrong.</p>
 <section id="docs-drift">
 <div class="wrap"><div class="chead">
-<span class="cnum">6 / 6 &middot; builds on <s>context-window</s></span>
+<span class="cnum">7 / 7 &middot; builds on <s>context-window</s></span>
 <h2>Docs as a second source of truth</h2>
 <p class="oneline">A layer of markdown written to explain your code becomes a second source of truth that nothing tests, and when it drifts the agent cannot tell which one is real.</p>
 </div></div>
