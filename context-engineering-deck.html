@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why your agent gets dumber the longer you talk to it &mdash; deck</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --measure:63ch;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:19px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:860px; margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 20px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:860px; padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:560px; margin:0 auto; height:auto; overflow:visible}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+
+html{scroll-snap-type:y mandatory}
+body{font-family:var(--sans)}
+.slide{
+  min-height:100dvh; scroll-snap-align:start; display:flex; flex-direction:column;
+  justify-content:center; padding:clamp(30px,5vw,80px); border-bottom:1px solid var(--line);
+  position:relative
+}
+.slide>*{max-width:none}
+.tick{
+  position:absolute; top:clamp(20px,3vw,40px); left:clamp(30px,5vw,80px); right:clamp(30px,5vw,80px);
+  display:flex; justify-content:space-between; gap:20px;
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
+}
+.tick s{text-decoration:none; color:var(--signal)}
+.slide h1{font-size:clamp(34px,7vw,86px); margin:0 0 clamp(20px,3vh,34px)}
+.slide h2{font-size:clamp(30px,6vw,72px); margin:0 0 clamp(18px,3vh,30px)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.4vw,30px); line-height:1.45;
+  color:var(--muted); margin:0; max-width:34ch
+}
+.slide .lead em{font-style:normal; color:var(--ink)}
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.2vh,26px)}
+.bul li{
+  font-size:clamp(20px,2.8vw,38px); line-height:1.25; padding-left:1.4em; position:relative;
+  text-wrap:balance
+}
+.bul li::before{
+  content:counter(list-item); position:absolute; left:0; top:.28em;
+  font:500 .45em var(--mono); color:var(--signal); letter-spacing:.1em
+}
+/* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
+   Twice the page's cap is the ceiling that stays proportionate on a projector. */
+.slide .plate{padding:clamp(20px,3vw,40px); max-width:1120px; margin:0 auto; width:100%}
+.slide .plate svg{max-width:1040px}
+.slide figcaption{max-width:1120px; margin:22px auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(14px,1.4vw,20px)}
+.slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
+.slide figure{margin:0; padding:0; max-width:none}
+.end{background:var(--surface)}
+.end .lead{max-width:44ch; color:var(--ink)}
+.slide .src{max-width:none; margin:clamp(24px,4vh,44px) 0 0; padding:0}
+@media print{html{scroll-snap-type:none} .slide{min-height:auto; page-break-after:always}}
+</style>
+</head>
+<body>
+<section class="slide "><div class="tick"><span>Context engineering</span><s>1 / 11</s></div><h1>Why your agent gets dumber the longer you talk to it</h1><p class="lead">Every model degrades as its context fills. Once you can see the mechanism, three unrelated-looking failures turn out to be the same problem — and the fixes stop being guesswork.</p></section>
+<section class="slide "><div class="tick"><span>The dumb zone</span><s>2 / 11</s></div><h2>The dumb zone</h2><ol class="bul"><li>A 1M-token window is not 1M tokens of usable work.</li><li>Add a token and the model tracks every relationship it has to every other token.</li><li>Performance sinks gradually — there is no cliff, so nothing warns you.</li><li>Rule of thumb: the dumb zone starts around 150k tokens.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/sOd7svdu_1I" target="_blank" rel="noopener">Matt Pocock &middot; What is the dumb zone? &#8599;</a></div></section>
+<section class="slide "><div class="tick"><span>The dumb zone</span><s>3 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 340 190" role="img"
+  aria-label="Two node graphs. Five nodes joined by ten lines; ten nodes joined by forty-five lines.">
+  <g><line x1="78.0" y1="34.0" x2="127.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="78.0" y1="34.0" x2="108.6" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="78.0" y1="34.0" x2="47.4" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="78.0" y1="34.0" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="127.5" y1="69.9" x2="108.6" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="127.5" y1="69.9" x2="47.4" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="127.5" y1="69.9" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="108.6" y1="128.1" x2="47.4" y2="128.1" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="108.6" y1="128.1" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="47.4" y1="128.1" x2="28.5" y2="69.9" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><circle cx="78.0" cy="34.0" r="5.5" fill="var(--signal)"/><circle cx="127.5" cy="69.9" r="5.5" fill="var(--signal)"/><circle cx="108.6" cy="128.1" r="5.5" fill="var(--signal)"/><circle cx="47.4" cy="128.1" r="5.5" fill="var(--signal)"/><circle cx="28.5" cy="69.9" r="5.5" fill="var(--signal)"/></g>
+  <g><line x1="250.0" y1="24.0" x2="286.4" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="309.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="309.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="24.0" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="309.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="309.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="35.8" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="309.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="66.8" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="286.4" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="309.0" y1="105.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="250.0" y2="148.0" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="286.4" y1="136.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="213.6" y2="136.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="250.0" y1="148.0" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="213.6" y1="136.2" x2="191.0" y2="105.2" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="213.6" y1="136.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="213.6" y1="136.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="191.0" y1="105.2" x2="191.0" y2="66.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="191.0" y1="105.2" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><line x1="191.0" y1="66.8" x2="213.6" y2="35.8" stroke="var(--interference)" stroke-width="1" opacity="0.42"/><circle cx="250.0" cy="24.0" r="5.5" fill="var(--signal)"/><circle cx="286.4" cy="35.8" r="5.5" fill="var(--signal)"/><circle cx="309.0" cy="66.8" r="5.5" fill="var(--signal)"/><circle cx="309.0" cy="105.2" r="5.5" fill="var(--signal)"/><circle cx="286.4" cy="136.2" r="5.5" fill="var(--signal)"/><circle cx="250.0" cy="148.0" r="5.5" fill="var(--signal)"/><circle cx="213.6" cy="136.2" r="5.5" fill="var(--signal)"/><circle cx="191.0" cy="105.2" r="5.5" fill="var(--signal)"/><circle cx="191.0" cy="66.8" r="5.5" fill="var(--signal)"/><circle cx="213.6" cy="35.8" r="5.5" fill="var(--signal)"/></g>
+  <text x="78" y="168" class="d-label" text-anchor="middle">5 tokens</text>
+  <text x="78" y="182" class="d-num" text-anchor="middle">10 relationships</text>
+  <text x="250" y="168" class="d-label" text-anchor="middle">10 tokens</text>
+  <text x="250" y="182" class="d-num" text-anchor="middle">45 relationships</text>
+</svg></div><figcaption><b>Tokens grow in a line. Relationships grow as a square.</b><span>5 tokens → 10 relationships. 10 tokens → 45. The model tracks the edges, not the dots, and the edges are what run out.</span></figcaption></figure></section>
+<section class="slide "><div class="tick"><span>The dumb zone</span><s>4 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 420 200" role="img"
+  aria-label="A curve of agent quality descending as context fills, with a smart zone on the left and a dumb zone on the right divided near 150k tokens.">
+  <defs>
+    <linearGradient id="zoneFade" x1="0" x2="1">
+      <stop offset="0%" stop-color="var(--signal)" stop-opacity="0.20"/>
+      <stop offset="55%" stop-color="var(--signal)" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="var(--interference)" stop-opacity="0.20"/>
+    </linearGradient>
+  </defs>
+  <rect x="40" y="18" width="352" height="122" fill="url(#zoneFade)"/>
+  <line x1="40" y1="140" x2="392" y2="140" stroke="var(--line)" stroke-width="1"/>
+  <line x1="40" y1="18" x2="40" y2="140" stroke="var(--line)" stroke-width="1"/>
+  <path d="M40 34 C 150 40, 208 62, 250 92 S 340 132, 392 137"
+        fill="none" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="250" y1="18" x2="250" y2="140" stroke="var(--interference)"
+        stroke-width="1.5" stroke-dasharray="4 4"/>
+  <circle cx="250" cy="92" r="4" fill="var(--interference)"/>
+  <text x="250" y="12" class="d-num" text-anchor="middle">~150k</text>
+  <text x="128" y="160" class="d-label" text-anchor="middle">smart zone</text>
+  <text x="322" y="160" class="d-label" text-anchor="middle">dumb zone</text>
+  <text x="14" y="82" class="d-label" text-anchor="middle" transform="rotate(-90 14 82)">quality</text>
+  <text x="216" y="186" class="d-label" text-anchor="middle">context window filling &#8594;</text>
+</svg></div><figcaption><b>There is no cliff, which is the problem</b><span>Quality sinks gradually as the window fills. Nothing errors and nothing warns you — you simply stop getting your tokens' worth.</span></figcaption></figure></section>
+<section class="slide "><div class="tick"><span>Tool definitions are context</span><s>5 / 11</s></div><h2>Tool definitions are context</h2><ol class="bul"><li>The more tools you give an LLM, the worse it performs.</li><li>A tool is not code to the model — it is a title, a description and a JSON schema.</li><li>All of it sits in the system prompt, above everything else you sent.</li><li>Six to eight is fine. Dozens fills the window before you have said anything.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/_1KrC_5Xv4s" target="_blank" rel="noopener">Matt Pocock &middot; Stop giving your LLM more tools &#8599;</a></div></section>
+<section class="slide "><div class="tick"><span>Tool definitions are context</span><s>6 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 420 176" role="img"
+  aria-label="Two stacked bars representing a system prompt. With eight tools, definitions take a small top slice and most space is left for work. With forty tools, definitions consume most of the bar.">
+  <text x="0" y="14" class="d-label">8 tools</text>
+  <rect x="0" y="22" width="420" height="34" rx="3" fill="var(--surface-2)"/>
+  <rect x="0" y="22" width="96" height="34" rx="3" fill="var(--interference)" opacity="0.55"/>
+  <text x="48" y="43" class="d-num" text-anchor="middle">defs</text>
+  <text x="258" y="43" class="d-label" text-anchor="middle">room to actually work</text>
+
+  <text x="0" y="94" class="d-label">40 tools</text>
+  <rect x="0" y="102" width="420" height="34" rx="3" fill="var(--surface-2)"/>
+  <rect x="0" y="102" width="330" height="34" rx="3" fill="var(--interference)" opacity="0.55"/>
+  <text x="165" y="123" class="d-num" text-anchor="middle">tool definitions</text>
+  <text x="375" y="123" class="d-label" text-anchor="middle">what's left</text>
+  <text x="0" y="164" class="d-label">Same window. The task now starts 78% of the way in.</text>
+</svg></div><figcaption><b>What a tool costs before it does anything</b><span>Definitions are pinned above your actual prompt. Add enough of them and the task arrives already deep in the window.</span></figcaption></figure></section>
+<section class="slide "><div class="tick"><span>Skill hell</span><s>7 / 11</s></div><h2>Skill hell</h2><ol class="bul"><li>After framework hell and tutorial hell: skill hell.</li><li>Cobbling several agent frameworks together until none of them works.</li><li>The failure is mechanical — it is all one context window.</li><li>Skills should empower the user, not the agent.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/32LyZyFQhCQ" target="_blank" rel="noopener">Matt Pocock &middot; Framework Hell, Tutorial Hell... now Skill Hell &#8599;</a></div></section>
+<section class="slide "><div class="tick"><span>Skill hell</span><s>8 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 520 214" role="img"
+  aria-label="Top: five skills loaded into a single context window that overflows. Bottom: the same skills run as three sequential stages, each in its own small context window.">
+  <text x="0" y="12" class="d-label">ALL AT ONCE</text>
+  <rect x="0" y="22" width="520" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="4" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="106" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="208" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="310" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <rect x="412" y="26" width="98" height="32" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <text x="260" y="47" class="d-node" text-anchor="middle">skills</text>
+  <text x="0" y="80" class="d-label">no room left for the actual task &#8594; dumb zone</text>
+
+  <text x="0" y="126" class="d-label">YOU DRIVE</text>
+  <rect x="0" y="136" width="150" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <rect x="4" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="103" y="160" class="d-label" text-anchor="middle">room</text>
+  <text x="163" y="160" class="d-node">&#8594;</text>
+  <rect x="185" y="136" width="150" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <rect x="189" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="288" y="160" class="d-label" text-anchor="middle">room</text>
+  <text x="348" y="160" class="d-node">&#8594;</text>
+  <rect x="370" y="136" width="150" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <rect x="374" y="140" width="60" height="32" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="473" y="160" class="d-label" text-anchor="middle">room</text>
+  <text x="0" y="196" class="d-label">one stage at a time, each in a window that fits it</text>
+</svg></div><figcaption><b>Same skills, two ways of loading them</b><span>Stacked, they compete for one window and push the work into the dumb zone. Sequenced, each stage gets a window that fits it.</span></figcaption></figure></section>
+<section class="slide "><div class="tick"><span>Factuality vs faithfulness</span><s>9 / 11</s></div><h2>Factuality vs faithfulness</h2><ol class="bul"><li>Hallucinations are probably inherent to LLMs. Diagnose, don't hope.</li><li>Ask one question: was the information in context?</li><li>It wasn't → factuality. The model was recalling. Load the information.</li><li>It was → faithfulness. The model drifted. Get out of the dumb zone.</li></ol><div class="src"><a href="https://www.youtube.com/shorts/H-JHumbpORI" target="_blank" rel="noopener">Matt Pocock &middot; My agent hallucinated - what do I do? &#8599;</a></div></section>
+<section class="slide "><div class="tick"><span>Factuality vs faithfulness</span><s>10 / 11</s></div><figure><div class="plate"><svg viewBox="0 0 420 232" role="img"
+  aria-label="Decision tree. Starting from a hallucination, ask whether the information was in the context window. If no, it is a factuality hallucination, fixed by loading the information. If yes, it is a faithfulness hallucination, fixed by leaving the dumb zone.">
+  <rect x="128" y="4" width="164" height="34" rx="17" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="210" y="26" class="d-node" text-anchor="middle">a hallucination</text>
+
+  <path d="M210 38 L210 58" stroke="var(--line)" stroke-width="1.5"/>
+  <rect x="104" y="58" width="212" height="34" rx="6" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>
+  <text x="210" y="80" class="d-node" text-anchor="middle">was it in the context window?</text>
+
+  <path d="M120 92 L120 118 M120 92 L210 92" stroke="var(--line)" stroke-width="1.5" fill="none"/>
+  <path d="M300 92 L300 118 M300 92 L210 92" stroke="var(--line)" stroke-width="1.5" fill="none"/>
+  <text x="104" y="110" class="d-label" text-anchor="end">no</text>
+  <text x="316" y="110" class="d-label">yes</text>
+
+  <rect x="14" y="118" width="196" height="42" rx="6" fill="var(--surface-2)" stroke="var(--interference)"/>
+  <text x="112" y="136" class="d-node" text-anchor="middle">factuality</text>
+  <text x="112" y="152" class="d-label" text-anchor="middle">it was recalling, and failed</text>
+
+  <rect x="212" y="118" width="196" height="42" rx="6" fill="var(--surface-2)" stroke="var(--interference)"/>
+  <text x="310" y="136" class="d-node" text-anchor="middle">faithfulness</text>
+  <text x="310" y="152" class="d-label" text-anchor="middle">it had the material, drifted</text>
+
+  <path d="M112 160 L112 180" stroke="var(--signal)" stroke-width="1.5"/>
+  <path d="M310 160 L310 180" stroke="var(--signal)" stroke-width="1.5"/>
+  <rect x="14" y="180" width="196" height="40" rx="6" fill="none" stroke="var(--signal)"/>
+  <text x="112" y="205" class="d-fix" text-anchor="middle">load the information</text>
+  <rect x="212" y="180" width="196" height="40" rx="6" fill="none" stroke="var(--signal)"/>
+  <text x="310" y="199" class="d-fix" text-anchor="middle">leave the dumb zone</text>
+  <text x="310" y="213" class="d-label" text-anchor="middle">clear · compact · hand off</text>
+</svg></div><figcaption><b>One question, two hallucinations</b><span>The split is diagnostic, not academic — the two branches have entirely different fixes, and re-prompting only helps on the left.</span></figcaption></figure></section>
+<section class="slide end"><div class="tick"><span>In one move</span><s>11 / 11</s></div><h2>The whole lesson in one move</h2><p class="lead">There is one resource, it degrades as it fills, and almost every fix is the same fix: put less in the window. Fewer tools, smaller tasks, fresh sessions. The threshold moves as models improve — the mechanism doesn't.</p></section>
+</body>
+</html>

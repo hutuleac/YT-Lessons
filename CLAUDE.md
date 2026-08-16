@@ -11,7 +11,8 @@ through the brief's theme structure.
 ## Repo
 - **Remote:** https://github.com/hutuleac/YT-Lessons.git (`main`, no other branches)
 - **Pages:** not enabled yet — no live URL. Enabling it is outward-facing, so ask first.
-- Repo root should only ever gain built `<lesson-id>.html` plus the refreshed `index.html`.
+- Repo root should only ever gain built `<lesson-id>.html`, `<lesson-id>-deck.html` and the
+  refreshed `index.html`.
   Transcripts live in `source-data/<lesson-id>/`.
 
 ## Creating notes and lessons
@@ -38,6 +39,10 @@ Things that are easy to get wrong and are not obvious from the code:
 python3 build.py lessons/<id>.py   # one lesson + refresh index
 python3 build.py --all             # everything
 ```
+Every build writes two files per lesson: the scrollable page (`<id>.html`, from `mechanism`) and
+the deck (`<id>-deck.html`, from `skeleton` alone — full-viewport scroll-snapped slides). A note
+with an empty `skeleton` fails the build, because it would render a blank slide.
+
 `build.py` is the renderer for every lesson and is **never edited per lesson** — per-video
 changes go in notes. Same rule as `generate.py` in the brief repo.
 

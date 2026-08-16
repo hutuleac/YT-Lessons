@@ -181,6 +181,54 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
 """
 
+# The deck is the same notes at deck detail: `skeleton` only, never `mechanism`. It shares the
+# palette and type tokens above and overrides the page's reading measure — a slide uses the whole
+# viewport, where a lesson page is deliberately capped at 63ch.
+DECK_CSS = """
+html{scroll-snap-type:y mandatory}
+body{font-family:var(--sans)}
+.slide{
+  min-height:100dvh; scroll-snap-align:start; display:flex; flex-direction:column;
+  justify-content:center; padding:clamp(30px,5vw,80px); border-bottom:1px solid var(--line);
+  position:relative
+}
+.slide>*{max-width:none}
+.tick{
+  position:absolute; top:clamp(20px,3vw,40px); left:clamp(30px,5vw,80px); right:clamp(30px,5vw,80px);
+  display:flex; justify-content:space-between; gap:20px;
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
+}
+.tick s{text-decoration:none; color:var(--signal)}
+.slide h1{font-size:clamp(34px,7vw,86px); margin:0 0 clamp(20px,3vh,34px)}
+.slide h2{font-size:clamp(30px,6vw,72px); margin:0 0 clamp(18px,3vh,30px)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.4vw,30px); line-height:1.45;
+  color:var(--muted); margin:0; max-width:34ch
+}
+.slide .lead em{font-style:normal; color:var(--ink)}
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.2vh,26px)}
+.bul li{
+  font-size:clamp(20px,2.8vw,38px); line-height:1.25; padding-left:1.4em; position:relative;
+  text-wrap:balance
+}
+.bul li::before{
+  content:counter(list-item); position:absolute; left:0; top:.28em;
+  font:500 .45em var(--mono); color:var(--signal); letter-spacing:.1em
+}
+/* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
+   Twice the page's cap is the ceiling that stays proportionate on a projector. */
+.slide .plate{padding:clamp(20px,3vw,40px); max-width:1120px; margin:0 auto; width:100%}
+.slide .plate svg{max-width:1040px}
+.slide figcaption{max-width:1120px; margin:22px auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(14px,1.4vw,20px)}
+.slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
+.slide figure{margin:0; padding:0; max-width:none}
+.end{background:var(--surface)}
+.end .lead{max-width:44ch; color:var(--ink)}
+.slide .src{max-width:none; margin:clamp(24px,4vh,44px) 0 0; padding:0}
+@media print{html{scroll-snap-type:none} .slide{min-height:auto; page-break-after:always}}
+"""
+
 RAIL_JS = """
 (function(){
   var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
@@ -254,6 +302,60 @@ def render_note(n, idx, total, bridge):
     return "\n".join(o)
 
 
+def build_deck(L, notes):
+    """The same lesson at deck detail: `skeleton` lines only, one slide per concept."""
+    slides = []  # (label, extra class, inner html)
+    slides.append((
+        L["subject"], "",
+        f'<h1>{e(L["title"])}</h1><p class="lead">{e(L["standfirst"])}</p>',
+    ))
+    for nid in L["notes"]:
+        n = notes[nid]
+        if not n.get("skeleton"):
+            raise SystemExit(f"notes/{nid}.py: empty 'skeleton' — the deck has nothing to show")
+        items = "".join(f"<li>{e(s)}</li>" for s in n["skeleton"])
+        s = n["source"]
+        slides.append((
+            n["concept"], "",
+            f'<h2>{e(n["concept"])}</h2><ol class="bul">{items}</ol>'
+            f'<div class="src"><a href="{e(s["url"])}" target="_blank" rel="noopener">'
+            f'{e(s["channel"])} &middot; {e(s["title"])} &#8599;</a></div>',
+        ))
+        for d in n.get("diagrams") or []:
+            slides.append((
+                n["concept"], "",
+                f'<figure><div class="plate">{d["svg"]}</div>'
+                f'<figcaption><b>{e(d["title"])}</b><span>{e(d["caption"])}</span>'
+                f"</figcaption></figure>",
+            ))
+    c = L.get("closing")
+    if c:
+        slides.append((
+            "In one move", "end",
+            f'<h2>{e(c["title"])}</h2><p class="lead">{e(c["body"])}</p>',
+        ))
+
+    total = len(slides)
+    body = []
+    for i, (label, cls, inner) in enumerate(slides, 1):
+        body.append(
+            f'<section class="slide {cls}">'
+            f'<div class="tick"><span>{e(label)}</span><s>{i} / {total}</s></div>{inner}</section>'
+        )
+
+    doc = (
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+        f"<title>{e(L['title'])} &mdash; deck</title>\n"
+        f"<style>{CSS}{DECK_CSS}</style>\n</head>\n<body>\n"
+        + "\n".join(body)
+        + "\n</body>\n</html>\n"
+    )
+    out = ROOT / f"{L['id']}-deck.html"
+    out.write_text(doc, encoding="utf-8")
+    print(f"wrote {out.name}  ({total} slides)")
+
+
 def check_note(nid, n):
     """Catch the errors that would otherwise render silently to the reader."""
     if n["id"] != nid:
@@ -323,6 +425,7 @@ def build_lesson(path):
     out = ROOT / f"{L['id']}.html"
     out.write_text(doc, encoding="utf-8")
     print(f"wrote {out.name}  ({total} notes)")
+    build_deck(L, notes)
     return L
 
 
@@ -332,7 +435,8 @@ def build_index(all_lessons):
         cards.append(
             f'<li><a href="{e(L["id"])}.html"><span class="k">{e(L["subject"])}</span>'
             f'<b>{e(L["title"])}</b><i>{e(L["standfirst"])}</i>'
-            f'<u>{len(L["notes"])} concepts</u></a></li>'
+            f'<u>{len(L["notes"])} concepts</u></a>'
+            f'<p class="dk"><a href="{e(L["id"])}-deck.html">Deck &#8599;</a></p></li>'
         )
     doc = (
         '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
@@ -350,6 +454,10 @@ def build_index(all_lessons):
               letter-spacing:-.03em;margin:12px 0 10px}
         .ix i{display:block;font-style:normal;color:var(--muted);font-size:17px;max-width:60ch}
         .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted);margin-top:14px}
+        .dk{margin:0 0 30px}
+        .dk a{font:400 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
+              color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+        .dk a:hover{color:var(--signal);border-color:var(--signal)}
         </style>\n</head>\n<body>\n<div class="ix">
         <p class="eyebrow">Lessons</p>
         <h1>Ideas worth more than 60 seconds</h1>
