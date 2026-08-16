@@ -367,6 +367,84 @@ def render_note(n, idx, total, bridge):
     return "\n".join(o)
 
 
+def concept_map(L, notes, per_row=3):
+    """The lesson's own prerequisite graph, drawn from the data the build already validates.
+
+    Serpentine layout so consecutive concepts are adjacent, which keeps the common case — a
+    straight chain of prerequisites — reading as a straight line.
+    """
+    w, h, gx, gy = 230, 72, 40, 54
+    pos = {}
+    for i, nid in enumerate(L["notes"]):
+        row, col = divmod(i, per_row)
+        if row % 2:  # serpentine: odd rows run right to left
+            col = per_row - 1 - col
+        pos[nid] = (col * (w + gx), row * (h + gy))
+
+    rows = (len(L["notes"]) + per_row - 1) // per_row
+    vb_w = per_row * w + (per_row - 1) * gx
+    vb_h = rows * h + (rows - 1) * gy
+
+    def on_border(cx, cy, tx, ty):
+        """Where the line from this box's centre towards (tx,ty) leaves the box."""
+        dx, dy = tx - cx, ty - cy
+        if dx == 0 and dy == 0:
+            return cx, cy
+        s = min(
+            (w / 2) / abs(dx) if dx else float("inf"),
+            (h / 2) / abs(dy) if dy else float("inf"),
+        )
+        return cx + dx * s, cy + dy * s
+
+    edges = []
+    for nid in L["notes"]:
+        for p in notes[nid].get("prerequisites") or []:
+            cx1, cy1 = pos[p][0] + w / 2, pos[p][1] + h / 2
+            cx2, cy2 = pos[nid][0] + w / 2, pos[nid][1] + h / 2
+            sx, sy = on_border(cx1, cy1, cx2, cy2)
+            tx, ty = on_border(cx2, cy2, cx1, cy1)
+            edges.append(
+                f'<line x1="{sx:.0f}" y1="{sy:.0f}" x2="{tx:.0f}" y2="{ty:.0f}" '
+                f'stroke="var(--interference)" stroke-width="1.6" opacity="0.7" '
+                f'marker-end="url(#cm-a)"/>'
+            )
+
+    boxes = []
+    for i, nid in enumerate(L["notes"], 1):
+        x, y = pos[nid]
+        # Two lines at most — the concept names are short, but "Docs as a second source of
+        # truth" is not, and an overflowing label is worse than a wrapped one.
+        words, lines, cur = notes[nid]["concept"].split(), [], ""
+        for word in words:
+            if len(cur) + len(word) + 1 > 24 and cur:
+                lines.append(cur)
+                cur = word
+            else:
+                cur = f"{cur} {word}".strip()
+        lines.append(cur)
+        label = "".join(
+            f'<tspan x="{x + 16}" dy="{0 if k == 0 else 17}">{e(t)}</tspan>'
+            for k, t in enumerate(lines[:2])
+        )
+        boxes.append(
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="var(--surface-2)" '
+            f'stroke="var(--signal)"/>'
+            f'<text x="{x + 16}" y="{y + 25}" class="d-num">{i:02d}</text>'
+            f'<text x="{x + 16}" y="{y + 47}" class="d-node">{label}</text>'
+        )
+
+    return (
+        f'<svg viewBox="-2 -2 {vb_w + 4} {vb_h + 4}" role="img" '
+        f'aria-label="Concept map of the lesson: {e(", ".join(notes[n]["concept"] for n in L["notes"]))},'
+        f' joined by arrows showing which concept each one builds on.">'
+        '<defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">'
+        '<path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs>'
+        + "".join(edges)
+        + "".join(boxes)
+        + "</svg>"
+    )
+
+
 def build_deck(L, notes):
     """The lesson as slides: one kind of slide per slide-shaped field of the note.
 
@@ -377,6 +455,14 @@ def build_deck(L, notes):
         L["subject"], "title",
         f'<h1>{e(L["title"])}</h1><p class="lead">{e(L["standfirst"])}</p>'
         f'<p class="audience">{e(L["audience"])}</p>',
+    ))
+
+    slides.append((
+        "Where this goes", "figs",
+        f'<figure><div class="plate">{concept_map(L, notes)}</div>'
+        f'<figcaption><b>The concepts, and what each one needs first</b>'
+        f'<span>Drawn from the prerequisites the build checks, so the map cannot drift from'
+        f' the lesson.</span></figcaption></figure>',
     ))
 
     for i, nid in enumerate(L["notes"], 1):
