@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What is actually happening when you talk to an LLM</title>
+<meta name="description" content="Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --measure:63ch;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:19px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:860px; margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 20px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:860px; padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:560px; margin:0 auto; height:auto; overflow:visible}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">LLM fundamentals</p>
+<h1>What is actually happening when you talk to an LLM</h1>
+<p class="standfirst">Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.</p>
+<p class="audience">You use LLMs daily through an API or a coding agent and have never seen the raw request that goes over the wire.</p>
+</div></header>
+<section id="tokens">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 6 &middot; start here</span>
+<h2>Tokens, encoding and decoding</h2>
+<p class="oneline">A model never sees your text — it is encoded into numeric tokens, thought about as tokens, and decoded back into text, which is why tokens are also the unit you are billed in.</p>
+</div></div>
+<div class="wrap">
+<p>Pass the word "hello" to an LLM and the model does not receive those five letters. The text is encoded into a token — a number — and it is the number that enters the model. Everything the model does downstream happens in that numeric space.</p>
+<p>The return trip is the mirror image. The model produces output tokens, which are decoded back into text, and the decoding happens as they arrive rather than at the end. So the whole loop is: text in, encode, model, tokens out, decode, text out.</p>
+<p>That is why billing is denominated in input and output tokens rather than words or characters. Tokens are the closest available representation of what is actually happening inside the model, so they are the honest unit to count — and the unit every other limit in this lesson is expressed in.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 132" role="img"
+  aria-label="A pipeline: input text is encoded into input tokens, passed through the LLM, which produces output tokens that are decoded back into output text.">
+  <rect x="0" y="30" width="92" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="46" y="57" class="d-node" text-anchor="middle">"hello"</text>
+  <text x="46" y="92" class="d-label" text-anchor="middle">input text</text>
+
+  <text x="104" y="57" class="d-label">encode &#8594;</text>
+
+  <rect x="158" y="30" width="76" height="44" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="196" y="57" class="d-num" text-anchor="middle">15339</text>
+  <text x="196" y="92" class="d-label" text-anchor="middle">input tokens</text>
+
+  <rect x="248" y="18" width="64" height="68" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="280" y="57" class="d-node" text-anchor="middle">LLM</text>
+
+  <rect x="326" y="30" width="76" height="44" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="364" y="57" class="d-num" text-anchor="middle">2748</text>
+  <text x="364" y="92" class="d-label" text-anchor="middle">output tokens</text>
+
+  <text x="412" y="57" class="d-label">decode &#8594;</text>
+
+  <rect x="466" y="30" width="54" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="493" y="57" class="d-node" text-anchor="middle">"hi"</text>
+  <text x="493" y="92" class="d-label" text-anchor="middle">text</text>
+
+  <text x="0" y="122" class="d-label">billed on both token columns &#8212; the text at either end is just presentation</text>
+</svg></div><figcaption><b>Text in, tokens through the middle, text out</b><span>Encoding and decoding are the only places text exists. The model itself works entirely in numbers, which is what you are billed for.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Count tokens, not words, when you estimate cost or fit — they are what the API meters.</li>
+<li>Expect input and output tokens to be priced differently; check both before optimising.</li>
+<li>Treat any limit you meet (context window, rate limit, price) as a token limit.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/IVZ2OL8mU8c" target="_blank" rel="noopener">Matt Pocock &middot; Most devs don't know how LLM tokens work &middot; 0:49 &#8599;</a></div>
+</section>
+<p class="bridge">Tokens are the unit. The next question is what shape they arrive in — because a conversation is a data structure, not a chat.</p>
+<section id="message-anatomy">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 6 &middot; builds on <s>tokens</s></span>
+<h2>What a conversation actually is</h2>
+<p class="oneline">A conversation with an LLM is a list of messages with roles — system, user, assistant — and each message can carry several parts, which is how reasoning, files and tool calls all fit into the same structure.</p>
+</div></div>
+<div class="wrap">
+<p>The bare structure is a list. User messages are the ones you send; the model's replies are assistant messages. That is the whole conversation when you talk to a raw model.</p>
+<p>A system prompt is not a separate mechanism — it is just a message placed at the very start of the history, visible to the model but usually not to the user. It is also where customisation lives, and in a conflict the model will usually follow the system prompt over the user: told to answer in Morse code, it keeps answering in Morse code even when you ask it to stop. Pocock is careful to hedge this — jailbreaks are common, so this is the theory rather than a guarantee.</p>
+<p>The part that unlocks everything else is that a message can contain multiple parts. Reasoning tokens, where the model appears to think before answering, are simply another part of the assistant message. File parts work the same way in both directions: attach a PDF to a user message and ask for a summary, or receive a generated image back as a part of the reply.</p>
+<p>Tool calls reuse the same idea. The assistant emits a tool call part carrying an id and arguments; your system executes it and sends back a tool result with the matching id. Nothing new is added to the protocol — it is still a list of messages made of parts, which is why one mental model covers chat, reasoning, files and agents alike.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 236" role="img"
+  aria-label="A message list: a system message at the top, then a user message, then an assistant message containing a reasoning part and a text part, then a user message with a file part, then an assistant message with a tool call part.">
+  <rect x="0" y="0" width="460" height="34" rx="4" fill="var(--interference)" opacity="0.25" stroke="var(--line)"/>
+  <text x="12" y="22" class="d-label">SYSTEM</text>
+  <text x="96" y="22" class="d-node">you are a helpful assistant &#183; tool definitions</text>
+
+  <rect x="0" y="44" width="300" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="12" y="64" class="d-label">USER</text>
+  <text x="72" y="64" class="d-node">summarise this</text>
+  <rect x="204" y="50" width="88" height="18" rx="3" fill="var(--sand)" opacity="0.5"/>
+  <text x="248" y="63" class="d-label" text-anchor="middle">file part</text>
+
+  <rect x="70" y="84" width="390" height="48" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="82" y="104" class="d-label">ASSISTANT</text>
+  <rect x="172" y="92" width="120" height="18" rx="3" fill="var(--signal)" opacity="0.4"/>
+  <text x="232" y="105" class="d-label" text-anchor="middle">reasoning part</text>
+  <rect x="300" y="92" width="90" height="18" rx="3" fill="var(--signal)" opacity="0.4"/>
+  <text x="345" y="105" class="d-label" text-anchor="middle">text part</text>
+  <text x="82" y="124" class="d-node">"here is the summary&#8230;"</text>
+
+  <rect x="70" y="142" width="390" height="34" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="82" y="164" class="d-label">ASSISTANT</text>
+  <rect x="172" y="150" width="140" height="18" rx="3" fill="var(--signal)" opacity="0.4"/>
+  <text x="242" y="163" class="d-label" text-anchor="middle">tool call &#183; id_42</text>
+
+  <rect x="0" y="186" width="300" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="12" y="208" class="d-label">TOOL</text>
+  <rect x="72" y="194" width="150" height="18" rx="3" fill="var(--sand)" opacity="0.5"/>
+  <text x="147" y="207" class="d-label" text-anchor="middle">result &#183; same id_42</text>
+
+  <text x="0" y="232" class="d-label">the history is one list &#8212; everything above is a message with parts</text>
+</svg></div><figcaption><b>One structure, four kinds of part</b><span>System first, then an alternating history. Reasoning, files and tool calls are parts inside a message rather than separate channels.</span></figcaption></figure>
+<div class="analogy"><q>A tool call is the LLM asking your system for something, and the tool result is you giving it the information it needed.</q><p>Framing it as a conversation rather than a function call explains why the ids have to match and why results go back into the history rather than into the model directly.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Put behaviour you want to persist in the system prompt, not in a first user message.</li>
+<li>Expect the system prompt to win conflicts with the user — design for that, don't rely on it.</li>
+<li>Treat reasoning, files and tool calls as message parts; they all cost context.</li>
+<li>Match tool result ids to tool call ids — the pairing is what makes the loop work.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/WwRE-SKdmKs" target="_blank" rel="noopener">Matt Pocock &middot; What messages you send to the LLM actually look like &middot; 2:19 &#8599;</a></div>
+</section>
+<p class="bridge">Messages accumulate, and they all compete for the same pool. That pool has a hard edge and a soft one, and the soft one hurts more.</p>
+<section id="context-window">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 6 &middot; builds on <s>tokens</s></span>
+<h2>The context window</h2>
+<p class="oneline">The context window is the whole conversation — input and output tokens together — capped by a hard per-model limit, and the fuller it gets the less attention the middle of it receives.</p>
+</div></div>
+<div class="wrap">
+<p>The common confusion is thinking the window is the input, or the output, or the model's memory. It is all of it: system prompt, user messages, reasoning tokens and the assistant's replies are one pool of tokens, and that pool is the context window.</p>
+<p>It grows as the conversation grows, and it cannot grow forever. Each model has a hard-coded limit on how many tokens it can see at once, and querying past that limit returns an error from the API. You can also hit it part-way through a generation — the reply starts fine and runs into the ceiling — because the model is not smart enough to work around its own limit.</p>
+<p>The subtler failure matters more. In a long conversation the messages at the start carry weight and so do the ones at the end, but the material in the middle gets attended to least. This is the lost-in-the-middle effect, and it is more pronounced the larger the window gets — a model may struggle to retrieve information from its own context.</p>
+<p>So a big advertised window is not the win it looks like. A model that supports an enormous context still has lost-in-the-middle problems inside it, and you will get better results from using fewer tokens regardless of what the limit allows.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 200" role="img"
+  aria-label="A curve showing attention high at the beginning of a conversation, dipping through the middle, and rising again at the end, over a row of message markers.">
+  <line x1="34" y1="150" x2="440" y2="150" stroke="var(--line)" stroke-width="1"/>
+  <line x1="34" y1="20" x2="34" y2="150" stroke="var(--line)" stroke-width="1"/>
+  <path d="M34 40 C 120 66, 150 118, 237 120 C 324 118, 354 66, 440 40"
+        fill="none" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="150" y="20" width="174" height="130" fill="var(--interference)" opacity="0.12"/>
+  <text x="237" y="100" class="d-label" text-anchor="middle">lost in the middle</text>
+  <g fill="var(--muted)">
+    <circle cx="60" cy="166" r="4"/><circle cx="106" cy="166" r="4"/><circle cx="152" cy="166" r="4"/>
+    <circle cx="198" cy="166" r="4"/><circle cx="244" cy="166" r="4"/><circle cx="290" cy="166" r="4"/>
+    <circle cx="336" cy="166" r="4"/><circle cx="382" cy="166" r="4"/><circle cx="428" cy="166" r="4"/>
+  </g>
+  <text x="14" y="88" class="d-label" text-anchor="middle" transform="rotate(-90 14 88)">attention</text>
+  <text x="60" y="192" class="d-label">oldest message</text>
+  <text x="440" y="192" class="d-label" text-anchor="end">newest message</text>
+</svg></div><figcaption><b>Attention is U-shaped across a long history</b><span>Start and end land; the middle thins out. The effect gets stronger as the window gets bigger, which is why huge contexts disappoint.</span></figcaption></figure>
+<div class="analogy"><q>The context window is not any part of this — it's the whole thing.</q><p>Holding input and output in one pool is what makes the later maths work: every tool definition, every reasoning token and every reply is competing for the same ceiling.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Count the whole conversation against the limit, not just what you typed.</li>
+<li>Put what matters at the start or the end; the middle is where attention thins.</li>
+<li>Read a big advertised window as headroom, not as usable capacity.</li>
+<li>Expect mid-generation failures on long replies and leave room for the output.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/9P36wMntNSI" target="_blank" rel="noopener">Matt Pocock &middot; Stop stuffing your context window (here's why) &middot; 2:09 &#8599;</a></div>
+</section>
+<p class="bridge">So far the model only produces text. Tools are how it reaches your machine — and they are built out of the same messages you have just seen.</p>
+<section id="tool-loop">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 6 &middot; builds on <s>message-anatomy</s></span>
+<h2>How a tool call actually runs</h2>
+<p class="oneline">A tool call is only a message asking for something — your code executes it and sends the result back, and that four-step loop is the whole of how coding agents touch your machine.</p>
+</div></div>
+<div class="wrap">
+<p>Tools reach the model through the system prompt. Each one supplies three things: a name, a description, and its parameters typed in JSON schema — so anything JSON schema supports, including objects and arrays. Those definitions are injected at the top and everything else in your system prompt sits below them. There is nothing clever happening: tool definitions are text in a message.</p>
+<p>When the user asks for something, the model replies with an assistant message containing a tool call: an id, the tool name, and the arguments. You never say which tool to use — the model chooses. And this is the step most people get wrong: at that point nothing has happened. The model has produced a message, not an effect.</p>
+<p>Execution is yours. For every tool named in the system prompt there must be a matching function in your codebase, and that function is what actually writes the file. You then send a result back carrying the same id as the call. Errors go back too, and Pocock is emphatic about that: the model can only do something different if it can see what went wrong.</p>
+<p>The model then reads the whole history — definitions, request, call, result — and replies with a summary. That loop is all a coding agent is. It explains both the power and the limits: the model can only ask, and your side decides what asking is allowed to do.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 216" role="img"
+  aria-label="A loop between the LLM and your machine: tool definitions in the system prompt, a tool call from the model, execution on your machine, and a tool result sent back with the same id.">
+  <rect x="0" y="18" width="180" height="52" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="90" y="42" class="d-node" text-anchor="middle">LLM</text>
+  <text x="90" y="60" class="d-label" text-anchor="middle">decides which tool</text>
+
+  <rect x="340" y="18" width="180" height="52" rx="6" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="430" y="42" class="d-node" text-anchor="middle">your machine</text>
+  <text x="430" y="60" class="d-label" text-anchor="middle">executes it</text>
+
+  <path d="M180 34 H336" stroke="var(--interference)" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+  <path d="M340 58 H184" stroke="var(--signal)" stroke-width="1.6" fill="none" marker-end="url(#ar2)"/>
+  <defs>
+    <marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/>
+    </marker>
+    <marker id="ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6 z" fill="var(--signal)"/>
+    </marker>
+  </defs>
+  <text x="258" y="28" class="d-label" text-anchor="middle">tool call &#183; id_42</text>
+  <text x="258" y="76" class="d-label" text-anchor="middle">tool result &#183; id_42</text>
+
+  <rect x="0" y="108" width="520" height="34" rx="4" fill="var(--interference)" opacity="0.22" stroke="var(--line)"/>
+  <text x="12" y="130" class="d-label">SYSTEM PROMPT</text>
+  <text x="150" y="130" class="d-node">write_file &#183; { path: string, content: string }</text>
+
+  <text x="0" y="168" class="d-label">1. define &#8594; 2. model asks &#8594; 3. you execute &#8594; 4. you answer, errors included</text>
+  <text x="0" y="192" class="d-label">nothing happens at step 2 &#8212; a tool call is a message, not an effect</text>
+</svg></div><figcaption><b>The four-step loop</b><span>Definitions go up in the system prompt; the call comes back; you execute; the result returns with the same id. Everything else is repetition.</span></figcaption></figure>
+<div class="analogy"><q>The tool call is the LLM asking us for something, and the tool result is us giving it the information it needs.</q><p>Once tools are a conversation rather than a function call, error handling stops being an edge case — a failure is just another thing you tell it.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Always return tool errors to the model; a swallowed error leaves it repeating the failure.</li>
+<li>Write tool descriptions for the model, not for your team — it picks from them.</li>
+<li>Keep one executable function per declared tool, or the model will call something that isn't there.</li>
+<li>Remember nothing runs until your code runs it — that boundary is where you put permissions.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/V94BUC1kop8" target="_blank" rel="noopener">Matt Pocock &middot; How LLM tools work under the hood &middot; 2:51 &#8599;</a></div>
+</section>
+<p class="bridge">Tools make the model ask for things. The mirror image is making the model hand things back in a shape you specified.</p>
+<section id="structured-output">
+<div class="wrap"><div class="chead">
+<span class="cnum">5 / 6 &middot; builds on <s>tool-loop</s></span>
+<h2>Structured outputs</h2>
+<p class="oneline">The second thing models are good at is returning data that matches a schema you supply, which turns an unstructured document into something you can put in a database.</p>
+</div></div>
+<div class="wrap">
+<p>Most people only ask models for prose, which leaves the more useful half unused. Pocock's example is an invoice PDF: a text summary reads nicely but you cannot query it, so asking "when did I last buy oranges" is impossible until the data has a shape.</p>
+<p>The change is small in code — swap the generate-text call for a generate-object call and pass a schema describing what you want back: an array of items with name, quantity and price, a total, a currency. The schema does double duty. It is converted to JSON schema and handed to the model so the model's structured-output feature can constrain the reply, and it validates the response when it arrives.</p>
+<p>That is what makes the result trustworthy in two different senses at once. Validation gives runtime safety, so a malformed reply fails loudly instead of flowing into your database. Inference from the same schema gives compile-time types, so the object you handle downstream is typed without you writing the type twice.</p>
+</div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Reach for structured output whenever the answer is going into storage, not onto a screen.</li>
+<li>Define the shape once and derive both the model's schema and your types from it.</li>
+<li>Validate the reply — structured output is a strong constraint, not a guarantee.</li>
+<li>Keep schemas narrow: ask for the fields you will use, not everything the document holds.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/AFM2N9ifYFI" target="_blank" rel="noopener">Matt Pocock &middot; Yes, LLM's can produce more than just text &middot; 1:19 &#8599;</a></div>
+</section>
+<p class="bridge">One call is one call. Chain several and you have built either a workflow or an agent, and the difference is smaller than the vocabulary suggests.</p>
+<section id="agents-vs-workflows">
+<div class="wrap"><div class="chead">
+<span class="cnum">6 / 6 &middot; builds on <s>tool-loop</s></span>
+<h2>Agents vs workflows</h2>
+<p class="oneline">Both orchestrate several LLM calls; the only real difference is who decides when to stop — your code in a workflow, the model itself in an agent.</p>
+</div></div>
+<div class="wrap">
+<p>Agents and workflows are both ways of building something more capable than a single call, and both involve orchestrating several calls. One call is neither of them.</p>
+<p>A workflow runs predetermined steps: this call feeds that call feeds the next. The steps are written by the developer, so the code decides when to call the model again and when to stop. An agent is handed tools instead of steps. It picks a tool, reacts to the result, picks again, and decides for itself when the job is done.</p>
+<p>So the crucial difference is control of termination. In a workflow it is the code; in an agent it is the model making it up as it goes. That hands the model much more power and makes the system much less predictable — the same trade in both directions.</p>
+<p>Which is better depends entirely on how well specified the task is. Agents suit problems where the steps aren't clear and improvisation is required. Workflows suit anything that must be done the same way repeatedly, and Pocock argues they are unfairly maligned for being less exciting: for a clearly specified task you will often get better results from a workflow. Parallel summarisation is his example — split the text, summarise each part, then summarise the summaries.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 224" role="img"
+  aria-label="Top: a workflow drawn as a fixed chain of three LLM calls ending in code. Bottom: an agent drawn as a single LLM call looping through a choice of tools until it decides to stop.">
+  <text x="0" y="12" class="d-label">WORKFLOW &#183; the code stops it</text>
+  <rect x="0" y="24" width="86" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="43" y="48" class="d-node" text-anchor="middle">call 1</text>
+  <text x="94" y="48" class="d-label">&#8594;</text>
+  <rect x="116" y="24" width="86" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="159" y="48" class="d-node" text-anchor="middle">call 2</text>
+  <text x="210" y="48" class="d-label">&#8594;</text>
+  <rect x="232" y="24" width="86" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="275" y="48" class="d-node" text-anchor="middle">call 3</text>
+  <text x="326" y="48" class="d-label">&#8594;</text>
+  <rect x="348" y="24" width="96" height="38" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="396" y="48" class="d-fix" text-anchor="middle">code stops</text>
+  <text x="0" y="82" class="d-label">same path every time &#8212; predictable, and usually better when the task is clear</text>
+
+  <text x="0" y="126" class="d-label">AGENT &#183; the model stops it</text>
+  <rect x="0" y="138" width="110" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="55" y="166" class="d-node" text-anchor="middle">LLM + tools</text>
+  <path d="M110 150 H176" stroke="var(--interference)" stroke-width="1.4" fill="none"/>
+  <path d="M110 172 H176" stroke="var(--interference)" stroke-width="1.4" fill="none"/>
+  <rect x="180" y="136" width="80" height="24" rx="3" fill="var(--interference)" opacity="0.35"/>
+  <text x="220" y="152" class="d-label" text-anchor="middle">tool A</text>
+  <rect x="180" y="164" width="80" height="24" rx="3" fill="var(--interference)" opacity="0.35"/>
+  <text x="220" y="180" class="d-label" text-anchor="middle">tool B</text>
+  <path d="M264 176 H288 V200 H55 V188" stroke="var(--interference)"
+        stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+  <text x="300" y="152" class="d-label">loops until it decides</text>
+  <text x="300" y="168" class="d-label">it is finished</text>
+  <text x="0" y="216" class="d-label">more power to the model, less predictability &#8212; the same trade, both ways</text>
+</svg></div><figcaption><b>Predetermined steps vs the model choosing</b><span>The shapes differ, but the decision that matters is the terminator: code ends a workflow, the model ends an agent.</span></figcaption></figure>
+<div class="analogy"><q>With the agent it's the LLM that decides when to stop. With the workflow it's just following a set of predetermined steps.</q><p>Every other difference people cite — autonomy, unpredictability, cost — follows from that one question, which makes it the useful test when you are choosing.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Ask who should decide when the job is done. That answer picks the architecture.</li>
+<li>Specify the task well enough for a workflow before reaching for an agent.</li>
+<li>Use workflows for repeated, well-defined work — they are more predictable and usually better.</li>
+<li>Parallelise inside a workflow — split, process independently, then merge.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/kDnxr8W-bdE" target="_blank" rel="noopener">Matt Pocock &middot; What even are Agents and Workflows? &middot; 1:50 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>It is a list of messages, all the way down</h2><p>Encode to tokens, append messages, watch the pool, let the model ask for things, give it results. Reasoning, files, tool calls and agents are all the same structure with different parts in it. Once that clicks, the interesting questions stop being 'how does this work' and start being 'what should I put in the window'.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
+</body>
+</html>
