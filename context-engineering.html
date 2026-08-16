@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Why your agent gets dumber the longer you talk to it</title>
-<meta name="description" content="Every model degrades as its context fills. Once you can see the mechanism, three unrelated-looking failures turn out to be the same problem — and the fixes stop being guesswork.">
+<title>Everything is competing for the same window</title>
+<meta name="description" content="One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -73,6 +73,9 @@ section:last-of-type{border-bottom:0}
   color:var(--muted); display:block; margin-bottom:12px
 }
 .cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
 h2{
   font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
   letter-spacing:-.03em; font-weight:600; margin:0 0 16px
@@ -143,13 +146,52 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="rail" id="rail"><i></i><b></b></div>
 <header><div class='wrap'>
 <p class="eyebrow">Context engineering</p>
-<h1>Why your agent gets dumber the longer you talk to it</h1>
-<p class="standfirst">Every model degrades as its context fills. Once you can see the mechanism, three unrelated-looking failures turn out to be the same problem — and the fixes stop being guesswork.</p>
-<p class="audience">You use a coding agent daily and have watched it get worse mid-session without knowing why.</p>
+<h1>Everything is competing for the same window</h1>
+<p class="standfirst">One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.</p>
+<p class="audience">You use a coding agent daily and have watched it get worse mid-session without knowing why — or what was in the window before you typed anything.</p>
 </div></header>
+<section id="context-window">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 8 &middot; builds on <a class="out" href="llm-fundamentals.html#tokens">tokens</a></span>
+<h2>The context window</h2>
+<p class="oneline">The context window is the whole conversation — input and output tokens together — capped by a hard per-model limit, and the fuller it gets the less attention the middle of it receives.</p>
+</div></div>
+<div class="wrap">
+<p>The common confusion is thinking the window is the input, or the output, or the model's memory. It is all of it: system prompt, user messages, reasoning tokens and the assistant's replies are one pool of tokens, and that pool is the context window.</p>
+<p>It grows as the conversation grows, and it cannot grow forever. Each model has a hard-coded limit on how many tokens it can see at once, and querying past that limit returns an error from the API. You can also hit it part-way through a generation — the reply starts fine and runs into the ceiling — because the model is not smart enough to work around its own limit.</p>
+<p>The subtler failure matters more. In a long conversation the messages at the start carry weight and so do the ones at the end, but the material in the middle gets attended to least. This is the lost-in-the-middle effect, and it is more pronounced the larger the window gets — a model may struggle to retrieve information from its own context.</p>
+<p>So a big advertised window is not the win it looks like. A model that supports an enormous context still has lost-in-the-middle problems inside it, and you will get better results from using fewer tokens regardless of what the limit allows.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 200" role="img"
+  aria-label="A curve showing attention high at the beginning of a conversation, dipping through the middle, and rising again at the end, over a row of message markers.">
+  <line x1="34" y1="150" x2="440" y2="150" stroke="var(--line)" stroke-width="1"/>
+  <line x1="34" y1="20" x2="34" y2="150" stroke="var(--line)" stroke-width="1"/>
+  <path d="M34 40 C 120 66, 150 118, 237 120 C 324 118, 354 66, 440 40"
+        fill="none" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="150" y="20" width="174" height="130" fill="var(--interference)" opacity="0.12"/>
+  <text x="237" y="100" class="d-label" text-anchor="middle">lost in the middle</text>
+  <g fill="var(--muted)">
+    <circle cx="60" cy="166" r="4"/><circle cx="106" cy="166" r="4"/><circle cx="152" cy="166" r="4"/>
+    <circle cx="198" cy="166" r="4"/><circle cx="244" cy="166" r="4"/><circle cx="290" cy="166" r="4"/>
+    <circle cx="336" cy="166" r="4"/><circle cx="382" cy="166" r="4"/><circle cx="428" cy="166" r="4"/>
+  </g>
+  <text x="14" y="88" class="d-label" text-anchor="middle" transform="rotate(-90 14 88)">attention</text>
+  <text x="60" y="192" class="d-label">oldest message</text>
+  <text x="440" y="192" class="d-label" text-anchor="end">newest message</text>
+</svg></div><figcaption><b>Attention is U-shaped across a long history</b><span>Start and end land; the middle thins out. The effect gets stronger as the window gets bigger, which is why huge contexts disappoint.</span></figcaption></figure>
+<div class="analogy"><q>The context window is not any part of this — it's the whole thing.</q><p>Holding input and output in one pool is what makes the later maths work: every tool definition, every reasoning token and every reply is competing for the same ceiling.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Count the whole conversation against the limit, not just what you typed.</li>
+<li>Put what matters at the start or the end; the middle is where attention thins.</li>
+<li>Read a big advertised window as headroom, not as usable capacity.</li>
+<li>Expect mid-generation failures on long replies and leave room for the output.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/9P36wMntNSI" target="_blank" rel="noopener">Matt Pocock &middot; Stop stuffing your context window (here's why) &middot; 2:09 &#8599;</a></div>
+</section>
+<p class="bridge">The hard limit is the boring failure — it errors, so you see it. The interesting one starts long before the limit and never announces itself.</p>
 <section id="dumb-zone">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 4 &middot; start here</span>
+<span class="cnum">2 / 8 &middot; start here</span>
 <h2>The dumb zone</h2>
 <p class="oneline">Every model degrades as its context window fills, so a large window has a usable region and a wasteful one — the dumb zone is where you stop getting your tokens' worth.</p>
 </div></div>
@@ -205,10 +247,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/shorts/sOd7svdu_1I" target="_blank" rel="noopener">Matt Pocock &middot; What is the dumb zone? &middot; 1:47 &#8599;</a></div>
 </section>
-<p class="bridge">The mechanism explains a failure that looks like it has nothing to do with context length — and is the most common way people fill a window without noticing.</p>
+<p class="bridge">So the window is a budget that degrades as it fills. The first thing spending it is the one you added on purpose, believing it made the agent more capable.</p>
 <section id="tool-overload">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 4 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">3 / 8 &middot; builds on <s>dumb-zone</s></span>
 <h2>Tool definitions are context</h2>
 <p class="oneline">Every tool you hand an agent is text pinned to the top of its system prompt, so more tools means less room and worse tool choice — the opposite of what adding a tool is meant to do.</p>
 </div></div>
@@ -244,10 +286,52 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/shorts/_1KrC_5Xv4s" target="_blank" rel="noopener">Matt Pocock &middot; Stop giving your LLM more tools &middot; 1:12 &#8599;</a></div>
 </section>
-<p class="bridge">Tools are not the only thing that floods a window. The same overload arrives through process, and it now has a name.</p>
+<p class="bridge">You did not add most of what is in there. The tool you code in shipped with its own tools, and they are re-sent on every request.</p>
+<section id="harness-bloat">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 8 &middot; builds on <s>tool-overload</s></span>
+<h2>Harness bloat</h2>
+<p class="oneline">The tool you code in ships thousands of tokens of features you never use, all of it in the system prompt on every request — and most of it can be switched off in settings.</p>
+</div></div>
+<div class="wrap">
+<p>Most harnesses, Claude Code especially, ship with a large system prompt covering every feature they offer. Pocock's audit found whole blocks for things he never touched — workflows, design sync, monitor — on the order of eight to ten thousand tokens per request.</p>
+<p>The cost is recurring, not one-off: it is in the system prompt, so it is re-sent on every request in every session. It is also the most expensive place to spend tokens, because the system prompt sits above your actual task.</p>
+<p>The fix is configuration rather than cleverness. Disabling a feature in global settings removes its tool definitions from the system prompt outright. He disabled plan-mode control, the ask-user-question tool, cron scheduling, bundled skills, dynamic workflows, remote control, connectors and artifacts — taking the shipped system tools from roughly 25K tokens down to around 8K. He used a proxy to see what was actually going over the wire, which is how you find yours rather than guessing.</p>
+<p>The reason this is worth doing is the same one behind every fix in this lesson: the less you send, the better the output, because there is less material distracting the agent.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>25K</b><i>tokens</i><span>shipped system tools before the audit</span></div>
+<div class="fig"><b>~8K</b><i>tokens</i><span>after disabling the unused features</span></div>
+<div class="fig"><b>8–10K</b><i>tokens</i><span>in blocks for three features he never used</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 172" role="img"
+  aria-label="Two bars. Before: 25 thousand tokens of shipped system tools filling most of the bar. After: about 8 thousand tokens, leaving far more room for the task.">
+  <text x="0" y="14" class="d-label">BEFORE</text>
+  <rect x="0" y="24" width="460" height="34" rx="3" fill="var(--surface-2)"/>
+  <rect x="0" y="24" width="368" height="34" rx="3" fill="var(--interference)" opacity="0.5"/>
+  <text x="184" y="45" class="d-num" text-anchor="middle">25K shipped tools</text>
+  <text x="414" y="45" class="d-label" text-anchor="middle">your task</text>
+
+  <text x="0" y="94" class="d-label">AFTER</text>
+  <rect x="0" y="104" width="460" height="34" rx="3" fill="var(--surface-2)"/>
+  <rect x="0" y="104" width="118" height="34" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <text x="59" y="125" class="d-num" text-anchor="middle">~8K</text>
+  <text x="290" y="125" class="d-label" text-anchor="middle">room to actually work</text>
+
+  <text x="0" y="164" class="d-label">a settings change, not a prompt trick &#8212; and it applies to every request</text>
+</svg></div><figcaption><b>25K down to 8K, on every request</b><span>The bar is the system prompt before your task starts. Everything shaded is shipped features, re-sent on every single call.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Run a proxy once to see what your harness actually sends — don't estimate it.</li>
+<li>Disable features you never use in global settings; the definitions leave the prompt.</li>
+<li>Re-audit after upgrades: new features arrive switched on.</li>
+<li>Judge the saving per request, not per session — the system prompt is re-sent every time.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/oLx4yCbeklQ" target="_blank" rel="noopener">Matt Pocock &middot; Claude Code's system tools are SO BLOATED &middot; 1:38 &#8599;</a></div>
+</section>
+<p class="bridge">Tools are not the only thing that arrives in bulk. The same overload comes through process, and it now has a name.</p>
 <section id="skill-hell">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 4 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">5 / 8 &middot; builds on <s>dumb-zone</s></span>
 <h2>Skill hell</h2>
 <p class="oneline">Stacking every agent framework you can find into one context window at once — the same overload as tool bloat, arriving through process instead of tools.</p>
 </div></div>
@@ -322,10 +406,115 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/shorts/32LyZyFQhCQ" target="_blank" rel="noopener">Matt Pocock &middot; Framework Hell, Tutorial Hell... now Skill Hell &middot; 1:30 &#8599;</a></div>
 </section>
-<p class="bridge">It also turns a vague complaint into a diagnosis. Not all hallucinations are the same failure, and one question separates them.</p>
+<p class="bridge">Tool definitions and skills at least do something you asked for. The next occupant is material the agent chose to keep on your behalf.</p>
+<section id="agent-memory">
+<div class="wrap"><div class="chead">
+<span class="cnum">6 / 8 &middot; builds on <s>context-window</s></span>
+<h2>Kill the auto-memory</h2>
+<p class="oneline">Letting an agent save its own memories trades predictability for convenience — a stateless agent starts from the same base every time, and anything worth keeping belongs in a file you wrote.</p>
+</div></div>
+<div class="wrap">
+<p>Pocock's position is blunt: turn auto-memory off completely and delete almost everything the agent has saved into its own memory banks. In Claude Code that is a setting, and the memories live in an uppercase MEMORY.md.</p>
+<p>The problem is eagerness. A preference you expressed about one specific feature — how that thing should be built — gets saved, and then influences every conversation you have afterwards, in contexts where it was never meant to apply.</p>
+<p>The gain from switching it off is predictability. A stateless agent remembers nothing between sessions, so every session starts from the same base and you know how it will behave. With memory accumulating, the behaviour drifts: each use is slightly different and slightly less predictable than the last, and none of that drift is visible to you.</p>
+<p>The alternative is not to have no preferences — it is to write them down deliberately. Edit your CLAUDE.md, add a doc in the repo. You stay in control of the steering, and the preference exists because you decided it should, not because the agent inferred it.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 238" role="img"
+  aria-label="Top row: four stateless sessions, each starting from an identical small base. Bottom row: four sessions where saved memory accumulates, so each base is larger and different from the last.">
+  <text x="0" y="12" class="d-label">STATELESS &#183; same base every time</text>
+  <g>
+    <rect x="0" y="24" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+    <rect x="4" y="28" width="30" height="38" rx="3" fill="var(--signal)" opacity="0.45"/>
+    <text x="56" y="84" class="d-label" text-anchor="middle">session 1</text>
+
+    <rect x="136" y="24" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+    <rect x="140" y="28" width="30" height="38" rx="3" fill="var(--signal)" opacity="0.45"/>
+    <text x="192" y="84" class="d-label" text-anchor="middle">session 2</text>
+
+    <rect x="272" y="24" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+    <rect x="276" y="28" width="30" height="38" rx="3" fill="var(--signal)" opacity="0.45"/>
+    <text x="328" y="84" class="d-label" text-anchor="middle">session 3</text>
+
+    <rect x="408" y="24" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+    <rect x="412" y="28" width="30" height="38" rx="3" fill="var(--signal)" opacity="0.45"/>
+    <text x="464" y="84" class="d-label" text-anchor="middle">session 4</text>
+  </g>
+  <text x="0" y="106" class="d-label">the base is what you wrote &#8212; comparable results, predictable behaviour</text>
+
+  <text x="0" y="140" class="d-label">AUTO&#8209;MEMORY &#183; the base drifts</text>
+  <g>
+    <rect x="0" y="152" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+    <rect x="4" y="156" width="30" height="38" rx="3" fill="var(--interference)" opacity="0.45"/>
+    <text x="56" y="214" class="d-label" text-anchor="middle">session 1</text>
+
+    <rect x="136" y="152" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+    <rect x="140" y="156" width="46" height="38" rx="3" fill="var(--interference)" opacity="0.45"/>
+    <text x="192" y="214" class="d-label" text-anchor="middle">session 2</text>
+
+    <rect x="272" y="152" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+    <rect x="276" y="156" width="66" height="38" rx="3" fill="var(--interference)" opacity="0.45"/>
+    <text x="328" y="214" class="d-label" text-anchor="middle">session 3</text>
+
+    <rect x="408" y="152" width="112" height="46" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+    <rect x="412" y="156" width="88" height="38" rx="3" fill="var(--interference)" opacity="0.45"/>
+    <text x="464" y="214" class="d-label" text-anchor="middle">session 4</text>
+  </g>
+  <text x="0" y="234" class="d-label">a preference about one feature, saved once, now shapes every conversation after it</text>
+</svg></div><figcaption><b>Four sessions, with and without saved memory</b><span>Stateless, every session starts from the same base you wrote. With auto-memory, the base is different each time and nothing shows you how.</span></figcaption></figure>
+<div class="analogy"><q>You should be in control of the steering.</q><p>The same test as any other agent feature: does it make your process repeatable, or does it quietly change the starting conditions on you?</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Turn auto-memory off in settings and clear what has already accumulated.</li>
+<li>Put durable preferences in CLAUDE.md or a repo doc — deliberately, by hand.</li>
+<li>Treat a stateless agent as the feature: a consistent base is what makes results comparable.</li>
+<li>If behaviour drifts between sessions, look at saved memory before blaming the model.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/A0scuiiGBC4" target="_blank" rel="noopener">Matt Pocock &middot; Kill your MEMORY.md &middot; 1:29 &#8599;</a></div>
+</section>
+<p class="bridge">The last one you wrote yourself, with the best intentions — and it is the only one that can also be wrong.</p>
+<section id="docs-drift">
+<div class="wrap"><div class="chead">
+<span class="cnum">7 / 8 &middot; builds on <s>context-window</s></span>
+<h2>Docs as a second source of truth</h2>
+<p class="oneline">A layer of markdown written to explain your code becomes a second source of truth that nothing tests, and when it drifts the agent cannot tell which one is real.</p>
+</div></div>
+<div class="wrap">
+<p>When an agent explores a codebase, the code is normally all it has to go on. That puts the burden on the code: formatted well, in sensible files, organised into reasonable chunks, interfaces separated from implementations so the agent can take what it needs.</p>
+<p>The antipattern is avoiding that work by building a layer of markdown docs and pointing the agent at those instead. Those files are not executable and not testable against the code, so nothing stops them drifting. Once they have drifted you have two sources of truth that disagree, and the agent has no way to tell which one is real. It also costs tokens to read the explanation on top of the thing it explains.</p>
+<p>This is not an argument against all docs. Code genuinely cannot record what alternatives were considered and rejected — that is what architecture decision records are for. It cannot define your domain language either: whether the agent knows what an "order" means in your codebase is a question a glossary answers. And a thin navigational layer speeds up exploration.</p>
+<p>The line is docs as the source of truth. A doc that captures something the code cannot express is worth keeping. A doc that restates what the code already says is a liability that starts accurate and ends misleading.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 184" role="img"
+  aria-label="Two parallel timelines starting together. The code line advances through several commits. The docs line stops early, and the gap between them is labelled drift.">
+  <text x="0" y="14" class="d-label">CODE &#183; tested, executed, forced to stay true</text>
+  <line x1="0" y1="44" x2="440" y2="44" stroke="var(--signal)" stroke-width="2.5"/>
+  <g fill="var(--signal)">
+    <circle cx="20" cy="44" r="5"/><circle cx="120" cy="44" r="5"/><circle cx="220" cy="44" r="5"/>
+    <circle cx="320" cy="44" r="5"/><circle cx="430" cy="44" r="5"/>
+  </g>
+
+  <text x="0" y="104" class="d-label">DOCS &#183; nothing checks them</text>
+  <line x1="0" y1="134" x2="120" y2="134" stroke="var(--interference)" stroke-width="2.5"/>
+  <line x1="120" y1="134" x2="440" y2="134" stroke="var(--interference)" stroke-width="2.5"
+        stroke-dasharray="5 6" opacity="0.5"/>
+  <g fill="var(--interference)"><circle cx="20" cy="134" r="5"/><circle cx="120" cy="134" r="5"/></g>
+
+  <line x1="320" y1="44" x2="320" y2="134" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="330" y="94" class="d-num">drift</text>
+  <text x="0" y="174" class="d-label">both still claim to be true, and the agent has no way to break the tie</text>
+</svg></div><figcaption><b>Two sources of truth, drifting apart</b><span>The code changes because it has to. The doc changes when someone remembers. Nothing fails when the gap opens.</span></figcaption></figure>
+<div class="analogy"><q>If there are two sources of truth and they conflict, AI won't know which one is the real one.</q><p>It reframes the choice: the question is not whether docs are useful, but whether this doc can ever be checked against the thing it describes.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Delete docs that restate the code — invest that effort in making the code readable instead.</li>
+<li>Keep architecture decision records: alternatives considered are not recoverable from code.</li>
+<li>Keep a glossary of domain terms; the agent cannot infer what your nouns mean.</li>
+<li>Keep the navigational layer thin — a map, not a mirror.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/Fj8DKMbdIzU" target="_blank" rel="noopener">Matt Pocock &middot; Delete (most of) your docs &middot; 2:04 &#8599;</a></div>
+</section>
+<p class="bridge">That is the audit. The mechanism also turns a vague complaint into a diagnosis: not all hallucinations are the same failure, and one question separates them.</p>
 <section id="hallucination-types">
 <div class="wrap"><div class="chead">
-<span class="cnum">4 / 4 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">8 / 8 &middot; builds on <s>dumb-zone</s></span>
 <h2>Factuality vs faithfulness</h2>
 <p class="oneline">One question splits every hallucination into two kinds with two different fixes: was the information in the context window at all?</p>
 </div></div>
@@ -410,7 +599,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/shorts/H-JHumbpORI" target="_blank" rel="noopener">Matt Pocock &middot; My agent hallucinated - what do I do? &middot; 1:32 &#8599;</a></div>
 </section>
-<div class="close"><div class="wrap"><h2>The whole lesson in one move</h2><p>There is one resource, it degrades as it fills, and almost every fix is the same fix: put less in the window. Fewer tools, smaller tasks, fresh sessions. The threshold moves as models improve — the mechanism doesn't.</p></div></div>
+<div class="close"><div class="wrap"><h2>The whole lesson in one move</h2><p>There is one resource, it degrades as it fills, and almost every fix is the same fix: put less in the window. Fewer tools, fewer shipped features, no saved memories, thinner docs, smaller tasks, fresh sessions. Audit what is in the request once — a proxy, a settings page, a MEMORY.md — and you will usually find more to delete than to tune. The threshold moves as models improve; the mechanism doesn't.</p></div></div>
 <footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
 <script>
 (function(){

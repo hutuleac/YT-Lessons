@@ -115,6 +115,9 @@ section:last-of-type{border-bottom:0}
   color:var(--muted); display:block; margin-bottom:12px
 }
 .cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
 h2{
   font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
   letter-spacing:-.03em; font-weight:600; margin:0 0 16px
@@ -312,7 +315,21 @@ RAIL_JS = """
 """
 
 
-def render_note(n, idx, total, bridge):
+def lesson_index():
+    """note id -> id of a lesson that teaches it, so an out-of-lesson prerequisite can link out.
+
+    A lesson carries its own argument; pulling in a whole prerequisite chain just to satisfy the
+    'builds on' line is what turns two lessons into the same lesson.
+    """
+    where = {}
+    for p in sorted(LESSONS.glob("*.py")):
+        L = load(p, "LESSON")
+        for nid in L["notes"]:
+            where.setdefault(nid, L["id"])
+    return where
+
+
+def render_note(n, idx, total, bridge, here, where):
     o = []
     if bridge:
         o.append(f'<p class="bridge">{e(bridge)}</p>')
@@ -320,7 +337,16 @@ def render_note(n, idx, total, bridge):
 
     # Structural device: the prerequisite chain, which is real data from the note.
     pre = n.get("prerequisites") or []
-    chain = f' &middot; builds on <s>{e(", ".join(pre))}</s>' if pre else " &middot; start here"
+    parts = []
+    for p in pre:
+        if p in here:
+            parts.append(f"<s>{e(p)}</s>")
+        elif p in where:
+            # Taught elsewhere: link out rather than dragging the note into this lesson.
+            parts.append(f'<a class="out" href="{e(where[p])}.html#{e(p)}">{e(p)}</a>')
+        else:
+            parts.append(f"<s>{e(p)}</s>")
+    chain = f' &middot; builds on {", ".join(parts)}' if parts else " &middot; start here"
     o.append('<div class="wrap"><div class="chead">')
     o.append(f'<span class="cnum">{idx} / {total}{chain}</span>')
     o.append(f'<h2>{e(n["concept"])}</h2>')
@@ -399,6 +425,8 @@ def concept_map(L, notes, per_row=3):
     edges = []
     for nid in L["notes"]:
         for p in notes[nid].get("prerequisites") or []:
+            if p not in pos:  # taught by another lesson — the section heading links out to it
+                continue
             cx1, cy1 = pos[p][0] + w / 2, pos[p][1] + h / 2
             cx2, cy2 = pos[nid][0] + w / 2, pos[nid][1] + h / 2
             sx, sy = on_border(cx1, cy1, cx2, cy2)
@@ -561,6 +589,7 @@ def check_note(nid, n):
 
 def build_lesson(path):
     L = load(path, "LESSON")
+    where = lesson_index()
     notes = {}
     for i in L["notes"]:
         f = NOTES / f"{i}.py"
@@ -574,12 +603,14 @@ def build_lesson(path):
     for nid in L["notes"]:
         for p in notes[nid].get("prerequisites") or []:
             if p not in L["notes"]:
-                # The heading renders "builds on <p>", so an absent prerequisite points the
-                # reader at a concept this lesson never teaches.
-                raise SystemExit(
-                    f"{path.name}: '{nid}' builds on '{p}', which the lesson never covers — "
-                    f"add '{p}' to 'notes' before it"
-                )
+                # Taught by another lesson: the heading links out to it. Only a prerequisite
+                # that no lesson covers is an error, because it can't be linked either.
+                if p not in where:
+                    raise SystemExit(
+                        f"{path.name}: '{nid}' builds on '{p}', which no lesson covers — "
+                        f"add '{p}' to this lesson, or to one that runs before it"
+                    )
+                continue
             if p not in seen:
                 raise SystemExit(
                     f"{path.name}: '{nid}' needs '{p}' first — reorder 'notes' in the lesson"
@@ -597,7 +628,9 @@ def build_lesson(path):
     ]
     total = len(L["notes"])
     for i, nid in enumerate(L["notes"], 1):
-        body.append(render_note(notes[nid], i, total, L.get("bridges", {}).get(nid)))
+        body.append(
+            render_note(notes[nid], i, total, L.get("bridges", {}).get(nid), L["notes"], where)
+        )
 
     c = L.get("closing")
     if c:

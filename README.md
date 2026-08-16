@@ -48,7 +48,8 @@ context-engineering.py: 'tool-overload' needs 'dumb-zone' first — reorder 'not
 ```
 
 The `builds on …` line under each section heading is rendered from that same field, so the
-dependency shown to the reader is the one the build checked.
+dependency shown to the reader is the one the build checked. A prerequisite that another lesson
+teaches becomes a link to that lesson, so a lesson only has to carry its own argument.
 
 ## Notes on the notes
 

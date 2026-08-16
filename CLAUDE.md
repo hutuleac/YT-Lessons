@@ -55,6 +55,11 @@ before one of its prerequisites, if a `prerequisites`/`related` id doesn't resol
 or if a note's `id` doesn't match its filename. A failure on ordering means reorder the lesson,
 not edit the note.
 
+A prerequisite **taught by a different lesson** is fine — the `builds on` line links out to that
+lesson instead. Only a prerequisite no lesson covers fails the build. Don't pull a chain of
+prerequisites into a lesson to satisfy the heading: that is how two lessons end up making the
+same argument out of the same notes.
+
 ## Gotchas
 - **`sys.dont_write_bytecode = True` in build.py is load-bearing.** Notes and lessons are data
   files loaded by path; a stale `.pyc` silently serves the previous version when an edit keeps the

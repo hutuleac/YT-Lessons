@@ -72,6 +72,9 @@ section:last-of-type{border-bottom:0}
   color:var(--muted); display:block; margin-bottom:12px
 }
 .cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
 h2{
   font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
   letter-spacing:-.03em; font-weight:600; margin:0 0 16px
@@ -160,6 +163,6 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
         <h1>Ideas worth more than 60 seconds</h1>
         <p class="standfirst">Short-form video, taken apart and put back together as something you
         can actually learn from.</p>
-        <ul><li><a href="context-engineering.html"><span class="k">Context engineering</span><b>Why your agent gets dumber the longer you talk to it</b><i>Every model degrades as its context fills. Once you can see the mechanism, three unrelated-looking failures turn out to be the same problem — and the fixes stop being guesswork.</i><u>4 concepts</u></a><p class="dk"><a href="context-engineering-deck.html">Deck &#8599;</a></p></li><li><a href="llm-fundamentals.html"><span class="k">LLM fundamentals</span><b>What is actually happening when you talk to an LLM</b><i>Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.</i><u>6 concepts</u></a><p class="dk"><a href="llm-fundamentals-deck.html">Deck &#8599;</a></p></li><li><a href="window-hygiene.html"><span class="k">Context hygiene</span><b>Everything competing for the same window</b><i>One pool of tokens, and four different things quietly filling it: the tools you added, the ones your harness shipped, the memories your agent saved itself, and a layer of docs nobody tests. Same resource, same fix.</i><u>7 concepts</u></a><p class="dk"><a href="window-hygiene-deck.html">Deck &#8599;</a></p></li></ul></div>
+        <ul><li><a href="context-engineering.html"><span class="k">Context engineering</span><b>Everything is competing for the same window</b><i>One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.</i><u>8 concepts</u></a><p class="dk"><a href="context-engineering-deck.html">Deck &#8599;</a></p></li><li><a href="llm-fundamentals.html"><span class="k">LLM fundamentals</span><b>What is actually happening when you talk to an LLM</b><i>Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.</i><u>6 concepts</u></a><p class="dk"><a href="llm-fundamentals-deck.html">Deck &#8599;</a></p></li></ul></div>
 </body>
 </html>
