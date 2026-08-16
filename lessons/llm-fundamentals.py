@@ -15,6 +15,7 @@ LESSON = {
         "tool-loop",
         "structured-output",
         "agents-vs-workflows",
+        "prompt-injection",
     ],
 
     "bridges": {
@@ -26,6 +27,9 @@ LESSON = {
                      " — and they are built out of the same messages you have just seen.",
         "structured-output": "Tools make the model ask for things. The mirror image is making the"
                              " model hand things back in a shape you specified.",
+        "prompt-injection": "Everything so far assumes the messages say what you think they"
+                             " say. Retrieved content is a message part too, and it can carry"
+                             " instructions of its own.",
         "agents-vs-workflows": "One call is one call. Chain several and you have built either a"
                                " workflow or an agent, and the difference is smaller than the"
                                " vocabulary suggests.",

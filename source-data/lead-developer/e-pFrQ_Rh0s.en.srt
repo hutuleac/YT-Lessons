@@ -1,0 +1,355 @@
+1
+00:00:00,000 --> 00:00:03,150
+
+Our coding feels exhausting.
+
+2
+00:00:03,150 --> 00:00:03,160
+Our coding feels exhausting.
+ 
+
+3
+00:00:03,160 --> 00:00:04,070
+Our coding feels exhausting.
+I mean, I think a lot of people are
+
+4
+00:00:04,070 --> 00:00:04,080
+I mean, I think a lot of people are
+ 
+
+5
+00:00:04,080 --> 00:00:05,870
+I mean, I think a lot of people are
+feeling this way because
+
+6
+00:00:05,870 --> 00:00:05,880
+feeling this way because
+ 
+
+7
+00:00:05,880 --> 00:00:07,790
+feeling this way because
+I think the main thing that I'm seeing
+
+8
+00:00:07,790 --> 00:00:07,800
+I think the main thing that I'm seeing
+ 
+
+9
+00:00:07,800 --> 00:00:10,030
+I think the main thing that I'm seeing
+is that people are having to do so much
+
+10
+00:00:10,030 --> 00:00:10,040
+is that people are having to do so much
+ 
+
+11
+00:00:10,040 --> 00:00:12,150
+is that people are having to do so much
+more strategic thinking than they used
+
+12
+00:00:12,150 --> 00:00:12,160
+more strategic thinking than they used
+ 
+
+13
+00:00:12,160 --> 00:00:14,790
+more strategic thinking than they used
+to. Before, you would have these coding
+
+14
+00:00:14,790 --> 00:00:14,800
+to. Before, you would have these coding
+ 
+
+15
+00:00:14,800 --> 00:00:16,790
+to. Before, you would have these coding
+sessions where you would write the code
+
+16
+00:00:16,790 --> 00:00:16,800
+sessions where you would write the code
+ 
+
+17
+00:00:16,800 --> 00:00:17,950
+sessions where you would write the code
+and that was like a little break for
+
+18
+00:00:17,950 --> 00:00:17,960
+and that was like a little break for
+ 
+
+19
+00:00:17,960 --> 00:00:20,070
+and that was like a little break for
+your brain. That's the kind of tactical
+
+20
+00:00:20,070 --> 00:00:20,080
+your brain. That's the kind of tactical
+ 
+
+21
+00:00:20,080 --> 00:00:22,350
+your brain. That's the kind of tactical
+side where you're kind of on the ground
+
+22
+00:00:22,350 --> 00:00:22,360
+side where you're kind of on the ground
+ 
+
+23
+00:00:22,360 --> 00:00:25,030
+side where you're kind of on the ground
+doing it sort of almost like non-verbal
+
+24
+00:00:25,030 --> 00:00:25,040
+doing it sort of almost like non-verbal
+ 
+
+25
+00:00:25,040 --> 00:00:26,630
+doing it sort of almost like non-verbal
+reasoning, not having to think very
+
+26
+00:00:26,630 --> 00:00:26,640
+reasoning, not having to think very
+ 
+
+27
+00:00:26,640 --> 00:00:28,710
+reasoning, not having to think very
+much, just sort of moving stuff around,
+
+28
+00:00:28,710 --> 00:00:28,720
+much, just sort of moving stuff around,
+ 
+
+29
+00:00:28,720 --> 00:00:31,910
+much, just sort of moving stuff around,
+kind of playing a game almost. But now
+
+30
+00:00:31,910 --> 00:00:31,920
+kind of playing a game almost. But now
+ 
+
+31
+00:00:31,920 --> 00:00:34,430
+kind of playing a game almost. But now
+all AI has just eaten that, right? AI
+
+32
+00:00:34,430 --> 00:00:34,440
+all AI has just eaten that, right? AI
+ 
+
+33
+00:00:34,440 --> 00:00:35,950
+all AI has just eaten that, right? AI
+has eaten the tactical side of
+
+34
+00:00:35,950 --> 00:00:35,960
+has eaten the tactical side of
+ 
+
+35
+00:00:35,960 --> 00:00:38,030
+has eaten the tactical side of
+programming. So, everything that we do
+
+36
+00:00:38,030 --> 00:00:38,040
+programming. So, everything that we do
+ 
+
+37
+00:00:38,040 --> 00:00:41,030
+programming. So, everything that we do
+now is strategic thinking long-term. And
+
+38
+00:00:41,030 --> 00:00:41,040
+now is strategic thinking long-term. And
+ 
+
+39
+00:00:41,040 --> 00:00:42,470
+now is strategic thinking long-term. And
+everything that we do, because we're
+
+40
+00:00:42,470 --> 00:00:42,480
+everything that we do, because we're
+ 
+
+41
+00:00:42,480 --> 00:00:44,550
+everything that we do, because we're
+having to operate at a level above the
+
+42
+00:00:44,550 --> 00:00:44,560
+having to operate at a level above the
+ 
+
+43
+00:00:44,560 --> 00:00:47,030
+having to operate at a level above the
+AI, think above the level that the AI is
+
+44
+00:00:47,030 --> 00:00:47,040
+AI, think above the level that the AI is
+ 
+
+45
+00:00:47,040 --> 00:00:48,550
+AI, think above the level that the AI is
+operating at.
+
+46
+00:00:48,550 --> 00:00:48,560
+operating at.
+ 
+
+47
+00:00:48,560 --> 00:00:50,390
+operating at.
+I mean, we've all turned into lead
+
+48
+00:00:50,390 --> 00:00:50,400
+I mean, we've all turned into lead
+ 
+
+49
+00:00:50,400 --> 00:00:52,230
+I mean, we've all turned into lead
+developers. We've gone higher up the
+
+50
+00:00:52,230 --> 00:00:52,240
+developers. We've gone higher up the
+ 
+
+51
+00:00:52,240 --> 00:00:53,950
+developers. We've gone higher up the
+chain and that demands high-level
+
+52
+00:00:53,950 --> 00:00:53,960
+chain and that demands high-level
+ 
+
+53
+00:00:53,960 --> 00:00:55,710
+chain and that demands high-level
+thinking. I don't honestly know what we
+
+54
+00:00:55,710 --> 00:00:55,720
+thinking. I don't honestly know what we
+ 
+
+55
+00:00:55,720 --> 00:00:57,670
+thinking. I don't honestly know what we
+do about this. I think it's just baked
+
+56
+00:00:57,670 --> 00:00:57,680
+do about this. I think it's just baked
+ 
+
+57
+00:00:57,680 --> 00:00:59,950
+do about this. I think it's just baked
+into the loaf. Everyone who's using AI,
+
+58
+00:00:59,950 --> 00:00:59,960
+into the loaf. Everyone who's using AI,
+ 
+
+59
+00:00:59,960 --> 00:01:01,750
+into the loaf. Everyone who's using AI,
+whether they're using it or anything
+
+60
+00:01:01,750 --> 00:01:01,760
+whether they're using it or anything
+ 
+
+61
+00:01:01,760 --> 00:01:04,150
+whether they're using it or anything
+else, they're having their boring grunt
+
+62
+00:01:04,150 --> 00:01:04,160
+else, they're having their boring grunt
+ 
+
+63
+00:01:04,160 --> 00:01:06,030
+else, they're having their boring grunt
+work taken away, but it means that their
+
+64
+00:01:06,030 --> 00:01:06,040
+work taken away, but it means that their
+ 
+
+65
+00:01:06,040 --> 00:01:07,750
+work taken away, but it means that their
+brain is under so much more strain. I
+
+66
+00:01:07,750 --> 00:01:07,760
+brain is under so much more strain. I
+ 
+
+67
+00:01:07,760 --> 00:01:09,630
+brain is under so much more strain. I
+have to say that I like it, you know, I
+
+68
+00:01:09,630 --> 00:01:09,640
+have to say that I like it, you know, I
+ 
+
+69
+00:01:09,640 --> 00:01:12,270
+have to say that I like it, you know, I
+do like making high-level decisions, but
+
+70
+00:01:12,270 --> 00:01:12,280
+do like making high-level decisions, but
+ 
+
+71
+00:01:12,280 --> 00:01:16,640
+do like making high-level decisions, but
+I end each day pretty knackered.
+

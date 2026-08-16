@@ -1,0 +1,375 @@
+1
+00:00:00,000 --> 00:00:02,070
+
+Pretty much everyone can get, um, better
+
+2
+00:00:02,070 --> 00:00:02,080
+Pretty much everyone can get, um, better
+ 
+
+3
+00:00:02,080 --> 00:00:04,710
+Pretty much everyone can get, um, better
+bang for your buck by using a lower
+
+4
+00:00:04,710 --> 00:00:04,720
+bang for your buck by using a lower
+ 
+
+5
+00:00:04,720 --> 00:00:06,150
+bang for your buck by using a lower
+effort level. Lower effort basically
+
+6
+00:00:06,150 --> 00:00:06,160
+effort level. Lower effort basically
+ 
+
+7
+00:00:06,160 --> 00:00:09,270
+effort level. Lower effort basically
+means fewer tokens spent on exploration.
+
+8
+00:00:09,270 --> 00:00:09,280
+means fewer tokens spent on exploration.
+ 
+
+9
+00:00:09,280 --> 00:00:11,950
+means fewer tokens spent on exploration.
+So, the agent is more efficient as it
+
+10
+00:00:11,950 --> 00:00:11,960
+So, the agent is more efficient as it
+ 
+
+11
+00:00:11,960 --> 00:00:13,670
+So, the agent is more efficient as it
+goes through your code base. Exploration
+
+12
+00:00:13,670 --> 00:00:13,680
+goes through your code base. Exploration
+ 
+
+13
+00:00:13,680 --> 00:00:15,590
+goes through your code base. Exploration
+is a task that you don't really need
+
+14
+00:00:15,590 --> 00:00:15,600
+is a task that you don't really need
+ 
+
+15
+00:00:15,600 --> 00:00:18,150
+is a task that you don't really need
+effort for. As you crank up the effort,
+
+16
+00:00:18,150 --> 00:00:18,160
+effort for. As you crank up the effort,
+ 
+
+17
+00:00:18,160 --> 00:00:19,910
+effort for. As you crank up the effort,
+the agent is going to be spending more
+
+18
+00:00:19,910 --> 00:00:19,920
+the agent is going to be spending more
+ 
+
+19
+00:00:19,920 --> 00:00:22,350
+the agent is going to be spending more
+thinking tokens to do the same work,
+
+20
+00:00:22,350 --> 00:00:22,360
+thinking tokens to do the same work,
+ 
+
+21
+00:00:22,360 --> 00:00:24,190
+thinking tokens to do the same work,
+more reasoning tokens. And what that
+
+22
+00:00:24,190 --> 00:00:24,200
+more reasoning tokens. And what that
+ 
+
+23
+00:00:24,200 --> 00:00:27,270
+more reasoning tokens. And what that
+means is that it's going to push harder
+
+24
+00:00:27,270 --> 00:00:27,280
+means is that it's going to push harder
+ 
+
+25
+00:00:27,280 --> 00:00:28,990
+means is that it's going to push harder
+on things that you don't need to push
+
+26
+00:00:28,990 --> 00:00:29,000
+on things that you don't need to push
+ 
+
+27
+00:00:29,000 --> 00:00:30,590
+on things that you don't need to push
+on. Everyone looks at the charts for the
+
+28
+00:00:30,590 --> 00:00:30,600
+on. Everyone looks at the charts for the
+ 
+
+29
+00:00:30,600 --> 00:00:33,710
+on. Everyone looks at the charts for the
+benchmarks that models use and they see
+
+30
+00:00:33,710 --> 00:00:33,720
+benchmarks that models use and they see
+ 
+
+31
+00:00:33,720 --> 00:00:35,310
+benchmarks that models use and they see
+that, okay, if you crank it up to max
+
+32
+00:00:35,310 --> 00:00:35,320
+that, okay, if you crank it up to max
+ 
+
+33
+00:00:35,320 --> 00:00:36,510
+that, okay, if you crank it up to max
+effort, you're going to get higher
+
+34
+00:00:36,510 --> 00:00:36,520
+effort, you're going to get higher
+ 
+
+35
+00:00:36,520 --> 00:00:38,270
+effort, you're going to get higher
+quality outputs. The weird thing about
+
+36
+00:00:38,270 --> 00:00:38,280
+quality outputs. The weird thing about
+ 
+
+37
+00:00:38,280 --> 00:00:39,710
+quality outputs. The weird thing about
+those charts is that they don't really
+
+38
+00:00:39,710 --> 00:00:39,720
+those charts is that they don't really
+ 
+
+39
+00:00:39,720 --> 00:00:41,910
+those charts is that they don't really
+take into account the crucial thing,
+
+40
+00:00:41,910 --> 00:00:41,920
+take into account the crucial thing,
+ 
+
+41
+00:00:41,920 --> 00:00:44,710
+take into account the crucial thing,
+which is that the tasks stay static,
+
+42
+00:00:44,710 --> 00:00:44,720
+which is that the tasks stay static,
+ 
+
+43
+00:00:44,720 --> 00:00:46,750
+which is that the tasks stay static,
+whereas you have the opportunity as the
+
+44
+00:00:46,750 --> 00:00:46,760
+whereas you have the opportunity as the
+ 
+
+45
+00:00:46,760 --> 00:00:48,510
+whereas you have the opportunity as the
+developer to change the way that you
+
+46
+00:00:48,510 --> 00:00:48,520
+developer to change the way that you
+ 
+
+47
+00:00:48,520 --> 00:00:50,790
+developer to change the way that you
+specify tasks to make things easier for
+
+48
+00:00:50,790 --> 00:00:50,800
+specify tasks to make things easier for
+ 
+
+49
+00:00:50,800 --> 00:00:52,350
+specify tasks to make things easier for
+the agent. The more high-quality
+
+50
+00:00:52,350 --> 00:00:52,360
+the agent. The more high-quality
+ 
+
+51
+00:00:52,360 --> 00:00:54,230
+the agent. The more high-quality
+information you give it, the lower
+
+52
+00:00:54,230 --> 00:00:54,240
+information you give it, the lower
+ 
+
+53
+00:00:54,240 --> 00:00:55,910
+information you give it, the lower
+effort you actually need to complete the
+
+54
+00:00:55,910 --> 00:00:55,920
+effort you actually need to complete the
+ 
+
+55
+00:00:55,920 --> 00:00:57,830
+effort you actually need to complete the
+task. So, I recommend actually starting,
+
+56
+00:00:57,830 --> 00:00:57,840
+task. So, I recommend actually starting,
+ 
+
+57
+00:00:57,840 --> 00:00:59,350
+task. So, I recommend actually starting,
+if you're using Opus or Fable or
+
+58
+00:00:59,350 --> 00:00:59,360
+if you're using Opus or Fable or
+ 
+
+59
+00:00:59,360 --> 00:01:01,630
+if you're using Opus or Fable or
+something, starting with the lowest
+
+60
+00:01:01,630 --> 00:01:01,640
+something, starting with the lowest
+ 
+
+61
+00:01:01,640 --> 00:01:03,350
+something, starting with the lowest
+effort you have access to and then
+
+62
+00:01:03,350 --> 00:01:03,360
+effort you have access to and then
+ 
+
+63
+00:01:03,360 --> 00:01:05,430
+effort you have access to and then
+cranking it up from there. You do still
+
+64
+00:01:05,430 --> 00:01:05,440
+cranking it up from there. You do still
+ 
+
+65
+00:01:05,440 --> 00:01:06,830
+cranking it up from there. You do still
+need a little bit of thinking tokens
+
+66
+00:01:06,830 --> 00:01:06,840
+need a little bit of thinking tokens
+ 
+
+67
+00:01:06,840 --> 00:01:08,310
+need a little bit of thinking tokens
+just because chain of thought is such a
+
+68
+00:01:08,310 --> 00:01:08,320
+just because chain of thought is such a
+ 
+
+69
+00:01:08,320 --> 00:01:10,430
+just because chain of thought is such a
+useful way of working with agents and
+
+70
+00:01:10,430 --> 00:01:10,440
+useful way of working with agents and
+ 
+
+71
+00:01:10,440 --> 00:01:12,710
+useful way of working with agents and
+getting it to do good stuff, but
+
+72
+00:01:12,710 --> 00:01:12,720
+getting it to do good stuff, but
+ 
+
+73
+00:01:12,720 --> 00:01:15,150
+getting it to do good stuff, but
+honestly, just try a lower effort level.
+
+74
+00:01:15,150 --> 00:01:15,160
+honestly, just try a lower effort level.
+ 
+
+75
+00:01:15,160 --> 00:01:18,640
+honestly, just try a lower effort level.
+You'll be surprised by what you get.
+

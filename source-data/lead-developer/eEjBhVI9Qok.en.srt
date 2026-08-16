@@ -1,0 +1,645 @@
+1
+00:00:00,000 --> 00:00:02,350
+
+Do software fundamentals still matter?
+
+2
+00:00:02,350 --> 00:00:02,360
+Do software fundamentals still matter?
+ 
+
+3
+00:00:02,360 --> 00:00:04,990
+Do software fundamentals still matter?
+Or is the programmer just dead as a
+
+4
+00:00:04,990 --> 00:00:05,000
+Or is the programmer just dead as a
+ 
+
+5
+00:00:05,000 --> 00:00:06,830
+Or is the programmer just dead as a
+profession? Should we just ignore the
+
+6
+00:00:06,830 --> 00:00:06,840
+profession? Should we just ignore the
+ 
+
+7
+00:00:06,840 --> 00:00:09,350
+profession? Should we just ignore the
+code and just focused on the outputs of
+
+8
+00:00:09,350 --> 00:00:09,360
+code and just focused on the outputs of
+ 
+
+9
+00:00:09,360 --> 00:00:11,510
+code and just focused on the outputs of
+what the AI is producing? Just let it be
+
+10
+00:00:11,510 --> 00:00:11,520
+what the AI is producing? Just let it be
+ 
+
+11
+00:00:11,520 --> 00:00:13,310
+what the AI is producing? Just let it be
+a black box. Well, I've got an idea for
+
+12
+00:00:13,310 --> 00:00:13,320
+a black box. Well, I've got an idea for
+ 
+
+13
+00:00:13,320 --> 00:00:15,870
+a black box. Well, I've got an idea for
+you, which is that the code is the
+
+14
+00:00:15,870 --> 00:00:15,880
+you, which is that the code is the
+ 
+
+15
+00:00:15,880 --> 00:00:18,630
+you, which is that the code is the
+environment the agent operates in and
+
+16
+00:00:18,630 --> 00:00:18,640
+environment the agent operates in and
+ 
+
+17
+00:00:18,640 --> 00:00:20,150
+environment the agent operates in and
+the quality of the environment
+
+18
+00:00:20,150 --> 00:00:20,160
+the quality of the environment
+ 
+
+19
+00:00:20,160 --> 00:00:22,230
+the quality of the environment
+influences the output of the agent
+
+20
+00:00:22,230 --> 00:00:22,240
+influences the output of the agent
+ 
+
+21
+00:00:22,240 --> 00:00:24,350
+influences the output of the agent
+working in that code base. So, if you
+
+22
+00:00:24,350 --> 00:00:24,360
+working in that code base. So, if you
+ 
+
+23
+00:00:24,360 --> 00:00:26,510
+working in that code base. So, if you
+have a garbage code base, then the agent
+
+24
+00:00:26,510 --> 00:00:26,520
+have a garbage code base, then the agent
+ 
+
+25
+00:00:26,520 --> 00:00:28,230
+have a garbage code base, then the agent
+is going to produce garbage. And the
+
+26
+00:00:28,230 --> 00:00:28,240
+is going to produce garbage. And the
+ 
+
+27
+00:00:28,240 --> 00:00:30,110
+is going to produce garbage. And the
+thing about garbage code bases is they
+
+28
+00:00:30,110 --> 00:00:30,120
+thing about garbage code bases is they
+ 
+
+29
+00:00:30,120 --> 00:00:32,470
+thing about garbage code bases is they
+sneak up on you. So, there's a concept
+
+30
+00:00:32,470 --> 00:00:32,480
+sneak up on you. So, there's a concept
+ 
+
+31
+00:00:32,480 --> 00:00:35,270
+sneak up on you. So, there's a concept
+called software entropy where unless
+
+32
+00:00:35,270 --> 00:00:35,280
+called software entropy where unless
+ 
+
+33
+00:00:35,280 --> 00:00:37,070
+called software entropy where unless
+you're very careful about organizing the
+
+34
+00:00:37,070 --> 00:00:37,080
+you're very careful about organizing the
+ 
+
+35
+00:00:37,080 --> 00:00:38,750
+you're very careful about organizing the
+code base, thinking strategically about
+
+36
+00:00:38,750 --> 00:00:38,760
+code base, thinking strategically about
+ 
+
+37
+00:00:38,760 --> 00:00:40,550
+code base, thinking strategically about
+what you're doing, having a long-term
+
+38
+00:00:40,550 --> 00:00:40,560
+what you're doing, having a long-term
+ 
+
+39
+00:00:40,560 --> 00:00:42,390
+what you're doing, having a long-term
+view of the code base, applying software
+
+40
+00:00:42,390 --> 00:00:42,400
+view of the code base, applying software
+ 
+
+41
+00:00:42,400 --> 00:00:45,030
+view of the code base, applying software
+fundamentals, then the code base slowly
+
+42
+00:00:45,030 --> 00:00:45,040
+fundamentals, then the code base slowly
+ 
+
+43
+00:00:45,040 --> 00:00:47,790
+fundamentals, then the code base slowly
+gets worse and worse, more disorganized,
+
+44
+00:00:47,790 --> 00:00:47,800
+gets worse and worse, more disorganized,
+ 
+
+45
+00:00:47,800 --> 00:00:49,990
+gets worse and worse, more disorganized,
+harder to work in over time. And from
+
+46
+00:00:49,990 --> 00:00:50,000
+harder to work in over time. And from
+ 
+
+47
+00:00:50,000 --> 00:00:53,390
+harder to work in over time. And from
+what I've seen so far of AI, humans are
+
+48
+00:00:53,390 --> 00:00:53,400
+what I've seen so far of AI, humans are
+ 
+
+49
+00:00:53,400 --> 00:00:55,270
+what I've seen so far of AI, humans are
+a lot better at working in bad code
+
+50
+00:00:55,270 --> 00:00:55,280
+a lot better at working in bad code
+ 
+
+51
+00:00:55,280 --> 00:00:58,550
+a lot better at working in bad code
+bases than AI is. Humans have memory and
+
+52
+00:00:58,550 --> 00:00:58,560
+bases than AI is. Humans have memory and
+ 
+
+53
+00:00:58,560 --> 00:01:00,630
+bases than AI is. Humans have memory and
+so they can remember what works in a
+
+54
+00:01:00,630 --> 00:01:00,640
+so they can remember what works in a
+ 
+
+55
+00:01:00,640 --> 00:01:02,750
+so they can remember what works in a
+code base and what doesn't. This isn't
+
+56
+00:01:02,750 --> 00:01:02,760
+code base and what doesn't. This isn't
+ 
+
+57
+00:01:02,760 --> 00:01:04,229
+code base and what doesn't. This isn't
+perfect, of course, but it means that
+
+58
+00:01:04,229 --> 00:01:04,239
+perfect, of course, but it means that
+ 
+
+59
+00:01:04,239 --> 00:01:06,190
+perfect, of course, but it means that
+they can develop a sense for a bad code
+
+60
+00:01:06,190 --> 00:01:06,200
+they can develop a sense for a bad code
+ 
+
+61
+00:01:06,200 --> 00:01:08,350
+they can develop a sense for a bad code
+base over time and still remain
+
+62
+00:01:08,350 --> 00:01:08,360
+base over time and still remain
+ 
+
+63
+00:01:08,360 --> 00:01:10,430
+base over time and still remain
+relatively productive in it. Agents have
+
+64
+00:01:10,430 --> 00:01:10,440
+relatively productive in it. Agents have
+ 
+
+65
+00:01:10,440 --> 00:01:11,910
+relatively productive in it. Agents have
+no memory
+
+66
+00:01:11,910 --> 00:01:11,920
+no memory
+ 
+
+67
+00:01:11,920 --> 00:01:13,470
+no memory
+unless you bolt on a kind of crappy
+
+68
+00:01:13,470 --> 00:01:13,480
+unless you bolt on a kind of crappy
+ 
+
+69
+00:01:13,480 --> 00:01:15,510
+unless you bolt on a kind of crappy
+memory system onto them, which is a very
+
+70
+00:01:15,510 --> 00:01:15,520
+memory system onto them, which is a very
+ 
+
+71
+00:01:15,520 --> 00:01:17,310
+memory system onto them, which is a very
+unsolved problem. They are kind of like
+
+72
+00:01:17,310 --> 00:01:17,320
+unsolved problem. They are kind of like
+ 
+
+73
+00:01:17,320 --> 00:01:18,990
+unsolved problem. They are kind of like
+the guy from Memento that wakes up in
+
+74
+00:01:18,990 --> 00:01:19,000
+the guy from Memento that wakes up in
+ 
+
+75
+00:01:19,000 --> 00:01:21,550
+the guy from Memento that wakes up in
+the code base and goes, "Okay, I'm
+
+76
+00:01:21,550 --> 00:01:21,560
+the code base and goes, "Okay, I'm
+ 
+
+77
+00:01:21,560 --> 00:01:22,630
+the code base and goes, "Okay, I'm
+awake.
+
+78
+00:01:22,630 --> 00:01:22,640
+awake.
+ 
+
+79
+00:01:22,640 --> 00:01:24,350
+awake.
+Uh what do I remember? Nothing." And so
+
+80
+00:01:24,350 --> 00:01:24,360
+Uh what do I remember? Nothing." And so
+ 
+
+81
+00:01:24,360 --> 00:01:25,870
+Uh what do I remember? Nothing." And so
+you have to re-teach them everything
+
+82
+00:01:25,870 --> 00:01:25,880
+you have to re-teach them everything
+ 
+
+83
+00:01:25,880 --> 00:01:28,070
+you have to re-teach them everything
+about this bad code base as it goes.
+
+84
+00:01:28,070 --> 00:01:28,080
+about this bad code base as it goes.
+ 
+
+85
+00:01:28,080 --> 00:01:29,590
+about this bad code base as it goes.
+This means that AI will make the same
+
+86
+00:01:29,590 --> 00:01:29,600
+This means that AI will make the same
+ 
+
+87
+00:01:29,600 --> 00:01:31,350
+This means that AI will make the same
+mistakes again and again in your code
+
+88
+00:01:31,350 --> 00:01:31,360
+mistakes again and again in your code
+ 
+
+89
+00:01:31,360 --> 00:01:33,550
+mistakes again and again in your code
+base unless you're there thinking
+
+90
+00:01:33,550 --> 00:01:33,560
+base unless you're there thinking
+ 
+
+91
+00:01:33,560 --> 00:01:35,750
+base unless you're there thinking
+strategically, working with guardrails,
+
+92
+00:01:35,750 --> 00:01:35,760
+strategically, working with guardrails,
+ 
+
+93
+00:01:35,760 --> 00:01:37,030
+strategically, working with guardrails,
+getting them to where they need to be,
+
+94
+00:01:37,030 --> 00:01:37,040
+getting them to where they need to be,
+ 
+
+95
+00:01:37,040 --> 00:01:38,790
+getting them to where they need to be,
+preventing their mistakes. This is true
+
+96
+00:01:38,790 --> 00:01:38,800
+preventing their mistakes. This is true
+ 
+
+97
+00:01:38,800 --> 00:01:40,510
+preventing their mistakes. This is true
+of dumb models and it's true of smart
+
+98
+00:01:40,510 --> 00:01:40,520
+of dumb models and it's true of smart
+ 
+
+99
+00:01:40,520 --> 00:01:42,670
+of dumb models and it's true of smart
+models. The problem is not the ability
+
+100
+00:01:42,670 --> 00:01:42,680
+models. The problem is not the ability
+ 
+
+101
+00:01:42,680 --> 00:01:44,710
+models. The problem is not the ability
+to reason, it's the fact that these code
+
+102
+00:01:44,710 --> 00:01:44,720
+to reason, it's the fact that these code
+ 
+
+103
+00:01:44,720 --> 00:01:47,030
+to reason, it's the fact that these code
+bases are hard to explore, hard to work
+
+104
+00:01:47,030 --> 00:01:47,040
+bases are hard to explore, hard to work
+ 
+
+105
+00:01:47,040 --> 00:01:49,590
+bases are hard to explore, hard to work
+in, hard to make changes in, and it's
+
+106
+00:01:49,590 --> 00:01:49,600
+in, hard to make changes in, and it's
+ 
+
+107
+00:01:49,600 --> 00:01:51,510
+in, hard to make changes in, and it's
+just a tricky environment for the AI to
+
+108
+00:01:51,510 --> 00:01:51,520
+just a tricky environment for the AI to
+ 
+
+109
+00:01:51,520 --> 00:01:52,670
+just a tricky environment for the AI to
+work in. The people who are most
+
+110
+00:01:52,670 --> 00:01:52,680
+work in. The people who are most
+ 
+
+111
+00:01:52,680 --> 00:01:54,390
+work in. The people who are most
+valuable right now are the ones who can
+
+112
+00:01:54,390 --> 00:01:54,400
+valuable right now are the ones who can
+ 
+
+113
+00:01:54,400 --> 00:01:56,750
+valuable right now are the ones who can
+build great agent experiences in their
+
+114
+00:01:56,750 --> 00:01:56,760
+build great agent experiences in their
+ 
+
+115
+00:01:56,760 --> 00:01:58,470
+build great agent experiences in their
+code base. And that comes from having
+
+116
+00:01:58,470 --> 00:01:58,480
+code base. And that comes from having
+ 
+
+117
+00:01:58,480 --> 00:02:00,270
+code base. And that comes from having
+code that's easy to explore, having
+
+118
+00:02:00,270 --> 00:02:00,280
+code that's easy to explore, having
+ 
+
+119
+00:02:00,280 --> 00:02:02,750
+code that's easy to explore, having
+tests that test at really good seams,
+
+120
+00:02:02,750 --> 00:02:02,760
+tests that test at really good seams,
+ 
+
+121
+00:02:02,760 --> 00:02:04,510
+tests that test at really good seams,
+having good module design and interface
+
+122
+00:02:04,510 --> 00:02:04,520
+having good module design and interface
+ 
+
+123
+00:02:04,520 --> 00:02:06,430
+having good module design and interface
+design. And so, yes, software
+
+124
+00:02:06,430 --> 00:02:06,440
+design. And so, yes, software
+ 
+
+125
+00:02:06,440 --> 00:02:09,029
+design. And so, yes, software
+fundamentals still matter more than ever
+
+126
+00:02:09,029 --> 00:02:09,039
+fundamentals still matter more than ever
+ 
+
+127
+00:02:09,039 --> 00:02:11,390
+fundamentals still matter more than ever
+because good code bases matter more than
+
+128
+00:02:11,390 --> 00:02:11,400
+because good code bases matter more than
+ 
+
+129
+00:02:11,400 --> 00:02:13,800
+because good code bases matter more than
+ever.
+

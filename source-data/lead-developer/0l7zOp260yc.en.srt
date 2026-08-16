@@ -1,0 +1,465 @@
+1
+00:00:00,000 --> 00:00:01,470
+
+Everyone always asks me what is the
+
+2
+00:00:01,470 --> 00:00:01,480
+Everyone always asks me what is the
+ 
+
+3
+00:00:01,480 --> 00:00:03,070
+Everyone always asks me what is the
+difference between greenfield and
+
+4
+00:00:03,070 --> 00:00:03,080
+difference between greenfield and
+ 
+
+5
+00:00:03,080 --> 00:00:05,710
+difference between greenfield and
+brownfield? Will your skills work on
+
+6
+00:00:05,710 --> 00:00:05,720
+brownfield? Will your skills work on
+ 
+
+7
+00:00:05,720 --> 00:00:07,710
+brownfield? Will your skills work on
+brownfield or will they only work on
+
+8
+00:00:07,710 --> 00:00:07,720
+brownfield or will they only work on
+ 
+
+9
+00:00:07,720 --> 00:00:09,550
+brownfield or will they only work on
+greenfield? And let me tell you
+
+10
+00:00:09,550 --> 00:00:09,560
+greenfield? And let me tell you
+ 
+
+11
+00:00:09,560 --> 00:00:11,510
+greenfield? And let me tell you
+something. Greenfield and brownfield are
+
+12
+00:00:11,510 --> 00:00:11,520
+something. Greenfield and brownfield are
+ 
+
+13
+00:00:11,520 --> 00:00:13,190
+something. Greenfield and brownfield are
+basically the same thing. Whatever
+
+14
+00:00:13,190 --> 00:00:13,200
+basically the same thing. Whatever
+ 
+
+15
+00:00:13,200 --> 00:00:14,910
+basically the same thing. Whatever
+you're building, you are building for
+
+16
+00:00:14,910 --> 00:00:14,920
+you're building, you are building for
+ 
+
+17
+00:00:14,920 --> 00:00:17,110
+you're building, you are building for
+the real world. And in the real world,
+
+18
+00:00:17,110 --> 00:00:17,120
+the real world. And in the real world,
+ 
+
+19
+00:00:17,120 --> 00:00:18,590
+the real world. And in the real world,
+there is really no such thing as a
+
+20
+00:00:18,590 --> 00:00:18,600
+there is really no such thing as a
+ 
+
+21
+00:00:18,600 --> 00:00:20,510
+there is really no such thing as a
+greenfield. You are always working
+
+22
+00:00:20,510 --> 00:00:20,520
+greenfield. You are always working
+ 
+
+23
+00:00:20,520 --> 00:00:22,790
+greenfield. You are always working
+around external constraints, working to
+
+24
+00:00:22,790 --> 00:00:22,800
+around external constraints, working to
+ 
+
+25
+00:00:22,800 --> 00:00:24,750
+around external constraints, working to
+integrate with existing software,
+
+26
+00:00:24,750 --> 00:00:24,760
+integrate with existing software,
+ 
+
+27
+00:00:24,760 --> 00:00:27,510
+integrate with existing software,
+working to, you know, solve real-world
+
+28
+00:00:27,510 --> 00:00:27,520
+working to, you know, solve real-world
+ 
+
+29
+00:00:27,520 --> 00:00:28,790
+working to, you know, solve real-world
+problems. And the only difference
+
+30
+00:00:28,790 --> 00:00:28,800
+problems. And the only difference
+ 
+
+31
+00:00:28,800 --> 00:00:30,710
+problems. And the only difference
+between a greenfield and brownfield code
+
+32
+00:00:30,710 --> 00:00:30,720
+between a greenfield and brownfield code
+ 
+
+33
+00:00:30,720 --> 00:00:33,230
+between a greenfield and brownfield code
+base is that you haven't sorted out the
+
+34
+00:00:33,230 --> 00:00:33,240
+base is that you haven't sorted out the
+ 
+
+35
+00:00:33,240 --> 00:00:35,710
+base is that you haven't sorted out the
+experience of working in that code base
+
+36
+00:00:35,710 --> 00:00:35,720
+experience of working in that code base
+ 
+
+37
+00:00:35,720 --> 00:00:37,430
+experience of working in that code base
+yet. In a brownfield code base, you
+
+38
+00:00:37,430 --> 00:00:37,440
+yet. In a brownfield code base, you
+ 
+
+39
+00:00:37,440 --> 00:00:38,630
+yet. In a brownfield code base, you
+already have existing coding
+
+40
+00:00:38,630 --> 00:00:38,640
+already have existing coding
+ 
+
+41
+00:00:38,640 --> 00:00:40,070
+already have existing coding
+conventions. You have probably an
+
+42
+00:00:40,070 --> 00:00:40,080
+conventions. You have probably an
+ 
+
+43
+00:00:40,080 --> 00:00:42,030
+conventions. You have probably an
+existing test suite. You have existing
+
+44
+00:00:42,030 --> 00:00:42,040
+existing test suite. You have existing
+ 
+
+45
+00:00:42,040 --> 00:00:43,870
+existing test suite. You have existing
+coding standard. Probably, you know,
+
+46
+00:00:43,870 --> 00:00:43,880
+coding standard. Probably, you know,
+ 
+
+47
+00:00:43,880 --> 00:00:45,270
+coding standard. Probably, you know,
+most of them do. Even if they're not
+
+48
+00:00:45,270 --> 00:00:45,280
+most of them do. Even if they're not
+ 
+
+49
+00:00:45,280 --> 00:00:47,510
+most of them do. Even if they're not
+documented, they are implicit in the
+
+50
+00:00:47,510 --> 00:00:47,520
+documented, they are implicit in the
+ 
+
+51
+00:00:47,520 --> 00:00:49,230
+documented, they are implicit in the
+code that's already been written. But in
+
+52
+00:00:49,230 --> 00:00:49,240
+code that's already been written. But in
+ 
+
+53
+00:00:49,240 --> 00:00:50,790
+code that's already been written. But in
+greenfield, you get to choose all of
+
+54
+00:00:50,790 --> 00:00:50,800
+greenfield, you get to choose all of
+ 
+
+55
+00:00:50,800 --> 00:00:52,230
+greenfield, you get to choose all of
+that out of the gate. But once you've
+
+56
+00:00:52,230 --> 00:00:52,240
+that out of the gate. But once you've
+ 
+
+57
+00:00:52,240 --> 00:00:54,230
+that out of the gate. But once you've
+made those choices and AI has spat a
+
+58
+00:00:54,230 --> 00:00:54,240
+made those choices and AI has spat a
+ 
+
+59
+00:00:54,240 --> 00:00:56,150
+made those choices and AI has spat a
+bunch of code out into the repo, then,
+
+60
+00:00:56,150 --> 00:00:56,160
+bunch of code out into the repo, then,
+ 
+
+61
+00:00:56,160 --> 00:00:57,430
+bunch of code out into the repo, then,
+you know, there's an element of those
+
+62
+00:00:57,430 --> 00:00:57,440
+you know, there's an element of those
+ 
+
+63
+00:00:57,440 --> 00:00:59,070
+you know, there's an element of those
+choices become harder to change as you
+
+64
+00:00:59,070 --> 00:00:59,080
+choices become harder to change as you
+ 
+
+65
+00:00:59,080 --> 00:01:00,830
+choices become harder to change as you
+go on. So, how long does your greenfield
+
+66
+00:01:00,830 --> 00:01:00,840
+go on. So, how long does your greenfield
+ 
+
+67
+00:01:00,840 --> 00:01:03,030
+go on. So, how long does your greenfield
+code base stay green? Like, not very
+
+68
+00:01:03,030 --> 00:01:03,040
+code base stay green? Like, not very
+ 
+
+69
+00:01:03,040 --> 00:01:04,990
+code base stay green? Like, not very
+long, you know, maybe a couple of days,
+
+70
+00:01:04,990 --> 00:01:05,000
+long, you know, maybe a couple of days,
+ 
+
+71
+00:01:05,000 --> 00:01:07,110
+long, you know, maybe a couple of days,
+maybe a week at most. We are able to
+
+72
+00:01:07,110 --> 00:01:07,120
+maybe a week at most. We are able to
+ 
+
+73
+00:01:07,120 --> 00:01:09,510
+maybe a week at most. We are able to
+move from fresh code base to legacy code
+
+74
+00:01:09,510 --> 00:01:09,520
+move from fresh code base to legacy code
+ 
+
+75
+00:01:09,520 --> 00:01:12,070
+move from fresh code base to legacy code
+base at a faster rate than ever before.
+
+76
+00:01:12,070 --> 00:01:12,080
+base at a faster rate than ever before.
+ 
+
+77
+00:01:12,080 --> 00:01:13,870
+base at a faster rate than ever before.
+So, I really don't think the greenfield
+
+78
+00:01:13,870 --> 00:01:13,880
+So, I really don't think the greenfield
+ 
+
+79
+00:01:13,880 --> 00:01:15,550
+So, I really don't think the greenfield
+versus brownfield distinction actually
+
+80
+00:01:15,550 --> 00:01:15,560
+versus brownfield distinction actually
+ 
+
+81
+00:01:15,560 --> 00:01:17,110
+versus brownfield distinction actually
+matters that much. And yes, brownfield
+
+82
+00:01:17,110 --> 00:01:17,120
+matters that much. And yes, brownfield
+ 
+
+83
+00:01:17,120 --> 00:01:19,110
+matters that much. And yes, brownfield
+code bases can have a lot of code in
+
+84
+00:01:19,110 --> 00:01:19,120
+code bases can have a lot of code in
+ 
+
+85
+00:01:19,120 --> 00:01:20,510
+code bases can have a lot of code in
+them, but you can actually make them
+
+86
+00:01:20,510 --> 00:01:20,520
+them, but you can actually make them
+ 
+
+87
+00:01:20,520 --> 00:01:22,430
+them, but you can actually make them
+pretty easy to navigate and easy to work
+
+88
+00:01:22,430 --> 00:01:22,440
+pretty easy to navigate and easy to work
+ 
+
+89
+00:01:22,440 --> 00:01:23,830
+pretty easy to navigate and easy to work
+through if you just design your
+
+90
+00:01:23,830 --> 00:01:23,840
+through if you just design your
+ 
+
+91
+00:01:23,840 --> 00:01:25,670
+through if you just design your
+documentation properly, if you design
+
+92
+00:01:25,670 --> 00:01:25,680
+documentation properly, if you design
+ 
+
+93
+00:01:25,680 --> 00:01:28,840
+documentation properly, if you design
+your folder structure properly.
+

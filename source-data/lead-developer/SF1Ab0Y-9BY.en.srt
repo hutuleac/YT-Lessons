@@ -1,0 +1,435 @@
+1
+00:00:00,000 --> 00:00:01,630
+
+If you ever wanted to compare models or
+
+2
+00:00:01,630 --> 00:00:01,640
+If you ever wanted to compare models or
+ 
+
+3
+00:00:01,640 --> 00:00:03,630
+If you ever wanted to compare models or
+compare effort levels of the same model,
+
+4
+00:00:03,630 --> 00:00:03,640
+compare effort levels of the same model,
+ 
+
+5
+00:00:03,640 --> 00:00:05,710
+compare effort levels of the same model,
+then this is such a banger of a graph.
+
+6
+00:00:05,710 --> 00:00:05,720
+then this is such a banger of a graph.
+ 
+
+7
+00:00:05,720 --> 00:00:06,750
+then this is such a banger of a graph.
+This is how different models at
+
+8
+00:00:06,750 --> 00:00:06,760
+This is how different models at
+ 
+
+9
+00:00:06,760 --> 00:00:08,590
+This is how different models at
+different effort levels perform on the
+
+10
+00:00:08,590 --> 00:00:08,600
+different effort levels perform on the
+ 
+
+11
+00:00:08,600 --> 00:00:12,110
+different effort levels perform on the
+deep SWE benchmark. And along the bottom
+
+12
+00:00:12,110 --> 00:00:12,120
+deep SWE benchmark. And along the bottom
+ 
+
+13
+00:00:12,120 --> 00:00:15,070
+deep SWE benchmark. And along the bottom
+here, we have the average cost per task.
+
+14
+00:00:15,070 --> 00:00:15,080
+here, we have the average cost per task.
+ 
+
+15
+00:00:15,080 --> 00:00:17,070
+here, we have the average cost per task.
+On the left-hand side here, we have the
+
+16
+00:00:17,070 --> 00:00:17,080
+On the left-hand side here, we have the
+ 
+
+17
+00:00:17,080 --> 00:00:19,390
+On the left-hand side here, we have the
+quality. So, the amount of tasks it got
+
+18
+00:00:19,390 --> 00:00:19,400
+quality. So, the amount of tasks it got
+ 
+
+19
+00:00:19,400 --> 00:00:20,830
+quality. So, the amount of tasks it got
+right. I've hidden everything except
+
+20
+00:00:20,830 --> 00:00:20,840
+right. I've hidden everything except
+ 
+
+21
+00:00:20,840 --> 00:00:23,030
+right. I've hidden everything except
+three models that I want to show you,
+
+22
+00:00:23,030 --> 00:00:23,040
+three models that I want to show you,
+ 
+
+23
+00:00:23,040 --> 00:00:25,150
+three models that I want to show you,
+which are Claude Sonic 5, Claude Fable,
+
+24
+00:00:25,150 --> 00:00:25,160
+which are Claude Sonic 5, Claude Fable,
+ 
+
+25
+00:00:25,160 --> 00:00:27,950
+which are Claude Sonic 5, Claude Fable,
+and GPT 5.6 Sol. So, Fable performs
+
+26
+00:00:27,950 --> 00:00:27,960
+and GPT 5.6 Sol. So, Fable performs
+ 
+
+27
+00:00:27,960 --> 00:00:30,070
+and GPT 5.6 Sol. So, Fable performs
+pretty differently at low effort levels
+
+28
+00:00:30,070 --> 00:00:30,080
+pretty differently at low effort levels
+ 
+
+29
+00:00:30,080 --> 00:00:32,269
+pretty differently at low effort levels
+versus medium effort level versus high
+
+30
+00:00:32,269 --> 00:00:32,279
+versus medium effort level versus high
+ 
+
+31
+00:00:32,279 --> 00:00:34,030
+versus medium effort level versus high
+effort level. And then there's no
+
+32
+00:00:34,030 --> 00:00:34,040
+effort level. And then there's no
+ 
+
+33
+00:00:34,040 --> 00:00:36,390
+effort level. And then there's no
+difference between extra high and max.
+
+34
+00:00:36,390 --> 00:00:36,400
+difference between extra high and max.
+ 
+
+35
+00:00:36,400 --> 00:00:38,670
+difference between extra high and max.
+It's also exceedingly expensive. So,
+
+36
+00:00:38,670 --> 00:00:38,680
+It's also exceedingly expensive. So,
+ 
+
+37
+00:00:38,680 --> 00:00:41,550
+It's also exceedingly expensive. So,
+high here, for instance, it cost about
+
+38
+00:00:41,550 --> 00:00:41,560
+high here, for instance, it cost about
+ 
+
+39
+00:00:41,560 --> 00:00:45,510
+high here, for instance, it cost about
+$13 per actual task completed. GPT 5.6
+
+40
+00:00:45,510 --> 00:00:45,520
+$13 per actual task completed. GPT 5.6
+ 
+
+41
+00:00:45,520 --> 00:00:47,310
+$13 per actual task completed. GPT 5.6
+Sol can achieve the same performance, it
+
+42
+00:00:47,310 --> 00:00:47,320
+Sol can achieve the same performance, it
+ 
+
+43
+00:00:47,320 --> 00:00:49,270
+Sol can achieve the same performance, it
+looks like, on this benchmark at high
+
+44
+00:00:49,270 --> 00:00:49,280
+looks like, on this benchmark at high
+ 
+
+45
+00:00:49,280 --> 00:00:52,190
+looks like, on this benchmark at high
+effort level for vanishingly low cost.
+
+46
+00:00:52,190 --> 00:00:52,200
+effort level for vanishingly low cost.
+ 
+
+47
+00:00:52,200 --> 00:00:55,150
+effort level for vanishingly low cost.
+So, this is only about $3.50. The
+
+48
+00:00:55,150 --> 00:00:55,160
+So, this is only about $3.50. The
+ 
+
+49
+00:00:55,160 --> 00:00:57,030
+So, this is only about $3.50. The
+hilarious one, to me at least, is Claude
+
+50
+00:00:57,030 --> 00:00:57,040
+hilarious one, to me at least, is Claude
+ 
+
+51
+00:00:57,040 --> 00:01:00,910
+hilarious one, to me at least, is Claude
+Sonic 5, which sits about 40% medium But
+
+52
+00:01:00,910 --> 00:01:00,920
+Sonic 5, which sits about 40% medium But
+ 
+
+53
+00:01:00,920 --> 00:01:03,070
+Sonic 5, which sits about 40% medium But
+then, look at the max one over here. The
+
+54
+00:01:03,070 --> 00:01:03,080
+then, look at the max one over here. The
+ 
+
+55
+00:01:03,080 --> 00:01:05,630
+then, look at the max one over here. The
+max is more expensive than Claude Fable
+
+56
+00:01:05,630 --> 00:01:05,640
+max is more expensive than Claude Fable
+ 
+
+57
+00:01:05,640 --> 00:01:08,670
+max is more expensive than Claude Fable
+5, but only achieves like 54%
+
+58
+00:01:08,670 --> 00:01:08,680
+5, but only achieves like 54%
+ 
+
+59
+00:01:08,680 --> 00:01:10,030
+5, but only achieves like 54%
+performance. Now, of course, all
+
+60
+00:01:10,030 --> 00:01:10,040
+performance. Now, of course, all
+ 
+
+61
+00:01:10,040 --> 00:01:11,630
+performance. Now, of course, all
+benchmarks are flawed because they don't
+
+62
+00:01:11,630 --> 00:01:11,640
+benchmarks are flawed because they don't
+ 
+
+63
+00:01:11,640 --> 00:01:13,870
+benchmarks are flawed because they don't
+represent what you are doing day-to-day.
+
+64
+00:01:13,870 --> 00:01:13,880
+represent what you are doing day-to-day.
+ 
+
+65
+00:01:13,880 --> 00:01:16,110
+represent what you are doing day-to-day.
+They don't represent your work. You will
+
+66
+00:01:16,110 --> 00:01:16,120
+They don't represent your work. You will
+ 
+
+67
+00:01:16,120 --> 00:01:17,870
+They don't represent your work. You will
+need to play around with this. But I
+
+68
+00:01:17,870 --> 00:01:17,880
+need to play around with this. But I
+ 
+
+69
+00:01:17,880 --> 00:01:20,270
+need to play around with this. But I
+find this graph in particular very nice
+
+70
+00:01:20,270 --> 00:01:20,280
+find this graph in particular very nice
+ 
+
+71
+00:01:20,280 --> 00:01:22,350
+find this graph in particular very nice
+as a good starting point for choosing
+
+72
+00:01:22,350 --> 00:01:22,360
+as a good starting point for choosing
+ 
+
+73
+00:01:22,360 --> 00:01:23,790
+as a good starting point for choosing
+your effort level. It's especially good
+
+74
+00:01:23,790 --> 00:01:23,800
+your effort level. It's especially good
+ 
+
+75
+00:01:23,800 --> 00:01:25,670
+your effort level. It's especially good
+for figuring out differences at lower
+
+76
+00:01:25,670 --> 00:01:25,680
+for figuring out differences at lower
+ 
+
+77
+00:01:25,680 --> 00:01:27,910
+for figuring out differences at lower
+effort levels. So, for instance, GPT 5.6
+
+78
+00:01:27,910 --> 00:01:27,920
+effort levels. So, for instance, GPT 5.6
+ 
+
+79
+00:01:27,920 --> 00:01:30,870
+effort levels. So, for instance, GPT 5.6
+Sol low medium to high that's pretty
+
+80
+00:01:30,870 --> 00:01:30,880
+Sol low medium to high that's pretty
+ 
+
+81
+00:01:30,880 --> 00:01:32,350
+Sol low medium to high that's pretty
+different. So, hopefully this gives you
+
+82
+00:01:32,350 --> 00:01:32,360
+different. So, hopefully this gives you
+ 
+
+83
+00:01:32,360 --> 00:01:34,470
+different. So, hopefully this gives you
+a sense for how you should be thinking
+
+84
+00:01:34,470 --> 00:01:34,480
+a sense for how you should be thinking
+ 
+
+85
+00:01:34,480 --> 00:01:36,110
+a sense for how you should be thinking
+about model selection and effort
+
+86
+00:01:36,110 --> 00:01:36,120
+about model selection and effort
+ 
+
+87
+00:01:36,120 --> 00:01:38,680
+about model selection and effort
+selection.
+

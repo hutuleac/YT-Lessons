@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You are the lead developer now</title>
+<meta name="description" content="The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --measure:63ch;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:19px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:860px; margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 20px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:860px; padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:560px; margin:0 auto; height:auto; overflow:visible}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">Working above the agent</p>
+<h1>You are the lead developer now</h1>
+<p class="standfirst">The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.</p>
+<p class="audience">You ship with an agent daily and the hard part is no longer writing the code — it is deciding what to check, what to pay for, and what to fix in the repo.</p>
+</div></header>
+<section id="strategic-load">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 7 &middot; start here</span>
+<h2>AI ate the tactical layer</h2>
+<p class="oneline">Coding used to alternate between strategic thinking and tactical work that gave your brain a rest; agents took the tactical half, so the day is now strategy end to end — which is why it is exhausting.</p>
+</div></div>
+<div class="wrap">
+<p>Programming used to alternate between two modes. Strategic thinking — what to build, how it fits — and tactical work, where you sat down and wrote the code. The tactical stretch was almost non-verbal: moving things around, close to playing a game, and a rest for the part of your brain that had been deciding things.</p>
+<p>Agents took that half. The grunt work is gone, which sounds like pure gain, but the rest period went with it. What remains is the strategic layer, and you are in it all day because you have to operate one level above whatever the agent is doing.</p>
+<p>That is the promotion nobody asked for: everyone has effectively become a lead developer. The work is higher up the chain and it demands high-level thinking continuously, which is a different kind of tiring than writing a lot of code.</p>
+<p>Pocock does not offer a fix, and says so — he thinks it is baked in. He also says he likes making the high-level decisions and still ends each day knackered. Both things are true at once, and naming the cause is most of the value here.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 176" role="img"
+  aria-label="Two bars representing a working day. Before AI, alternating strategic and tactical blocks. After AI, one continuous strategic block with the tactical work moved to the agent.">
+  <text x="0" y="12" class="d-label">BEFORE &#183; strategy alternating with tactical work</text>
+  <rect x="0" y="22" width="70" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <rect x="72" y="22" width="120" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="132" y="43" class="d-label" text-anchor="middle">writing code</text>
+  <rect x="194" y="22" width="70" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <rect x="266" y="22" width="120" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="326" y="43" class="d-label" text-anchor="middle">writing code</text>
+  <rect x="388" y="22" width="72" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <text x="0" y="74" class="d-label">the shaded blocks are decisions &#8212; the gaps were the rest</text>
+
+  <text x="0" y="116" class="d-label">NOW &#183; decisions end to end</text>
+  <rect x="0" y="126" width="460" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <text x="230" y="147" class="d-node" text-anchor="middle">strategic thinking</text>
+  <text x="0" y="172" class="d-label">the tactical block moved to the agent, and took the break with it</text>
+</svg></div><figcaption><b>Where the day used to go, and where it goes now</b><span>The same hours. The tactical block that used to break up the decisions is the block the agent absorbed.</span></figcaption></figure>
+<div class="analogy"><q>We've all turned into lead developers.</q><p>It explains the fatigue better than 'AI is tiring' does: the exhaustion is the normal cost of a role, and it arrived without the title or the expectation.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Budget the strategic day like a lead's day, not a maker's day — it has no built-in rest.</li>
+<li>Schedule breaks deliberately; the tactical work that used to provide them is gone.</li>
+<li>Batch the decisions that need you and let the agent run between them.</li>
+<li>Notice when fatigue is the load, not the tooling — swapping tools won't fix a role change.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/e-pFrQ_Rh0s" target="_blank" rel="noopener">Matt Pocock &middot; AI Coding is exhausting &middot; 1:15 &#8599;</a></div>
+</section>
+<p class="bridge">If the day is all decisions, the first question is which decisions are actually yours. That is a placement problem, not a trust one.</p>
+<section id="review-checkpoints">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 7 &middot; start here</span>
+<h2>Shift the checkpoint left or right</h2>
+<p class="oneline">Automating agent work is really the question of where the human checks it, and the answer is set by diff size: big work is reviewed before it starts, small work after it lands.</p>
+</div></div>
+<div class="wrap">
+<p>A pre-AI process has three human checkpoints: you plan the work, you ship the work, you review the work. The common ambition is to hand all three to the agent at once, and Pocock's argument is that this is the wrong unit of decision. The real question is where the human check belongs, not whether to have one.</p>
+<p>For very large pieces of work you want to be involved at the planning stage — aligning with the agent before it writes anything. That is what his own skills are for. You probably also want a human review at the end, before production.</p>
+<p>But the checkpoint can move. A refactor or an internal documentation rename might only need the early alignment: agree the plan, then let the agent ship it through. And a very small change — a button colour, a title, a two-line bug fix — might need no alignment at all: one prompt, let it run, review the diff before it goes live.</p>
+<p>The reason is regeneration cost. The smaller the diff, the easier it is to throw the code away and generate it again, and the easier it is to hold the whole thing in context. On massive work, fixing a wrong direction late is expensive, so the check has to happen before the work exists. Big work shifts the review left; small work shifts it right.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 216" role="img"
+  aria-label="Two pipelines of plan, ship and review. For big work the human checkpoint sits at the planning stage on the left. For small work the checkpoint sits at review on the right.">
+  <text x="0" y="12" class="d-label">BIG WORK &#183; check before it exists</text>
+  <rect x="0" y="24" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="65" y="48" class="d-node" text-anchor="middle">plan</text>
+  <text x="136" y="48" class="d-label">&#8594;</text>
+  <rect x="158" y="24" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="223" y="48" class="d-label" text-anchor="middle">agent ships</text>
+  <text x="294" y="48" class="d-label">&#8594;</text>
+  <rect x="316" y="24" width="144" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="388" y="48" class="d-label" text-anchor="middle">review</text>
+  <circle cx="65" cy="76" r="7" fill="var(--interference)"/>
+  <text x="80" y="81" class="d-label">human checkpoint &#8212; redirecting later is the expensive part</text>
+
+  <text x="0" y="132" class="d-label">SMALL WORK &#183; check the diff at the end</text>
+  <rect x="0" y="144" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="65" y="168" class="d-label" text-anchor="middle">one prompt</text>
+  <text x="136" y="168" class="d-label">&#8594;</text>
+  <rect x="158" y="144" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="223" y="168" class="d-label" text-anchor="middle">agent ships</text>
+  <text x="294" y="168" class="d-label">&#8594;</text>
+  <rect x="316" y="144" width="144" height="38" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="388" y="168" class="d-node" text-anchor="middle">review</text>
+  <circle cx="388" cy="196" r="7" fill="var(--interference)"/>
+  <text x="0" y="212" class="d-label">small diff &#8594; cheap to regenerate &#8594; the check can wait</text>
+</svg></div><figcaption><b>The same pipeline, two placements</b><span>One checkpoint, moved. Left for work that is expensive to redirect later, right for work that is cheap to throw away and regenerate.</span></figcaption></figure>
+<div class="analogy"><q>For big work you shift the review left. For small work you shift the review right.</q><p>It replaces a yes-or-no question about trusting the agent with a placement question you can answer from the size of the diff before you start.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Decide where the checkpoint goes before you start, using the expected size of the diff.</li>
+<li>Big or irreversible work: align on the plan first, because late fixes are the expensive ones.</li>
+<li>Small, low-blast-radius work: skip the alignment, review the diff before it goes live.</li>
+<li>If a change is cheap to regenerate from scratch, that is the signal to review it late.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/Yn8h5Ip-L9c" target="_blank" rel="noopener">Matt Pocock &middot; Do you even need human review? &middot; 1:59 &#8599;</a></div>
+</section>
+<p class="bridge">Checkpoints decide where you spend attention. The next dial decides what you spend on the agent — and most people have it turned up too far.</p>
+<section id="effort-levels">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 7 &middot; builds on <a class="out" href="llm-fundamentals.html#tokens">tokens</a></span>
+<h2>Your effort level is too high</h2>
+<p class="oneline">Effort is thinking tokens spent per task, and the benchmarks that justify cranking it up hold the task fixed — but you can rewrite the task, and a better-specified task needs less effort.</p>
+</div></div>
+<div class="wrap">
+<p>Effort level controls how many reasoning tokens the agent spends. Crank it up and it thinks harder about the same work — including the parts that do not reward thinking. Exploring a codebase is the clearest case: it is a task you do not really need effort for, so extra effort mostly buys you a slower, more expensive traversal and an agent pushing hard on things that did not need pushing.</p>
+<p>The benchmark charts do show quality rising with effort, and Pocock's objection to them is precise: those charts hold the task static. The task is a fixed prompt on a fixed problem. You, unlike the benchmark, can change how the task is specified.</p>
+<p>That is the substitution worth understanding. High-quality information given to the agent up front does the work that reasoning tokens would otherwise have to do. The better the spec, the less effort the same job requires — so effort is a knob you reach for when your specification has run out, not the first thing you turn up.</p>
+<p>The practical recommendation is to start at the lowest effort level you have access to and raise it from there. Not zero: some thinking tokens are worth having, because chain of thought is a genuinely useful way to work with agents.</p>
+</div>
+<div class="analogy"><q>The more high-quality information you give it, the lower effort you actually need to complete the task.</q><p>It turns effort from a quality dial into a symptom: if you need max effort for routine work, the specification is doing too little.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Start at the lowest effort level available and raise it only when output actually suffers.</li>
+<li>Don't spend effort on exploration — spend it on the reasoning-heavy step, if any.</li>
+<li>Improve the spec before raising the dial; information substitutes for thinking tokens.</li>
+<li>Keep some thinking tokens — chain of thought is worth its cost.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/iQb3F9UzBR4" target="_blank" rel="noopener">Matt Pocock &middot; Your effort level is TOO DAMN HIGH &middot; 1:17 &#8599;</a></div>
+</section>
+<p class="bridge">Effort has a price, and it is legible. Plotted properly, the point where paying more stops buying anything is visible on a chart.</p>
+<section id="model-cost-curve">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 7 &middot; builds on <s>effort-levels</s></span>
+<h2>Read the cost-quality curve</h2>
+<p class="oneline">Plotting models and effort levels as quality against cost per completed task shows what a single benchmark number hides: the same score is available at wildly different prices, and the top effort levels often buy nothing.</p>
+</div></div>
+<div class="wrap">
+<p>The chart Pocock recommends puts average cost per task along the bottom and quality — the share of tasks solved — up the side, then plots each model at each of its effort levels. One model becomes a curve rather than a number, which is what makes it useful.</p>
+<p>Read across a curve and you see where effort stops paying. A model can differ sharply between low, medium and high, then show no meaningful difference between extra-high and max while costing considerably more. That flat top is money spent on nothing.</p>
+<p>Read across curves and you see the substitution. On the benchmark he shows, one model at high effort lands around $13 per completed task, while another reaches roughly the same quality at about $3.50. Another sits near 40% at medium and only about 54% at max — where max costs more than the stronger model's high setting.</p>
+<p>His caveat is not decoration. All benchmarks are flawed because they do not represent your day-to-day work, so this is a starting point for choosing an effort level rather than an answer — most useful, he notes, for seeing the differences at the low end, which is where the cheap wins are.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>$13</b><i>per task</i><span>one model at high effort on the benchmark shown</span></div>
+<div class="fig"><b>$3.50</b><i>per task</i><span>comparable quality from a different model at high effort</span></div>
+<div class="fig"><b>40%</b><i>of tasks</i><span>a mid-tier model at medium effort</span></div>
+<div class="fig"><b>54%</b><i>of tasks</i><span>the same model at max — for more than the stronger model's high</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 216" role="img"
+  aria-label="A scatter chart with cost per task on the horizontal axis and quality on the vertical axis. One model's curve rises steeply then flattens at high cost; a second model reaches similar quality at much lower cost; a third plateaus at a lower quality despite high cost.">
+  <line x1="38" y1="168" x2="450" y2="168" stroke="var(--line)" stroke-width="1"/>
+  <line x1="38" y1="16" x2="38" y2="168" stroke="var(--line)" stroke-width="1"/>
+  <text x="18" y="96" class="d-label" text-anchor="middle" transform="rotate(-90 18 96)">quality</text>
+  <text x="244" y="196" class="d-label" text-anchor="middle">average cost per completed task &#8594;</text>
+
+  <path d="M60 140 C 120 96, 180 60, 300 48 C 360 44, 400 42, 430 41"
+        fill="none" stroke="var(--interference)" stroke-width="2" stroke-linecap="round"/>
+  <g fill="var(--interference)">
+    <circle cx="60" cy="140" r="4"/><circle cx="150" cy="80" r="4"/>
+    <circle cx="300" cy="48" r="4"/><circle cx="430" cy="41" r="4"/>
+  </g>
+  <text x="330" y="34" class="d-label">extra-high and max: no gain</text>
+
+  <path d="M52 150 C 80 120, 110 70, 150 56" fill="none" stroke="var(--signal)"
+        stroke-width="2" stroke-linecap="round"/>
+  <g fill="var(--signal)"><circle cx="52" cy="150" r="4"/><circle cx="100" cy="92" r="4"/><circle cx="150" cy="56" r="4"/></g>
+  <text x="60" y="44" class="d-fix">same quality, a fraction of the cost</text>
+
+  <path d="M56 160 C 120 140, 220 122, 380 116" fill="none" stroke="var(--muted)"
+        stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+  <g fill="var(--muted)"><circle cx="56" cy="160" r="4"/><circle cx="200" cy="126" r="4"/><circle cx="380" cy="116" r="4"/></g>
+  <text x="256" y="136" class="d-label">expensive max, mid quality</text>
+
+  <line x1="150" y1="56" x2="300" y2="48" stroke="var(--line)" stroke-dasharray="3 3"/>
+  <text x="0" y="212" class="d-label">shape only &#8212; benchmarks don't represent your work, so re-test on it</text>
+</svg></div><figcaption><b>Quality against cost, one curve per model</b><span>Shape of the chart, not exact figures. The flat top is effort you are paying for and not receiving; the horizontal gap is the same quality at a different price.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Compare models on cost per completed task, not on the headline benchmark score.</li>
+<li>Find where your model's curve flattens and stop paying past that point.</li>
+<li>Check the low end first — that is where effort levels differ most and cost least.</li>
+<li>Re-test on your own work; a benchmark is a starting point, not a decision.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/SF1Ab0Y-9BY" target="_blank" rel="noopener">Matt Pocock &middot; Don't know which model to choose? *taps the graph* &middot; 1:37 &#8599;</a></div>
+</section>
+<p class="bridge">Cheaper runs are no help if every result arrives as an essay. The reporting format is a setting too.</p>
+<section id="concise-output">
+<div class="wrap"><div class="chead">
+<span class="cnum">5 / 7 &middot; start here</span>
+<h2>Sacrifice grammar for concision</h2>
+<p class="oneline">One line in your global config — report to me extremely concisely, sacrificing grammar — turns an agent's essays into headers and fragments you can scan, without changing what the agent understood.</p>
+</div></div>
+<div class="wrap">
+<p>The instruction is one sentence: when reporting information to me, be extremely concise and sacrifice grammar for the sake of concision. Adding it to a prompt reshapes the reply; adding it to the global CLAUDE.md applies it to every session.</p>
+<p>The difference Pocock demonstrates on a debugging session is structural rather than cosmetic. Without it: paragraphs — scannable, but still prose. With it: "ESM/CJS mismatch. Let me check the build output and config," then a header, "root cause found," then the specific incompatibility. The biggest gap is in the final summary, which goes from a mini-article to a couple of headings and a short list.</p>
+<p>The key point is that this changes the report, not the work. Under the hood the model has the same understanding of what it did; you are choosing the format of the first thing you receive. Follow-up questions still get you the long version whenever you want it.</p>
+<p>Which is why the win compounds: shorter reports mean less to read at every checkpoint, and fewer tokens spent re-stating work you already agreed to.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 196" role="img"
+  aria-label="Two report blocks. The default report is three long paragraph bars. The concise report is a short header, two short fragments and a two-item list.">
+  <text x="0" y="12" class="d-label">DEFAULT</text>
+  <rect x="0" y="22" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="38" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="54" width="180" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="76" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="92" width="196" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="108" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="124" width="150" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <text x="0" y="158" class="d-label">root cause is in there</text>
+
+  <text x="248" y="12" class="d-label">CONCISE</text>
+  <text x="248" y="36" class="d-node">ESM/CJS mismatch</text>
+  <rect x="248" y="46" width="140" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <text x="248" y="78" class="d-fix">root cause found</text>
+  <rect x="248" y="88" width="120" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <rect x="248" y="102" width="164" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <rect x="248" y="120" width="96" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <text x="248" y="158" class="d-label">headers first, detail on request</text>
+  <text x="0" y="188" class="d-label">one line in the global config &#8212; same understanding, different report</text>
+</svg></div><figcaption><b>Same debugging session, two report formats</b><span>The model's understanding is identical either side. What changes is how long it takes you to find the root cause in the reply.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Add the concision line to your global config, not to individual prompts.</li>
+<li>Ask for the format you want to receive — headers and fragments are a legitimate request.</li>
+<li>Treat the short summary as the default and ask follow-ups when you need depth.</li>
+<li>Judge the change on how fast you can scan a report, not on how polished it reads.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/I12Mf8KBT1I" target="_blank" rel="noopener">Matt Pocock &middot; Make Claude Code give you answers, not essays &middot; 1:30 &#8599;</a></div>
+</section>
+<p class="bridge">So far, everything you control sits outside the repo. The largest lever is inside it.</p>
+<section id="codebase-as-environment">
+<div class="wrap"><div class="chead">
+<span class="cnum">6 / 7 &middot; start here</span>
+<h2>The code is the agent's environment</h2>
+<p class="oneline">An agent's output quality is bounded by the codebase it works in, and unlike a human it has no memory to route around a bad one — so software fundamentals matter more now, not less.</p>
+</div></div>
+<div class="wrap">
+<p>The question is whether fundamentals still matter if the code is just something the AI produces. Pocock's answer inverts it: the code is the environment the agent operates in, and the quality of that environment shapes the output. A garbage codebase yields garbage work, and garbage codebases sneak up on you — software entropy means disorganisation accumulates unless someone is deliberately holding a long-term view.</p>
+<p>The asymmetry is memory. Humans are better at working in bad codebases than agents are, because a human accumulates a feel for it: what works here, what to avoid, which corner lies. Imperfect, but it compounds, and it keeps them productive in a mess.</p>
+<p>Agents have none of that unless you bolt on a memory system, which is itself unsolved. Pocock's image is the man from Memento: the agent wakes up in the codebase, asks what it remembers, and the answer is nothing. So it makes the same mistake again and again unless you are there with guardrails preventing it.</p>
+<p>Crucially this is not a reasoning problem, so a smarter model does not fix it. The difficulty is that the codebase is hard to explore, hard to change, hard to work in. Which makes the valuable skill building a good agent experience: code that is easy to explore, tests at good seams, clean module and interface design.</p>
+</div>
+<div class="analogy"><q>They are kind of like the guy from Memento who wakes up in the codebase and goes: okay, I'm awake — what do I remember? Nothing.</q><p>It explains why the fix is environmental rather than a better prompt: you cannot teach something that starts every session from zero, you can only make the place it wakes up in easier to read.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Judge a refactor by whether it makes the codebase easier for an agent to explore.</li>
+<li>Put tests at seams that let an agent verify a change without understanding everything.</li>
+<li>Encode the guardrails that stop repeated mistakes — the agent will not remember them.</li>
+<li>Stop reaching for a smarter model when the real obstacle is the environment.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/eEjBhVI9Qok" target="_blank" rel="noopener">Matt Pocock &middot; Do software fundamentals still matter? &middot; 2:12 &#8599;</a></div>
+</section>
+<p class="bridge">Which raises the obvious escape route — start fresh. It closes faster than you would think.</p>
+<section id="no-greenfield">
+<div class="wrap"><div class="chead">
+<span class="cnum">7 / 7 &middot; builds on <s>codebase-as-environment</s></span>
+<h2>There is no such thing as greenfield</h2>
+<p class="oneline">The only real difference between a greenfield and a brownfield codebase is that one has settled conventions and the other hasn't yet — and with an agent filling the repo, that distinction survives about a week.</p>
+</div></div>
+<div class="wrap">
+<p>The recurring question is whether a technique works on brownfield or only greenfield. Pocock's answer is that they are basically the same thing, because whatever you are building is for the real world: external constraints, integration with existing software, real problems.</p>
+<p>The one genuine difference is that in a brownfield codebase you have not yet sorted out the experience of working in it — the conventions, test suite and standards already exist, and are often implicit in the code rather than documented anywhere. Greenfield means you choose all of that at the start.</p>
+<p>But choices harden. Once the agent has spat a pile of code into the repo, those decisions get progressively harder to change, which means the green period is short — a couple of days, maybe a week. We move from fresh codebase to legacy codebase faster than ever before, precisely because output volume went up.</p>
+<p>So the distinction is not worth planning around. A brownfield codebase can hold a lot of code and still be easy to navigate if the documentation and folder structure are designed properly, which is the same work that keeps a new repo workable past its first week.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>days</b><i>to a week</i><span>how long a codebase stays meaningfully greenfield</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 150" role="img"
+  aria-label="A timeline of a codebase from day zero. A short green segment lasting about a week, then a long segment labelled the same as any brownfield codebase.">
+  <rect x="0" y="34" width="64" height="34" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <rect x="64" y="34" width="396" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="32" y="24" class="d-num" text-anchor="middle">~1 week</text>
+  <text x="262" y="56" class="d-label" text-anchor="middle">conventions set, choices now expensive to change</text>
+  <line x1="64" y1="30" x2="64" y2="76" stroke="var(--interference)" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="0" y="94" class="d-label">day 0</text>
+  <text x="460" y="94" class="d-label" text-anchor="end">legacy</text>
+  <text x="0" y="126" class="d-label">agents fill the repo faster, so the green segment gets shorter, not longer</text>
+</svg></div><figcaption><b>How long the green lasts</b><span>The distinction is real for about a week. After that both codebases are the same problem: conventions someone has to make legible.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Set conventions on day one and write them down — the implicit ones are what the agent misses.</li>
+<li>Design folder structure and docs for navigation, not for completeness.</li>
+<li>Stop filtering techniques by greenfield vs brownfield; the difference expires in a week.</li>
+<li>Treat the first week of a new repo as the only cheap window for changing your mind.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/0l7zOp260yc" target="_blank" rel="noopener">Matt Pocock &middot; There is no such thing as greenfield &middot; 1:27 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>The role, in one line</h2><p>Decide where the human check goes, spend the least effort the task needs, keep the reports short, and make the codebase somewhere an agent with no memory can work. None of that is writing code, and all of it decides how good the code turns out.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
+</body>
+</html>

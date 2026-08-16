@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You are the lead developer now &mdash; deck</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --measure:63ch;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:19px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:860px; margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 20px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:860px; padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:560px; margin:0 auto; height:auto; overflow:visible}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+
+html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
+body{font-family:var(--sans)}
+.slide{
+  min-height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(58px,7vh,96px) clamp(30px,5vw,86px); position:relative; overflow:hidden
+}
+.slide>*{max-width:none}
+
+/* ---- slide chrome: the same bar on every slide, the way a deck master works ---- */
+.tick{
+  position:absolute; top:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
+}
+.tick s{text-decoration:none; color:var(--signal)}
+.foot{
+  position:absolute; bottom:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  align-items:center; font:400 11px/1 var(--mono); color:var(--muted)
+}
+.foot em{font-style:normal; letter-spacing:.06em}
+.bar{position:absolute; left:0; right:0; bottom:0; height:3px; background:var(--line)}
+.bar i{display:block; height:100%; background:var(--signal)}
+
+/* ---- kinds ---- */
+.k-title, .k-section, .k-close{background:var(--surface)}
+/* The divider is the one slide with room to spare, so it splits: number left, concept right. */
+@media (min-width:1000px){
+  .k-section{display:grid; grid-template-columns:minmax(200px,22%) 1fr;
+             gap:clamp(30px,4vw,70px); align-items:center; align-content:center}
+  .k-section .idx{grid-row:1 / span 3; align-self:start; margin:0}
+  .k-section h2, .k-section .lead, .k-section .src{grid-column:2}
+}
+.k-section .idx{
+  font:600 clamp(64px,13vw,180px)/0.82 var(--mono); letter-spacing:-.05em;
+  color:var(--line); margin:0 0 clamp(14px,2vh,26px)
+}
+.slide h1{font-size:clamp(34px,6.4vw,84px); margin:0 0 clamp(18px,3vh,32px)}
+.slide h2{font-size:clamp(28px,5vw,64px); margin:0 0 clamp(16px,2.6vh,28px)}
+.k-bullets h2, .k-do h2, .k-figs h2{font-size:clamp(22px,3.2vw,40px); color:var(--muted)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.3vw,30px); line-height:1.42;
+  color:var(--muted); margin:0; max-width:36ch
+}
+.k-close .lead{color:var(--ink); max-width:44ch}
+.k-title .audience{margin-top:clamp(20px,3vh,36px); font-size:clamp(12px,1.2vw,15px)}
+
+/* ---- bullets ---- */
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.6vh,30px); counter-reset:b}
+.bul li{
+  font-size:clamp(21px,2.9vw,42px); line-height:1.22; padding-left:1.5em; position:relative;
+  text-wrap:balance; counter-increment:b
+}
+.bul li::before{
+  content:counter(b); position:absolute; left:0; top:.3em;
+  font:500 .42em var(--mono); color:var(--signal); letter-spacing:.1em
+}
+
+/* ---- big numbers ---- */
+.nums{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(20px,3vw,44px)}
+.nums div{border-top:2px solid var(--line); padding-top:clamp(12px,2vh,20px)}
+.nums b{display:block; font:600 clamp(34px,5.4vw,68px)/1 var(--mono); letter-spacing:-.04em; color:var(--sand)}
+.nums i{display:block; font:400 clamp(12px,1.2vw,15px) var(--mono); font-style:normal; color:var(--muted); margin:10px 0 8px}
+.nums span{font-size:clamp(13px,1.3vw,17px); line-height:1.4; color:var(--muted)}
+
+/* ---- quote ---- */
+.k-quote q{
+  display:block; quotes:none; font-family:var(--serif); font-size:clamp(28px,4.6vw,62px);
+  line-height:1.22; border-left:3px solid var(--signal); padding-left:clamp(20px,2.6vw,40px);
+  text-wrap:balance
+}
+.k-quote p{
+  margin:clamp(18px,3vh,32px) 0 0 clamp(23px,2.9vw,43px); color:var(--muted);
+  font-size:clamp(14px,1.5vw,20px); max-width:52ch
+}
+
+/* ---- what to do ---- */
+.acts{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.4vh,26px);
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.acts li{
+  font-size:clamp(16px,1.8vw,24px); line-height:1.35; padding-left:1.5em; position:relative;
+  background:var(--surface-2); border-radius:8px; padding:clamp(16px,2vh,24px) clamp(18px,2vw,26px)
+              clamp(16px,2vh,24px) clamp(38px,3.4vw,52px)
+}
+.acts li::before{
+  content:"\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
+  color:var(--interference); font-family:var(--mono)
+}
+
+/* ---- diagrams ---- */
+/* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
+   Twice the page's cap is the ceiling that stays proportionate on a projector. */
+.slide figure{margin:0 auto; padding:0; max-width:1180px; width:100%}
+.slide .plate{padding:clamp(20px,3vw,42px); width:100%}
+.slide .plate svg{max-width:1040px}
+.slide figcaption{margin:clamp(16px,2.4vh,26px) auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(15px,1.5vw,21px)}
+.slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
+
+.slide .src{max-width:none; margin:clamp(22px,4vh,44px) 0 0; padding:0}
+@media print{
+  html{scroll-snap-type:none}
+  .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
+  .bar{display:none}
+}
+</style>
+</head>
+<body>
+<section class="slide k-title"><div class="tick"><span>Working above the agent</span><s>1 / 35</s></div><h1>You are the lead developer now</h1><p class="lead">The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.</p><p class="audience">You ship with an agent daily and the hard part is no longer writing the code — it is deciding what to check, what to pay for, and what to fix in the repo.</p><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:2.9%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Where this goes</span><s>2 / 35</s></div><figure><div class="plate"><svg viewBox="-2 -2 774 328" role="img" aria-label="Concept map of the lesson: AI ate the tactical layer, Shift the checkpoint left or right, Your effort level is too high, Read the cost-quality curve, Sacrifice grammar for concision, The code is the agent's environment, There is no such thing as greenfield, joined by arrows showing which concept each one builds on."><defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs><line x1="655" y1="72" x2="655" y2="126" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><line x1="115" y1="198" x2="115" y2="252" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><rect x="0" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="25" class="d-num">01</text><text x="16" y="47" class="d-node"><tspan x="16" dy="0">AI ate the tactical</tspan><tspan x="16" dy="17">layer</tspan></text><rect x="270" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="25" class="d-num">02</text><text x="286" y="47" class="d-node"><tspan x="286" dy="0">Shift the checkpoint</tspan><tspan x="286" dy="17">left or right</tspan></text><rect x="540" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="25" class="d-num">03</text><text x="556" y="47" class="d-node"><tspan x="556" dy="0">Your effort level is too</tspan><tspan x="556" dy="17">high</tspan></text><rect x="540" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="151" class="d-num">04</text><text x="556" y="173" class="d-node"><tspan x="556" dy="0">Read the cost-quality</tspan><tspan x="556" dy="17">curve</tspan></text><rect x="270" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="151" class="d-num">05</text><text x="286" y="173" class="d-node"><tspan x="286" dy="0">Sacrifice grammar for</tspan><tspan x="286" dy="17">concision</tspan></text><rect x="0" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="151" class="d-num">06</text><text x="16" y="173" class="d-node"><tspan x="16" dy="0">The code is the agent's</tspan><tspan x="16" dy="17">environment</tspan></text><rect x="0" y="252" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="277" class="d-num">07</text><text x="16" y="299" class="d-node"><tspan x="16" dy="0">There is no such thing</tspan><tspan x="16" dy="17">as greenfield</tspan></text></svg></div><figcaption><b>The concepts, and what each one needs first</b><span>Drawn from the prerequisites the build checks, so the map cannot drift from the lesson.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:5.7%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>AI ate the tactical layer</span><s>3 / 35</s></div><p class="idx">01</p><h2>AI ate the tactical layer</h2><p class="lead">Coding used to alternate between strategic thinking and tactical work that gave your brain a rest; agents took the tactical half, so the day is now strategy end to end — which is why it is exhausting.</p><div class="src"><a href="https://www.youtube.com/shorts/e-pFrQ_Rh0s" target="_blank" rel="noopener">Matt Pocock &middot; AI Coding is exhausting &middot; 1:15 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:8.6%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>AI ate the tactical layer</span><s>4 / 35</s></div><h2>AI ate the tactical layer</h2><ol class="bul"><li>Writing code used to be the break in the day.</li><li>That tactical layer is the part AI took.</li><li>What is left is strategic thinking, all day.</li><li>Everyone has effectively been promoted to lead developer.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:11.4%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>AI ate the tactical layer</span><s>5 / 35</s></div><figure><div class="plate"><svg viewBox="0 0 460 176" role="img"
+  aria-label="Two bars representing a working day. Before AI, alternating strategic and tactical blocks. After AI, one continuous strategic block with the tactical work moved to the agent.">
+  <text x="0" y="12" class="d-label">BEFORE &#183; strategy alternating with tactical work</text>
+  <rect x="0" y="22" width="70" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <rect x="72" y="22" width="120" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="132" y="43" class="d-label" text-anchor="middle">writing code</text>
+  <rect x="194" y="22" width="70" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <rect x="266" y="22" width="120" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="326" y="43" class="d-label" text-anchor="middle">writing code</text>
+  <rect x="388" y="22" width="72" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <text x="0" y="74" class="d-label">the shaded blocks are decisions &#8212; the gaps were the rest</text>
+
+  <text x="0" y="116" class="d-label">NOW &#183; decisions end to end</text>
+  <rect x="0" y="126" width="460" height="34" rx="3" fill="var(--interference)" opacity="0.45"/>
+  <text x="230" y="147" class="d-node" text-anchor="middle">strategic thinking</text>
+  <text x="0" y="172" class="d-label">the tactical block moved to the agent, and took the break with it</text>
+</svg></div><figcaption><b>Where the day used to go, and where it goes now</b><span>The same hours. The tactical block that used to break up the decisions is the block the agent absorbed.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:14.3%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>AI ate the tactical layer</span><s>6 / 35</s></div><q>We've all turned into lead developers.</q><p>It explains the fatigue better than 'AI is tiring' does: the exhaustion is the normal cost of a role, and it arrived without the title or the expectation.</p><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:17.1%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>AI ate the tactical layer</span><s>7 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Budget the strategic day like a lead's day, not a maker's day — it has no built-in rest.</li><li>Schedule breaks deliberately; the tactical work that used to provide them is gone.</li><li>Batch the decisions that need you and let the agent run between them.</li><li>Notice when fatigue is the load, not the tooling — swapping tools won't fix a role change.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:20.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Shift the checkpoint left or right</span><s>8 / 35</s></div><p class="idx">02</p><h2>Shift the checkpoint left or right</h2><p class="lead">Automating agent work is really the question of where the human checks it, and the answer is set by diff size: big work is reviewed before it starts, small work after it lands.</p><div class="src"><a href="https://www.youtube.com/shorts/Yn8h5Ip-L9c" target="_blank" rel="noopener">Matt Pocock &middot; Do you even need human review? &middot; 1:59 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:22.9%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Shift the checkpoint left or right</span><s>9 / 35</s></div><h2>Shift the checkpoint left or right</h2><ol class="bul"><li>Plan, ship, review — the checkpoints are the human parts.</li><li>Handing all three to AI at once is the wrong move.</li><li>Big work: shift the checkpoint left, align before it starts.</li><li>Small work: shift it right, review the diff at the end.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:25.7%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Shift the checkpoint left or right</span><s>10 / 35</s></div><figure><div class="plate"><svg viewBox="0 0 460 216" role="img"
+  aria-label="Two pipelines of plan, ship and review. For big work the human checkpoint sits at the planning stage on the left. For small work the checkpoint sits at review on the right.">
+  <text x="0" y="12" class="d-label">BIG WORK &#183; check before it exists</text>
+  <rect x="0" y="24" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="65" y="48" class="d-node" text-anchor="middle">plan</text>
+  <text x="136" y="48" class="d-label">&#8594;</text>
+  <rect x="158" y="24" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="223" y="48" class="d-label" text-anchor="middle">agent ships</text>
+  <text x="294" y="48" class="d-label">&#8594;</text>
+  <rect x="316" y="24" width="144" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="388" y="48" class="d-label" text-anchor="middle">review</text>
+  <circle cx="65" cy="76" r="7" fill="var(--interference)"/>
+  <text x="80" y="81" class="d-label">human checkpoint &#8212; redirecting later is the expensive part</text>
+
+  <text x="0" y="132" class="d-label">SMALL WORK &#183; check the diff at the end</text>
+  <rect x="0" y="144" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="65" y="168" class="d-label" text-anchor="middle">one prompt</text>
+  <text x="136" y="168" class="d-label">&#8594;</text>
+  <rect x="158" y="144" width="130" height="38" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="223" y="168" class="d-label" text-anchor="middle">agent ships</text>
+  <text x="294" y="168" class="d-label">&#8594;</text>
+  <rect x="316" y="144" width="144" height="38" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="388" y="168" class="d-node" text-anchor="middle">review</text>
+  <circle cx="388" cy="196" r="7" fill="var(--interference)"/>
+  <text x="0" y="212" class="d-label">small diff &#8594; cheap to regenerate &#8594; the check can wait</text>
+</svg></div><figcaption><b>The same pipeline, two placements</b><span>One checkpoint, moved. Left for work that is expensive to redirect later, right for work that is cheap to throw away and regenerate.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:28.6%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Shift the checkpoint left or right</span><s>11 / 35</s></div><q>For big work you shift the review left. For small work you shift the review right.</q><p>It replaces a yes-or-no question about trusting the agent with a placement question you can answer from the size of the diff before you start.</p><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:31.4%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Shift the checkpoint left or right</span><s>12 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Decide where the checkpoint goes before you start, using the expected size of the diff.</li><li>Big or irreversible work: align on the plan first, because late fixes are the expensive ones.</li><li>Small, low-blast-radius work: skip the alignment, review the diff before it goes live.</li><li>If a change is cheap to regenerate from scratch, that is the signal to review it late.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:34.3%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Your effort level is too high</span><s>13 / 35</s></div><p class="idx">03</p><h2>Your effort level is too high</h2><p class="lead">Effort is thinking tokens spent per task, and the benchmarks that justify cranking it up hold the task fixed — but you can rewrite the task, and a better-specified task needs less effort.</p><div class="src"><a href="https://www.youtube.com/shorts/iQb3F9UzBR4" target="_blank" rel="noopener">Matt Pocock &middot; Your effort level is TOO DAMN HIGH &middot; 1:17 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:37.1%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Your effort level is too high</span><s>14 / 35</s></div><h2>Your effort level is too high</h2><ol class="bul"><li>Higher effort means more thinking tokens for the same work.</li><li>Exploration barely benefits from effort — it just costs more.</li><li>Benchmarks hold the task static. You don't have to.</li><li>Start at the lowest effort you have and crank up only if you need to.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:40.0%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Your effort level is too high</span><s>15 / 35</s></div><q>The more high-quality information you give it, the lower effort you actually need to complete the task.</q><p>It turns effort from a quality dial into a symptom: if you need max effort for routine work, the specification is doing too little.</p><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:42.9%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Your effort level is too high</span><s>16 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Start at the lowest effort level available and raise it only when output actually suffers.</li><li>Don't spend effort on exploration — spend it on the reasoning-heavy step, if any.</li><li>Improve the spec before raising the dial; information substitutes for thinking tokens.</li><li>Keep some thinking tokens — chain of thought is worth its cost.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:45.7%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Read the cost-quality curve</span><s>17 / 35</s></div><p class="idx">04</p><h2>Read the cost-quality curve</h2><p class="lead">Plotting models and effort levels as quality against cost per completed task shows what a single benchmark number hides: the same score is available at wildly different prices, and the top effort levels often buy nothing.</p><div class="src"><a href="https://www.youtube.com/shorts/SF1Ab0Y-9BY" target="_blank" rel="noopener">Matt Pocock &middot; Don't know which model to choose? *taps the graph* &middot; 1:37 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:48.6%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Read the cost-quality curve</span><s>18 / 35</s></div><h2>Read the cost-quality curve</h2><ol class="bul"><li>Plot quality against average cost per task, not quality alone.</li><li>Each model traces a curve as its effort level rises.</li><li>The curve flattens — extra-high and max can be indistinguishable.</li><li>The same score is often available far cheaper from another model.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:51.4%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Read the cost-quality curve</span><s>19 / 35</s></div><figure><div class="plate"><svg viewBox="0 0 460 216" role="img"
+  aria-label="A scatter chart with cost per task on the horizontal axis and quality on the vertical axis. One model's curve rises steeply then flattens at high cost; a second model reaches similar quality at much lower cost; a third plateaus at a lower quality despite high cost.">
+  <line x1="38" y1="168" x2="450" y2="168" stroke="var(--line)" stroke-width="1"/>
+  <line x1="38" y1="16" x2="38" y2="168" stroke="var(--line)" stroke-width="1"/>
+  <text x="18" y="96" class="d-label" text-anchor="middle" transform="rotate(-90 18 96)">quality</text>
+  <text x="244" y="196" class="d-label" text-anchor="middle">average cost per completed task &#8594;</text>
+
+  <path d="M60 140 C 120 96, 180 60, 300 48 C 360 44, 400 42, 430 41"
+        fill="none" stroke="var(--interference)" stroke-width="2" stroke-linecap="round"/>
+  <g fill="var(--interference)">
+    <circle cx="60" cy="140" r="4"/><circle cx="150" cy="80" r="4"/>
+    <circle cx="300" cy="48" r="4"/><circle cx="430" cy="41" r="4"/>
+  </g>
+  <text x="330" y="34" class="d-label">extra-high and max: no gain</text>
+
+  <path d="M52 150 C 80 120, 110 70, 150 56" fill="none" stroke="var(--signal)"
+        stroke-width="2" stroke-linecap="round"/>
+  <g fill="var(--signal)"><circle cx="52" cy="150" r="4"/><circle cx="100" cy="92" r="4"/><circle cx="150" cy="56" r="4"/></g>
+  <text x="60" y="44" class="d-fix">same quality, a fraction of the cost</text>
+
+  <path d="M56 160 C 120 140, 220 122, 380 116" fill="none" stroke="var(--muted)"
+        stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+  <g fill="var(--muted)"><circle cx="56" cy="160" r="4"/><circle cx="200" cy="126" r="4"/><circle cx="380" cy="116" r="4"/></g>
+  <text x="256" y="136" class="d-label">expensive max, mid quality</text>
+
+  <line x1="150" y1="56" x2="300" y2="48" stroke="var(--line)" stroke-dasharray="3 3"/>
+  <text x="0" y="212" class="d-label">shape only &#8212; benchmarks don't represent your work, so re-test on it</text>
+</svg></div><figcaption><b>Quality against cost, one curve per model</b><span>Shape of the chart, not exact figures. The flat top is effort you are paying for and not receiving; the horizontal gap is the same quality at a different price.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:54.3%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Read the cost-quality curve</span><s>20 / 35</s></div><h2>By the numbers</h2><div class="nums"><div><b>$13</b><i>per task</i><span>one model at high effort on the benchmark shown</span></div><div><b>$3.50</b><i>per task</i><span>comparable quality from a different model at high effort</span></div><div><b>40%</b><i>of tasks</i><span>a mid-tier model at medium effort</span></div><div><b>54%</b><i>of tasks</i><span>the same model at max — for more than the stronger model's high</span></div></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:57.1%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Read the cost-quality curve</span><s>21 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Compare models on cost per completed task, not on the headline benchmark score.</li><li>Find where your model's curve flattens and stop paying past that point.</li><li>Check the low end first — that is where effort levels differ most and cost least.</li><li>Re-test on your own work; a benchmark is a starting point, not a decision.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:60.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Sacrifice grammar for concision</span><s>22 / 35</s></div><p class="idx">05</p><h2>Sacrifice grammar for concision</h2><p class="lead">One line in your global config — report to me extremely concisely, sacrificing grammar — turns an agent's essays into headers and fragments you can scan, without changing what the agent understood.</p><div class="src"><a href="https://www.youtube.com/shorts/I12Mf8KBT1I" target="_blank" rel="noopener">Matt Pocock &middot; Make Claude Code give you answers, not essays &middot; 1:30 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:62.9%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Sacrifice grammar for concision</span><s>23 / 35</s></div><h2>Sacrifice grammar for concision</h2><ol class="bul"><li>Agents default to paragraphs. You have to read all of them.</li><li>Ask for extreme concision, explicitly sacrificing grammar.</li><li>You get headers, fragments and short lists instead of prose.</li><li>Put it in the global config so it applies everywhere.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:65.7%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Sacrifice grammar for concision</span><s>24 / 35</s></div><figure><div class="plate"><svg viewBox="0 0 460 196" role="img"
+  aria-label="Two report blocks. The default report is three long paragraph bars. The concise report is a short header, two short fragments and a two-item list.">
+  <text x="0" y="12" class="d-label">DEFAULT</text>
+  <rect x="0" y="22" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="38" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="54" width="180" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="76" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="92" width="196" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="108" width="212" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <rect x="0" y="124" width="150" height="10" rx="2" fill="var(--muted)" opacity="0.45"/>
+  <text x="0" y="158" class="d-label">root cause is in there</text>
+
+  <text x="248" y="12" class="d-label">CONCISE</text>
+  <text x="248" y="36" class="d-node">ESM/CJS mismatch</text>
+  <rect x="248" y="46" width="140" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <text x="248" y="78" class="d-fix">root cause found</text>
+  <rect x="248" y="88" width="120" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <rect x="248" y="102" width="164" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <rect x="248" y="120" width="96" height="8" rx="2" fill="var(--signal)" opacity="0.5"/>
+  <text x="248" y="158" class="d-label">headers first, detail on request</text>
+  <text x="0" y="188" class="d-label">one line in the global config &#8212; same understanding, different report</text>
+</svg></div><figcaption><b>Same debugging session, two report formats</b><span>The model's understanding is identical either side. What changes is how long it takes you to find the root cause in the reply.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:68.6%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Sacrifice grammar for concision</span><s>25 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Add the concision line to your global config, not to individual prompts.</li><li>Ask for the format you want to receive — headers and fragments are a legitimate request.</li><li>Treat the short summary as the default and ask follow-ups when you need depth.</li><li>Judge the change on how fast you can scan a report, not on how polished it reads.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:71.4%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>The code is the agent's environment</span><s>26 / 35</s></div><p class="idx">06</p><h2>The code is the agent's environment</h2><p class="lead">An agent's output quality is bounded by the codebase it works in, and unlike a human it has no memory to route around a bad one — so software fundamentals matter more now, not less.</p><div class="src"><a href="https://www.youtube.com/shorts/eEjBhVI9Qok" target="_blank" rel="noopener">Matt Pocock &middot; Do software fundamentals still matter? &middot; 2:12 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:74.3%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>The code is the agent's environment</span><s>27 / 35</s></div><h2>The code is the agent's environment</h2><ol class="bul"><li>The codebase is the environment the agent operates in.</li><li>A garbage codebase produces garbage output.</li><li>Humans build a feel for a bad codebase. Agents cannot — no memory.</li><li>So the same mistakes repeat, on dumb models and smart ones alike.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:77.1%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>The code is the agent's environment</span><s>28 / 35</s></div><q>They are kind of like the guy from Memento who wakes up in the codebase and goes: okay, I'm awake — what do I remember? Nothing.</q><p>It explains why the fix is environmental rather than a better prompt: you cannot teach something that starts every session from zero, you can only make the place it wakes up in easier to read.</p><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:80.0%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The code is the agent's environment</span><s>29 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Judge a refactor by whether it makes the codebase easier for an agent to explore.</li><li>Put tests at seams that let an agent verify a change without understanding everything.</li><li>Encode the guardrails that stop repeated mistakes — the agent will not remember them.</li><li>Stop reaching for a smarter model when the real obstacle is the environment.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:82.9%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>There is no such thing as greenfield</span><s>30 / 35</s></div><p class="idx">07</p><h2>There is no such thing as greenfield</h2><p class="lead">The only real difference between a greenfield and a brownfield codebase is that one has settled conventions and the other hasn't yet — and with an agent filling the repo, that distinction survives about a week.</p><div class="src"><a href="https://www.youtube.com/shorts/0l7zOp260yc" target="_blank" rel="noopener">Matt Pocock &middot; There is no such thing as greenfield &middot; 1:27 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:85.7%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>There is no such thing as greenfield</span><s>31 / 35</s></div><h2>There is no such thing as greenfield</h2><ol class="bul"><li>Everything is built for the real world, with real constraints.</li><li>Brownfield means the conventions already exist, often only in the code.</li><li>Greenfield just means you pick them — once.</li><li>A repo goes from fresh to legacy faster than ever now.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:88.6%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>There is no such thing as greenfield</span><s>32 / 35</s></div><figure><div class="plate"><svg viewBox="0 0 460 150" role="img"
+  aria-label="A timeline of a codebase from day zero. A short green segment lasting about a week, then a long segment labelled the same as any brownfield codebase.">
+  <rect x="0" y="34" width="64" height="34" rx="3" fill="var(--signal)" opacity="0.45"/>
+  <rect x="64" y="34" width="396" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="32" y="24" class="d-num" text-anchor="middle">~1 week</text>
+  <text x="262" y="56" class="d-label" text-anchor="middle">conventions set, choices now expensive to change</text>
+  <line x1="64" y1="30" x2="64" y2="76" stroke="var(--interference)" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="0" y="94" class="d-label">day 0</text>
+  <text x="460" y="94" class="d-label" text-anchor="end">legacy</text>
+  <text x="0" y="126" class="d-label">agents fill the repo faster, so the green segment gets shorter, not longer</text>
+</svg></div><figcaption><b>How long the green lasts</b><span>The distinction is real for about a week. After that both codebases are the same problem: conventions someone has to make legible.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:91.4%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>There is no such thing as greenfield</span><s>33 / 35</s></div><h2>By the numbers</h2><div class="nums"><div><b>days</b><i>to a week</i><span>how long a codebase stays meaningfully greenfield</span></div></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:94.3%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>There is no such thing as greenfield</span><s>34 / 35</s></div><h2>What to do</h2><ul class="acts"><li>Set conventions on day one and write them down — the implicit ones are what the agent misses.</li><li>Design folder structure and docs for navigation, not for completeness.</li><li>Stop filtering techniques by greenfield vs brownfield; the difference expires in a week.</li><li>Treat the first week of a new repo as the only cheap window for changing your mind.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:97.1%"></i></div></section>
+<section class="slide k-close"><div class="tick"><span>In one move</span><s>35 / 35</s></div><h2>The role, in one line</h2><p class="lead">Decide where the human check goes, spend the least effort the task needs, keep the reports short, and make the codebase somewhere an agent with no memory can work. None of that is writing code, and all of it decides how good the code turns out.</p><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
+</body>
+</html>
