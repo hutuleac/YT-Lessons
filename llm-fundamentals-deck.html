@@ -13,8 +13,10 @@
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --measure:min(78ch, 92vw);
-  --wide:min(980px, 92vw);
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
 }
 @media (prefers-color-scheme:light){
   :root{
@@ -81,7 +83,7 @@ h2{
   letter-spacing:-.03em; font-weight:600; margin:0 0 16px
 }
 .oneline{font-size:20px; color:var(--ink); margin:0}
-p{margin:0 0 20px}
+p{margin:0 0 30px}
 
 /* ---- numbers ---- */
 .figs{
