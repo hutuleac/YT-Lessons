@@ -10,7 +10,7 @@ through the brief's theme structure.
 
 ## Repo
 - **Remote:** https://github.com/hutuleac/YT-Lessons.git (`main`, no other branches)
-- **Pages:** not enabled yet — no live URL. Enabling it is outward-facing, so ask first.
+- **Pages:** live at https://hutuleac.github.io/YT-Lessons/, serving off `main`.
 - Repo root should only ever gain built `<lesson-id>.html`, `<lesson-id>-deck.html` and the
   refreshed `index.html`.
   Transcripts live in `source-data/<lesson-id>/`.
