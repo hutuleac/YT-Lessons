@@ -66,8 +66,14 @@ same argument out of the same notes.
   same byte size within the same second. Symptom: you edit a note, rebuild, nothing changes. If
   output ever looks stale: `find . -name __pycache__ -exec rm -rf {} +`.
 - **SVG text scales with the plate.** Text is sized in user units, so a 340-wide viewBox stretched
-  to 800px renders 10px text at 24px. `.plate svg` is capped at 560px for this reason. If diagram
-  text looks wrong, check the viewBox, not the CSS.
+  to 800px renders 10px text at 24px. `.plate svg` is capped at 820px (page) / a `clamp()` up to
+  ~1400px (deck) for this reason — since it's vector, pushing the cap higher only makes labels
+  more readable, never blurry. If diagram text looks wrong, check the viewBox, not the CSS.
+- **Every size in `DECK_CSS` must be `clamp()`-based, no bare px.** `.slide h1`/`.bul li`/etc. all
+  scale with `vw`; a plain `max-width:1040px` (as `.slide .plate svg` once had) freezes the moment
+  the window passes that width while everything around it keeps growing. Symptom: diagrams look
+  fine at 1440px but stay a fixed size past that while headings keep scaling — check windows
+  2000px+, not just 1440px, when touching deck sizing.
 - **Diagrams scroll, they don't shrink.** Below ~470px they'd compress until labels overflow their
   boxes, so `.plate` scrolls horizontally with `svg{min-width:420px}`. Page-level horizontal
   overflow must stay false.
@@ -86,6 +92,11 @@ zone. Diagrams use CSS custom properties so they theme themselves; text uses `.d
 
 Verify rendering with the **/browse** skill (never the Chrome MCP tools) — console errors, page
 overflow at 390px, wide-monitor space usage at 1920px+, and both themes.
+
+To screenshot one diagram among several: `nth-of-type` on `<figure>` breaks when they sit in
+different parent sections (it resets per parent). Tag them first —
+`$B js "document.querySelectorAll('figure').forEach((f,i)=>f.id='fig-'+i)"` — then
+`$B screenshot out.png --selector "#fig-N"`.
 
 ## Git conventions
 - **Never add a `Co-Authored-By: Claude...` trailer** to commits in this repo.
