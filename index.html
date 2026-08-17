@@ -100,6 +100,10 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 /* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
    so they scroll inside the plate instead of becoming illegible. */
 .plate svg{display:block; width:100%; min-width:420px; max-width:560px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
 .d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
 .d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
 .d-node{font:500 12px var(--mono); fill:var(--ink)}
