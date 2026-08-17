@@ -13,6 +13,7 @@ LESSON = {
         "strategic-load",
         "review-checkpoints",
         "auto-mode",
+        "auto-mode-safety-record",
         "effort-levels",
         "model-cost-curve",
         "concise-output",
@@ -26,6 +27,9 @@ LESSON = {
         "auto-mode": "That is where you decide the checkpoint belongs. The harness has its own"
                      " answer, it changed recently, and it is now on by default — so it is worth"
                      " knowing what it lets through.",
+        "auto-mode-safety-record": "Knowing the mechanism is one thing; trusting it is another."
+                                   " The data on how manual review actually performs is the reason"
+                                   " the default changed.",
         "effort-levels": "Checkpoints decide where you spend attention. The next dial decides"
                          " what you spend on the agent — and most people have it turned up too"
                          " far.",
