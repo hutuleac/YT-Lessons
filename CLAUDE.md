@@ -71,6 +71,10 @@ same argument out of the same notes.
 - **Diagrams scroll, they don't shrink.** Below ~470px they'd compress until labels overflow their
   boxes, so `.plate` scrolls horizontally with `svg{min-width:420px}`. Page-level horizontal
   overflow must stay false.
+- **Page width is `clamp()`-based, not a fixed max-width.** `--measure` (prose) and `--wide`
+  (boxes/plates/lists) both scale with `vw` up to a cap (900px / 1360px), so the page keeps using
+  more of a wide monitor instead of stranding content in a narrow column on anything past a
+  laptop. A regression here only shows up at 1920px+ — checking 390px and 1440px won't catch it.
 
 ## Design
 Dark-first, light is a media-query override. Monospace display / serif body — the machine speaks
@@ -81,7 +85,7 @@ zone. Diagrams use CSS custom properties so they theme themselves; text uses `.d
 `.d-node` `.d-fix` and never hardcodes font-size.
 
 Verify rendering with the **/browse** skill (never the Chrome MCP tools) — console errors, page
-overflow at 390px, and both themes.
+overflow at 390px, wide-monitor space usage at 1920px+, and both themes.
 
 ## Git conventions
 - **Never add a `Co-Authored-By: Claude...` trailer** to commits in this repo.
