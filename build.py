@@ -686,10 +686,13 @@ def build_index(all_lessons):
     cards = []
     for L in sorted(all_lessons, key=lambda x: x["id"]):
         cards.append(
-            f'<li><a href="{e(L["id"])}.html"><span class="k">{e(L["subject"])}</span>'
+            f'<li><span class="k">{e(L["subject"])}</span>'
             f'<b>{e(L["title"])}</b><i>{e(L["standfirst"])}</i>'
-            f'<u>{len(L["notes"])} concepts</u></a>'
-            f'<p class="dk"><a href="{e(L["id"])}-deck.html">Deck &#8599;</a></p></li>'
+            f'<div class="ix-foot"><u>{len(L["notes"])} concepts</u>'
+            f'<div class="ix-go">'
+            f'<a class="go go-read" href="{e(L["id"])}.html">Read &#8594;</a>'
+            f'<a class="go go-deck" href="{e(L["id"])}-deck.html">Deck &#8599;</a>'
+            f"</div></div></li>"
         )
     doc = (
         '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
@@ -699,24 +702,29 @@ def build_index(all_lessons):
         + """
         .ix{max-width:var(--wide);margin:0 auto;padding:14vh 22px 12vh}
         .ix ul{list-style:none;margin:44px 0 0;padding:0}
-        .ix li{border-top:1px solid var(--line)}
-        .ix a{display:block;padding:30px 0;text-decoration:none;color:inherit}
-        .ix a:hover b{color:var(--signal)}
+        .ix li{border-top:1px solid var(--line);padding:30px 0}
         .k{font:500 11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--interference)}
         .ix b{display:block;font-family:var(--mono);font-size:26px;font-weight:600;
               letter-spacing:-.03em;margin:12px 0 10px}
         .ix i{display:block;font-style:normal;color:var(--muted);font-size:17px;max-width:60ch}
-        .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted);margin-top:14px}
-        .dk{margin:0 0 30px}
-        /* .ix a matches this link too and only it declares display/padding — restate both. */
-        .dk a{display:inline;padding:0;font:400 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
-              color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
-        .dk a:hover{color:var(--signal);border-color:var(--signal)}
+        .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted)}
+        .ix-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+                 gap:16px;margin-top:22px}
+        .ix-go{display:flex;gap:10px}
+        /* Two equal-weight actions, not one primary link with a footnote — reading and presenting
+           are both first-class outputs of the same source, so neither gets buried. */
+        .go{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+            text-decoration:none;padding:11px 18px;border-radius:999px;border:1px solid var(--line)}
+        .go-read{color:var(--void);background:var(--signal);border-color:var(--signal)}
+        .go-read:hover{opacity:.85}
+        .go-deck{color:var(--ink);background:transparent}
+        .go-deck:hover{border-color:var(--interference);color:var(--interference)}
         </style>\n</head>\n<body>\n<div class="ix">
         <p class="eyebrow">Lessons</p>
         <h1>Ideas worth more than 60 seconds</h1>
         <p class="standfirst">Short-form video, taken apart and put back together as something you
-        can actually learn from.</p>
+        can actually learn from. Every lesson comes in two shapes: read it end to end, or open it
+        as a deck for presenting.</p>
         <ul>"""
         + "".join(cards)
         + "</ul></div>\n</body>\n</html>\n"

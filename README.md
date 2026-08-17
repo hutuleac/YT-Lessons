@@ -1,5 +1,7 @@
 # YT-Lessons
 
+**Live: [hutuleac.github.io/YT-Lessons](https://hutuleac.github.io/YT-Lessons/)**
+
 Teaching material built from short-form video. Static HTML, no build step, no dependencies.
 
 Companion to [YT-Knowledge](https://github.com/hutuleac/YT-Knowledge), which does research briefs

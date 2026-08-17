@@ -151,19 +151,23 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 
         .ix{max-width:var(--wide);margin:0 auto;padding:14vh 22px 12vh}
         .ix ul{list-style:none;margin:44px 0 0;padding:0}
-        .ix li{border-top:1px solid var(--line)}
-        .ix a{display:block;padding:30px 0;text-decoration:none;color:inherit}
-        .ix a:hover b{color:var(--signal)}
+        .ix li{border-top:1px solid var(--line);padding:30px 0}
         .k{font:500 11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--interference)}
         .ix b{display:block;font-family:var(--mono);font-size:26px;font-weight:600;
               letter-spacing:-.03em;margin:12px 0 10px}
         .ix i{display:block;font-style:normal;color:var(--muted);font-size:17px;max-width:60ch}
-        .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted);margin-top:14px}
-        .dk{margin:0 0 30px}
-        /* .ix a matches this link too and only it declares display/padding — restate both. */
-        .dk a{display:inline;padding:0;font:400 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
-              color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
-        .dk a:hover{color:var(--signal);border-color:var(--signal)}
+        .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted)}
+        .ix-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+                 gap:16px;margin-top:22px}
+        .ix-go{display:flex;gap:10px}
+        /* Two equal-weight actions, not one primary link with a footnote — reading and presenting
+           are both first-class outputs of the same source, so neither gets buried. */
+        .go{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+            text-decoration:none;padding:11px 18px;border-radius:999px;border:1px solid var(--line)}
+        .go-read{color:var(--void);background:var(--signal);border-color:var(--signal)}
+        .go-read:hover{opacity:.85}
+        .go-deck{color:var(--ink);background:transparent}
+        .go-deck:hover{border-color:var(--interference);color:var(--interference)}
         </style>
 </head>
 <body>
@@ -171,7 +175,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
         <p class="eyebrow">Lessons</p>
         <h1>Ideas worth more than 60 seconds</h1>
         <p class="standfirst">Short-form video, taken apart and put back together as something you
-        can actually learn from.</p>
-        <ul><li><a href="context-engineering.html"><span class="k">Context engineering</span><b>Everything is competing for the same window</b><i>One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.</i><u>8 concepts</u></a><p class="dk"><a href="context-engineering-deck.html">Deck &#8599;</a></p></li><li><a href="lead-developer.html"><span class="k">Working above the agent</span><b>You are the lead developer now</b><i>The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.</i><u>9 concepts</u></a><p class="dk"><a href="lead-developer-deck.html">Deck &#8599;</a></p></li><li><a href="llm-fundamentals.html"><span class="k">LLM fundamentals</span><b>What is actually happening when you talk to an LLM</b><i>Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.</i><u>7 concepts</u></a><p class="dk"><a href="llm-fundamentals-deck.html">Deck &#8599;</a></p></li></ul></div>
+        can actually learn from. Every lesson comes in two shapes: read it end to end, or open it
+        as a deck for presenting.</p>
+        <ul><li><span class="k">Context engineering</span><b>Everything is competing for the same window</b><i>One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.</i><div class="ix-foot"><u>8 concepts</u><div class="ix-go"><a class="go go-read" href="context-engineering.html">Read &#8594;</a><a class="go go-deck" href="context-engineering-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Working above the agent</span><b>You are the lead developer now</b><i>The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.</i><div class="ix-foot"><u>9 concepts</u><div class="ix-go"><a class="go go-read" href="lead-developer.html">Read &#8594;</a><a class="go go-deck" href="lead-developer-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">LLM fundamentals</span><b>What is actually happening when you talk to an LLM</b><i>Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.</i><div class="ix-foot"><u>7 concepts</u><div class="ix-go"><a class="go go-read" href="llm-fundamentals.html">Read &#8594;</a><a class="go go-deck" href="llm-fundamentals-deck.html">Deck &#8599;</a></div></div></li></ul></div>
 </body>
 </html>
