@@ -262,109 +262,143 @@ body{font-family:var(--sans)}
 </style>
 </head>
 <body>
-<section class="slide k-title"><div class="tick"><span>Token economics</span><s>1 / 19</s></div><h1>The bill is mostly about timing, not brevity</h1><p class="lead">A tip to "be brief" saves you output tokens. The real 20x swing in what you pay lives somewhere most people never look: whether your message lands inside an hour-long cache window or misses it.</p><p class="audience">You use Claude Code or a similar agent regularly and have noticed usage costs spike without an obvious reason — long idle gaps, model switches, or long sessions that suddenly get expensive.</p><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:5.3%"></i></div></section>
-<section class="slide k-figs"><div class="tick"><span>Where this goes</span><s>2 / 19</s></div><figure><div class="plate"><svg viewBox="-2 -2 774 76" role="img" aria-label="Concept map of the lesson: Prompt caching, Clear, compact, or handoff, Advisor mode, joined by arrows showing which concept each one builds on."><defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs><line x1="230" y1="36" x2="270" y2="36" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><line x1="230" y1="36" x2="540" y2="36" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><rect x="0" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="25" class="d-num">01</text><text x="16" y="47" class="d-node"><tspan x="16" dy="0">Prompt caching</tspan></text><rect x="270" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="25" class="d-num">02</text><text x="286" y="47" class="d-node"><tspan x="286" dy="0">Clear, compact, or</tspan><tspan x="286" dy="17">handoff</tspan></text><rect x="540" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="25" class="d-num">03</text><text x="556" y="47" class="d-node"><tspan x="556" dy="0">Advisor mode</tspan></text></svg></div><figcaption><b>The concepts, and what each one needs first</b><span>Drawn from the prerequisites the build checks, so the map cannot drift from the lesson.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:10.5%"></i></div></section>
-<section class="slide k-section"><div class="tick"><span>Prompt caching</span><s>3 / 19</s></div><p class="idx">01</p><h2>Prompt caching</h2><p class="lead">Every message resends the whole conversation so far, but Anthropic caches that growing history as a document Claude re-reads instead of reprocessing — so a message that continues an active conversation costs a fraction of one that doesn't, and the gap between those two prices is 20x.</p><div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:15.8%"></i></div></section>
-<section class="slide k-bullets"><div class="tick"><span>Prompt caching</span><s>4 / 19</s></div><h2>Prompt caching</h2><ol class="bul"><li>Every message resends the entire conversation, not just the new text.</li><li>That growing history is cached as a document Claude re-reads instead of reprocessing.</li><li>A cache write costs 2x base input price; a cache read costs 1/10th — a 20x swing.</li><li>The cache expires after 1 hour of no activity, and refreshes on every message sent.</li><li>Switching model, effort, MCPs, or compacting resets it early, mid-conversation.</li></ol><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:21.1%"></i></div></section>
-<section class="slide k-figs"><div class="tick"><span>Prompt caching</span><s>5 / 19</s></div><figure><div class="plate"><svg viewBox="0 0 480 190" role="img"
+<section class="slide k-title"><div class="tick"><span>Token economics</span><s>1 / 20</s></div><h1>The bill is mostly about timing, not brevity</h1><p class="lead">A rule to "be brief" only trims output tokens. The real 20x swing in your bill comes from something else: did your message land inside the 1-hour cache window, or miss it.</p><p class="audience">You use Claude Code or a similar agent, and your usage cost has spiked without a clear reason: a long idle gap, a model switch, or a long session that suddenly gets expensive.</p><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:5.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Where this goes</span><s>2 / 20</s></div><figure><div class="plate"><svg viewBox="-2 -2 774 76" role="img" aria-label="Concept map of the lesson: Prompt caching, Clear, compact, or handoff, Advisor mode, joined by arrows showing which concept each one builds on."><defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs><line x1="230" y1="36" x2="270" y2="36" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><line x1="230" y1="36" x2="540" y2="36" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><rect x="0" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="25" class="d-num">01</text><text x="16" y="47" class="d-node"><tspan x="16" dy="0">Prompt caching</tspan></text><rect x="270" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="25" class="d-num">02</text><text x="286" y="47" class="d-node"><tspan x="286" dy="0">Clear, compact, or</tspan><tspan x="286" dy="17">handoff</tspan></text><rect x="540" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="25" class="d-num">03</text><text x="556" y="47" class="d-node"><tspan x="556" dy="0">Advisor mode</tspan></text></svg></div><figcaption><b>The concepts, and what each one needs first</b><span>Drawn from the prerequisites the build checks, so the map cannot drift from the lesson.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:10.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Prompt caching</span><s>3 / 20</s></div><p class="idx">01</p><h2>Prompt caching</h2><p class="lead">A cache stores your growing conversation, so Claude reads it cheaply on each new message instead of paying full price to process it again.</p><div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:15.0%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Prompt caching</span><s>4 / 20</s></div><h2>Prompt caching</h2><ol class="bul"><li>Each message resends your full chat history.</li><li>The cache stores that history for fast, cheap reads.</li><li>Writing to the cache costs more than reading from it.</li><li>The cache ends after 1 hour with no new messages.</li><li>Switching models or running /compact ends the cache early.</li></ol><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:20.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Prompt caching</span><s>5 / 20</s></div><figure><div class="plate"><svg viewBox="0 0 480 190" role="img"
   aria-label="Two stacked message rows. Message 1 sends 5 input and 4 output tokens. Message 2 must resend all 9 of those tokens plus its own 6 new input tokens, for 15 tokens actually sent.">
   <text x="0" y="18" class="d-label">message 1</text>
   <rect x="0" y="26" width="60" height="30" rx="3" fill="var(--signal)" opacity="0.45"/>
   <text x="30" y="46" class="d-num" text-anchor="middle">5</text>
   <rect x="66" y="26" width="60" height="30" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
   <text x="96" y="46" class="d-num" text-anchor="middle">4</text>
-  <text x="132" y="46" class="d-label">in / out — 9 tokens total</text>
+  <text x="132" y="46" class="d-label">in / out, 9 tokens</text>
 
-  <text x="0" y="92" class="d-label">message 2 (what you think you send)</text>
+  <text x="0" y="92" class="d-label">message 2 &#8212; you type</text>
   <rect x="0" y="100" width="60" height="30" rx="3" fill="var(--surface-2)" stroke="var(--line)" stroke-dasharray="3 3"/>
   <text x="30" y="120" class="d-num" text-anchor="middle">6</text>
-  <text x="66" y="120" class="d-label">new input only</text>
+  <text x="66" y="120" class="d-label">new tokens only</text>
 
-  <text x="0" y="152" class="d-label">message 2 (what actually gets sent)</text>
+  <text x="0" y="152" class="d-label">message 2 &#8212; actually sent</text>
   <rect x="0" y="160" width="60" height="26" rx="3" fill="var(--signal)" opacity="0.45"/>
   <rect x="60" y="160" width="48" height="26" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
   <rect x="108" y="160" width="60" height="26" rx="3" fill="var(--interference)" opacity="0.5"/>
-  <text x="192" y="178" class="d-fix">msg 1 (9) + new (6) = 15 tokens, every turn</text>
-</svg></div><figcaption><b>Every message resends the history</b><span>Message 2 isn't 6 tokens — it's message 1's 9 tokens plus the new 6.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:26.3%"></i></div></section>
-<section class="slide k-figs"><div class="tick"><span>Prompt caching</span><s>6 / 19</s></div><figure><div class="plate"><svg viewBox="0 0 460 232" role="img"
-  aria-label="Bar chart comparing the cost of the next message on a 500,000 token conversation: about 50 cents if the cache is still warm (cache read), versus about 10 dollars if the cache expired (cache write), a 20x difference.">
-  <line x1="90" y1="16" x2="90" y2="168" stroke="var(--line)" stroke-width="1"/>
-  <line x1="90" y1="168" x2="440" y2="168" stroke="var(--line)" stroke-width="1"/>
+  <text x="176" y="178" class="d-fix">9 + 6 = 15 tokens, every turn</text>
+</svg></div><figcaption><b>Every message resends the history</b><span>Message 2 is not 6 tokens. It is message 1's 9 tokens plus the new 6.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:25.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Prompt caching</span><s>6 / 20</s></div><figure><div class="plate"><svg viewBox="0 0 480 230" role="img"
+  aria-label="A new message enters a compute step that writes it into the cache at the higher write price. Every later message reads that same cache at the much lower read price, shown as a repeating loop."
+       >
+  <rect x="0" y="86" width="92" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="46" y="110" class="d-node" text-anchor="middle">new turn</text>
 
-  <text x="0" y="52" class="d-label">warm</text>
-  <text x="0" y="66" class="d-label">(within 1h)</text>
-  <rect x="90" y="44" width="16" height="124" fill="var(--signal)"/>
-  <text x="116" y="52" class="d-num">~$0.50</text>
-  <text x="116" y="68" class="d-label">cache read, $1/M</text>
+  <path d="M92 106 L 158 106" stroke="var(--interference)" stroke-width="2" fill="none" marker-end="url(#pc-a1)"/>
+  <text x="94" y="94" class="d-fix">write</text>
 
-  <text x="0" y="132" class="d-label">cold</text>
-  <text x="0" y="146" class="d-label">(&gt;1h idle)</text>
-  <rect x="230" y="26" width="16" height="142" fill="var(--interference)"/>
-  <text x="256" y="34" class="d-num">~$10</text>
-  <text x="256" y="50" class="d-label">cache write, $20/M</text>
+  <rect x="164" y="70" width="150" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)" stroke-width="2"/>
+  <rect x="180" y="92" width="20" height="14" rx="2" fill="none" stroke="var(--sand)" stroke-width="2"/>
+  <path d="M184 92 v-6 a4 4 0 0 1 8 0 v6" fill="none" stroke="var(--sand)" stroke-width="2"/>
+  <text x="239" y="102" class="d-node" text-anchor="middle">cache</text>
+  <text x="239" y="120" class="d-label" text-anchor="middle">stored once</text>
 
-  <text x="0" y="196" class="d-fix">same conversation, same next message &#8212;</text>
-  <text x="0" y="214" class="d-fix">20x apart on timing alone</text>
-</svg></div><figcaption><b>Cache write vs. cache read: a 20x gap</b><span>Same 500k-token history, two prices depending on whether the hour ran out.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:31.6%"></i></div></section>
-<section class="slide k-nums"><div class="tick"><span>Prompt caching</span><s>7 / 19</s></div><h2>By the numbers</h2><div class="nums"><div><b>$20</b><i>per million tokens</i><span>cache write (1-hour), roughly 2x base input</span></div><div><b>$1</b><i>per million tokens</i><span>cache read, roughly 1/10 base input</span></div><div><b>20x</b><i>cost multiple</i><span>cache read vs. cache write for the same tokens</span></div><div><b>1 hour</b><i>of inactivity</i><span>before the cache expires; refreshes on every message</span></div><div><b>~$0.50</b><i>vs ~$10</i><span>next message on a 500k-token conversation, warm vs. cold</span></div></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:36.8%"></i></div></section>
-<section class="slide k-quote"><div class="tick"><span>Prompt caching</span><s>8 / 19</s></div><q>"I want you to think of the message cache as simply a document that Claude has in front of it that has your entire conversation up until that point."</q><p>Reframes caching from something invisible happening to your tokens into a physical object with a shelf life — it makes the 1-hour expiry intuitive: the document gets taken away, not silently forgotten.</p><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:42.1%"></i></div></section>
-<section class="slide k-do"><div class="tick"><span>Prompt caching</span><s>9 / 19</s></div><h2>What to do</h2><ul class="acts"><li>Don't leave an important long conversation idle for over an hour if you intend to continue it — the next message pays full cache-write price for everything before it.</li><li>Avoid switching models, effort level, or MCPs mid-conversation if preserving the cache matters more than the change.</li><li>If you must step away for over an hour, decide in advance whether to /clear, /compact, or hand off — don't just come back and send the next message cold.</li></ul><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:47.4%"></i></div></section>
-<section class="slide k-section"><div class="tick"><span>Clear, compact, or handoff</span><s>10 / 19</s></div><p class="idx">02</p><h2>Clear, compact, or handoff</h2><p class="lead">When a long conversation's cache is gone or about to be, the choice isn't whether to lose the history — it's whether nothing carries forward (/clear), a summary rides in the message history (/compact), or a summary lives as a file on disk (a handoff document).</p><div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:52.6%"></i></div></section>
-<section class="slide k-bullets"><div class="tick"><span>Clear, compact, or handoff</span><s>11 / 19</s></div><h2>Clear, compact, or handoff</h2><ol class="bul"><li>/clear wipes the conversation; the codebase itself carries the context forward.</li><li>/compact summarises the conversation, then starts fresh with that summary injected.</li><li>A handoff writes the summary to a markdown file on disk instead of into the message.</li><li>The difference between compact and handoff is only where the summary lives.</li><li>None of these beat staying under a few hundred thousand tokens in the first place.</li></ol><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:57.9%"></i></div></section>
-<section class="slide k-figs"><div class="tick"><span>Clear, compact, or handoff</span><s>12 / 19</s></div><figure><div class="plate"><svg viewBox="0 0 480 200" role="img"
-  aria-label="A long conversation branches into three outcomes: clear discards it entirely and relies on the project files; compact summarises it into the new conversation's message history; handoff summarises it into a markdown file on disk that a new conversation reads.">
-  <rect x="0" y="80" width="110" height="40" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
-  <text x="55" y="104" class="d-node" text-anchor="middle">long convo</text>
+  <path d="M314 96 C 360 70, 400 70, 400 96" stroke="var(--signal)" stroke-width="2" fill="none" marker-end="url(#pc-a2)"/>
+  <path d="M400 116 C 400 142, 360 142, 314 116" stroke="var(--signal)" stroke-width="2" fill="none" marker-end="url(#pc-a2)"/>
+  <text x="330" y="60" class="d-fix">read, read, read &#8230;</text>
 
-  <path d="M110 90 L 200 40" stroke="var(--line)" fill="none"/>
-  <path d="M110 100 L 200 100" stroke="var(--line)" fill="none"/>
-  <path d="M110 110 L 200 160" stroke="var(--line)" fill="none"/>
+  <rect x="400" y="86" width="80" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="440" y="110" class="d-node" text-anchor="middle">reply</text>
 
-  <rect x="204" y="18" width="90" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
-  <text x="249" y="36" class="d-node" text-anchor="middle">/clear</text>
-  <text x="249" y="52" class="d-label" text-anchor="middle">nothing kept</text>
+  <defs>
+    <marker id="pc-a1" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker>
+    <marker id="pc-a2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--signal)"/></marker>
+  </defs>
 
-  <rect x="204" y="78" width="90" height="44" rx="4" fill="var(--interference)" opacity="0.45"/>
-  <text x="249" y="96" class="d-node" text-anchor="middle">/compact</text>
-  <text x="249" y="112" class="d-label" text-anchor="middle">summary &#8594; new chat</text>
+  <text x="0" y="176" class="d-label">write: pay once, 1.25x&#8211;2x base</text>
+  <text x="0" y="196" class="d-label">read: pay each time, 0.1x base</text>
+</svg></div><figcaption><b>Write once, read many times</b><span>The write pays for the compute that builds the cache. Every read after that reuses it.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:30.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Prompt caching</span><s>7 / 20</s></div><figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
+  aria-label="Bar chart of four token prices per million on Claude Fable 5: cache read at 1 dollar, base input at 10 dollars, 5-minute cache write at 12.50 dollars, and 1-hour cache write at 20 dollars.">
+  <line x1="10" y1="180" x2="450" y2="180" stroke="var(--line)" stroke-width="1"/>
 
-  <rect x="204" y="138" width="90" height="44" rx="4" fill="var(--interference)" opacity="0.45"/>
-  <text x="249" y="156" class="d-node" text-anchor="middle">handoff</text>
-  <text x="249" y="172" class="d-label" text-anchor="middle">summary &#8594; disk file</text>
+  <rect x="30" y="170" width="34" height="10" fill="var(--signal)"/>
+  <text x="47" y="150" class="d-num" text-anchor="middle">$1</text>
+  <text x="47" y="200" class="d-label" text-anchor="middle">read</text>
 
-  <text x="310" y="36" class="d-label">project files fill the gap</text>
-  <text x="310" y="105" class="d-label">lives in message history</text>
-  <text x="310" y="165" class="d-label">lives as a .md, reusable</text>
-</svg></div><figcaption><b>Same summarising step, different destination</b><span>Clear keeps nothing; compact and handoff both summarise — only where the summary ends up differs.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:63.2%"></i></div></section>
-<section class="slide k-nums"><div class="tick"><span>Clear, compact, or handoff</span><s>13 / 19</s></div><h2>By the numbers</h2><div class="nums"><div><b>600-800k</b><i>tokens</i><span>range where context rot sets in regardless of model strength</span></div></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:68.4%"></i></div></section>
-<section class="slide k-do"><div class="tick"><span>Clear, compact, or handoff</span><s>14 / 19</s></div><h2>What to do</h2><ul class="acts"><li>Default to /clear when working in a real codebase — let the project carry the context.</li><li>Use /compact before you'd naturally hit auto-compact, not after, to avoid the context-rot range.</li><li>Reach for a handoff file specifically when you want a document that persists and updates across many sessions, not just the next one.</li></ul><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:73.7%"></i></div></section>
-<section class="slide k-section"><div class="tick"><span>Advisor mode</span><s>15 / 19</s></div><p class="idx">03</p><h2>Advisor mode</h2><p class="lead">A strong model plans and a cheaper model executes, sharing context back to the planner only when it hits trouble — so most of the conversation runs at the cheap model's rate instead of the strong one's, and each keeps its own cache.</p><div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:78.9%"></i></div></section>
-<section class="slide k-bullets"><div class="tick"><span>Advisor mode</span><s>16 / 19</s></div><h2>Advisor mode</h2><ol class="bul"><li>A smart model plans the task; a cheaper model executes it.</li><li>The executor only pulls the planner back in when it runs into trouble.</li><li>Planner and executor each keep their own separate prompt cache.</li><li>The executor doesn't have to be another Claude model — Codex works the same way.</li></ol><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:84.2%"></i></div></section>
-<section class="slide k-figs"><div class="tick"><span>Advisor mode</span><s>17 / 19</s></div><figure><div class="plate"><svg viewBox="0 0 460 190" role="img"
+  <rect x="130" y="100" width="34" height="80" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="147" y="90" class="d-num" text-anchor="middle">$10</text>
+  <text x="147" y="200" class="d-label" text-anchor="middle">base</text>
+
+  <rect x="230" y="80" width="34" height="100" fill="var(--sand)" opacity="0.65"/>
+  <text x="247" y="70" class="d-num" text-anchor="middle">$12.50</text>
+  <text x="247" y="200" class="d-label" text-anchor="middle">5-min write</text>
+
+  <rect x="330" y="20" width="34" height="160" fill="var(--interference)"/>
+  <text x="347" y="10" class="d-num" text-anchor="middle">$20</text>
+  <text x="347" y="200" class="d-label" text-anchor="middle">1-hour write</text>
+
+  <text x="10" y="222" class="d-fix">read is 20x cheaper than a 1-hour write, same tokens</text>
+</svg></div><figcaption><b>Four prices for the same tokens</b><span>Claude Fable 5 rates. Read is the cheapest way to move a token through the model twice.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:35.0%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Prompt caching</span><s>8 / 20</s></div><h2>By the numbers</h2><div class="nums"><div><b>$10</b><i>per million tokens</i><span>base input price (Claude Fable 5)</span></div><div><b>$12.50</b><i>per million tokens</i><span>5-minute cache write, 1.25x base — API only</span></div><div><b>$20</b><i>per million tokens</i><span>1-hour cache write, 2x base — Claude Code default</span></div><div><b>$1</b><i>per million tokens</i><span>cache read, 0.1x base — 20x cheaper than the 1-hour write</span></div><div><b>~$0.50 vs ~$10</b><i>next message, 500k-token chat</i><span>cache read vs. cache write, same history</span></div></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:40.0%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Prompt caching</span><s>9 / 20</s></div><q>"I want you to think of the message cache as simply a document that Claude has in front of it that has your entire conversation up until that point."</q><p>A physical object with a shelf life, not invisible magic — it makes the expiry intuitive: the document gets taken away, not silently forgotten.</p><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:45.0%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Prompt caching</span><s>10 / 20</s></div><h2>What to do</h2><ul class="acts"><li>Send your next message within the hour to keep the cache warm.</li><li>Avoid changing model, effort, or MCPs mid-task if the cache matters to you.</li><li>Use 5-minute caching on the API for quick, one-off calls; use 1-hour for longer work.</li><li>Plan your break before it happens: /clear, /compact, or hand off — not after.</li></ul><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:50.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Clear, compact, or handoff</span><s>11 / 20</s></div><p class="idx">02</p><h2>Clear, compact, or handoff</h2><p class="lead">When the cache is gone, pick one of three moves: keep nothing and let the project carry the context, summarise into the next chat, or write the summary to a file on disk.</p><div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:55.0%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Clear, compact, or handoff</span><s>12 / 20</s></div><h2>Clear, compact, or handoff</h2><ol class="bul"><li>/clear wipes the chat. The project files carry the context forward.</li><li>/compact summarises the chat, then starts a new one with that summary.</li><li>A handoff writes the summary to a file on disk instead.</li><li>Compact and handoff do the same summary step. Only the storage differs.</li><li>Do this before you hit the auto-compact limit, not after.</li></ol><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:60.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Clear, compact, or handoff</span><s>13 / 20</s></div><figure><div class="plate"><svg viewBox="0 0 480 260" role="img"
+  aria-label="A long conversation splits three ways. Clear discards it and relies on project files. Compact writes a summary into the new conversation. Handoff writes a summary to a markdown file on disk that a new conversation reads.">
+  <rect x="195" y="0" width="90" height="38" rx="5" fill="var(--surface-2)" stroke="var(--signal)" stroke-width="2"/>
+  <text x="240" y="24" class="d-node" text-anchor="middle">long chat</text>
+
+  <path d="M225 38 L 80 92" stroke="var(--line)" fill="none"/>
+  <path d="M240 38 L 240 92" stroke="var(--line)" fill="none"/>
+  <path d="M255 38 L 400 92" stroke="var(--line)" fill="none"/>
+
+  <rect x="10" y="96" width="140" height="46" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="80" y="125" class="d-node" text-anchor="middle">/clear</text>
+  <text x="80" y="168" class="d-label" text-anchor="middle">nothing kept</text>
+  <text x="80" y="184" class="d-label" text-anchor="middle">files carry it</text>
+
+  <rect x="170" y="96" width="140" height="46" rx="5" fill="var(--interference)" opacity="0.4"/>
+  <text x="240" y="125" class="d-node" text-anchor="middle">/compact</text>
+  <text x="240" y="168" class="d-label" text-anchor="middle">summary</text>
+  <text x="240" y="184" class="d-label" text-anchor="middle">&#8594; new chat</text>
+
+  <rect x="330" y="96" width="140" height="46" rx="5" fill="var(--interference)" opacity="0.4"/>
+  <text x="400" y="125" class="d-node" text-anchor="middle">handoff</text>
+  <text x="400" y="168" class="d-label" text-anchor="middle">summary</text>
+  <text x="400" y="184" class="d-label" text-anchor="middle">&#8594; disk file</text>
+
+  <text x="0" y="232" class="d-fix">clear: relies on the project</text>
+  <text x="0" y="250" class="d-fix">compact / handoff: same summary, different home</text>
+</svg></div><figcaption><b>One summary step, two destinations</b><span>Clear keeps nothing. Compact and handoff both summarise; only where the summary lands differs.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:65.0%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Clear, compact, or handoff</span><s>14 / 20</s></div><h2>By the numbers</h2><div class="nums"><div><b>600k-800k</b><i>tokens</i><span>range where context rot sets in, regardless of model</span></div></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:70.0%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Clear, compact, or handoff</span><s>15 / 20</s></div><h2>What to do</h2><ul class="acts"><li>Use /clear by default when you work inside a real codebase.</li><li>Run /compact before the auto-compact limit, not after.</li><li>Use a handoff file when the summary needs to persist and update across sessions.</li></ul><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:75.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Advisor mode</span><s>16 / 20</s></div><p class="idx">03</p><h2>Advisor mode</h2><p class="lead">A strong model plans and a cheap model executes, calling the planner back only when it gets stuck, so most turns run at the cheap model's price.</p><div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:80.0%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Advisor mode</span><s>17 / 20</s></div><h2>Advisor mode</h2><ol class="bul"><li>A strong model plans the task.</li><li>A cheap model executes the plan, turn by turn.</li><li>The executor calls the planner back only when it gets stuck.</li><li>Planner and executor each keep their own separate cache.</li><li>The executor can be a different model family, not just a cheaper Claude.</li></ol><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:85.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Advisor mode</span><s>18 / 20</s></div><figure><div class="plate"><svg viewBox="0 0 460 210" role="img"
   aria-label="A strong planner model produces a plan for a cheaper executor model. The executor handles most turns on its own, escalating back to the planner only when it hits trouble, then resuming execution."
        >
-  <rect x="0" y="16" width="130" height="44" rx="4" fill="var(--signal)" opacity="0.45"/>
-  <text x="65" y="34" class="d-node" text-anchor="middle">planner</text>
-  <text x="65" y="50" class="d-label" text-anchor="middle">strong, expensive</text>
+  <rect x="0" y="16" width="140" height="44" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="70" y="36" class="d-node" text-anchor="middle">planner</text>
+  <text x="70" y="52" class="d-label" text-anchor="middle">strong, high cost</text>
 
-  <path d="M65 60 L 65 100" stroke="var(--line)" fill="none"/>
-  <text x="72" y="84" class="d-label">plan</text>
+  <path d="M70 60 L 70 104" stroke="var(--line)" fill="none"/>
+  <text x="78" y="86" class="d-label">plan</text>
 
-  <rect x="0" y="104" width="130" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
-  <text x="65" y="122" class="d-node" text-anchor="middle">executor</text>
-  <text x="65" y="138" class="d-label" text-anchor="middle">cheap, does the work</text>
+  <rect x="0" y="108" width="140" height="44" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="70" y="128" class="d-node" text-anchor="middle">executor</text>
+  <text x="70" y="144" class="d-label" text-anchor="middle">cheap, does the work</text>
 
-  <path d="M130 126 C 220 126, 220 126, 300 126" stroke="var(--line)" fill="none" stroke-dasharray="3 3"/>
-  <text x="150" y="118" class="d-label">most turns stay here</text>
-  <circle cx="200" cy="126" r="3" fill="var(--muted)"/>
-  <circle cx="260" cy="126" r="3" fill="var(--muted)"/>
+  <text x="160" y="122" class="d-label">most turns stay here</text>
+  <path d="M160 132 L 300 132" stroke="var(--line)" stroke-dasharray="3 3" fill="none"/>
+  <circle cx="210" cy="132" r="3" fill="var(--muted)"/>
+  <circle cx="260" cy="132" r="3" fill="var(--muted)"/>
 
-  <path d="M130 118 C 220 100, 220 30, 132 22" stroke="var(--interference)" fill="none" stroke-width="2"/>
-  <text x="150" y="70" class="d-fix">stuck &#8594; escalate to planner</text>
+  <path d="M140 116 C 220 60, 260 40, 60 22" stroke="var(--interference)" fill="none" stroke-width="2"/>
+  <text x="160" y="52" class="d-fix">stuck &#8594; escalate</text>
 
-  <text x="0" y="182" class="d-label">each side keeps its own separate prompt cache</text>
-</svg></div><figcaption><b>Planner and executor, escalating only on trouble</b><span>Most turns stay on the cheap executor; the strong planner is called in only when execution stalls.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:89.5%"></i></div></section>
-<section class="slide k-do"><div class="tick"><span>Advisor mode</span><s>18 / 19</s></div><h2>What to do</h2><ul class="acts"><li>Route the planning step to your strongest model and the execution step to a cheaper one, rather than running one model through the whole task.</li><li>Let the executor escalate to the planner only when it's stuck — don't route every step through the strong model by default.</li><li>Consider a non-Anthropic executor (Codex, a local model) for execution-heavy work where the planner's reasoning is the only part that needs a top-tier model.</li></ul><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:94.7%"></i></div></section>
-<section class="slide k-close"><div class="tick"><span>In one move</span><s>19 / 19</s></div><h2>Timing beats trimming</h2><p class="lead">A concise-output rule shaves output tokens, which are one line item. Prompt caching is the whole conversation's input cost, and it swings 20x on whether you sent your next message inside the hour or outside it — or whether you switched models, effort, or MCPs mid-session without meaning to. Protect the cache while you're using it, have a deliberate plan for when it's gone, and keep the expensive model out of steps a cheaper one can execute.</p><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
+  <text x="0" y="196" class="d-label">each side keeps its own cache</text>
+</svg></div><figcaption><b>Escalate only on trouble</b><span>Most turns stay on the cheap executor. The strong planner is called in only when execution stalls.</span></figcaption></figure><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:90.0%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Advisor mode</span><s>19 / 20</s></div><h2>What to do</h2><ul class="acts"><li>Send the planning step to your strongest model.</li><li>Send the execution step to a cheaper model.</li><li>Let the executor escalate only when it is stuck.</li><li>Try a non-Anthropic executor, such as Codex, for execution-heavy work.</li></ul><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:95.0%"></i></div></section>
+<section class="slide k-close"><div class="tick"><span>In one move</span><s>20 / 20</s></div><h2>Timing beats trimming</h2><p class="lead">A "be brief" rule only trims output tokens, a small line item. Prompt caching sets the price of your whole input history, and it swings 20x on timing alone: inside the hour, or outside it. Keep the cache warm while you work. Have a plan for when it is gone. Send cheap steps to a cheap model.</p><div class="foot"><em>Token economics</em><em>The bill is mostly about timing, not brevity</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
 </body>
 </html>
