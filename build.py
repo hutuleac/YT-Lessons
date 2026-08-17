@@ -298,11 +298,13 @@ body{font-family:var(--sans)}
 
 /* ---- diagrams ---- */
 /* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
-   Twice the page's cap is the ceiling that stays proportionate on a projector. */
-.slide figure{margin:0 auto; padding:0; max-width:1180px; width:100%}
+   Twice the page's cap is the ceiling that stays proportionate on a projector. These are
+   clamp()-based like everything else on the slide, so a window wider than a laptop keeps
+   growing the diagram instead of freezing at a fixed px the moment it's hit. */
+.slide figure{margin:0 auto; padding:0; max-width:clamp(1180px,74vw,1560px); width:100%}
 .slide .plate{padding:clamp(20px,3vw,42px); width:100%}
-.slide .plate svg{max-width:1040px}
-.slide .plate.photo{padding:0; max-width:820px; margin:0 auto}
+.slide .plate svg{max-width:clamp(1040px,65vw,1400px)}
+.slide .plate.photo{padding:0; max-width:clamp(820px,51vw,1100px); margin:0 auto}
 .slide .plate.photo img{width:100%; height:auto; border-radius:9px}
 .slide figcaption{margin:clamp(16px,2.4vh,26px) auto 0; text-align:center}
 .slide figcaption b{font-size:clamp(15px,1.5vw,21px)}
