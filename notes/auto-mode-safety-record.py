@@ -41,6 +41,15 @@ NOTE = {
         " asked for 6.3% of the time, versus 2.4% for auto mode sessions — the gap held at every"
         " severity level tested.",
 
+        "The prompt-injection numbers hide a detail worth pulling out: the risk isn't spread"
+        " evenly across what an agent does. Split by task type, tool-calling tasks — where a"
+        " result comes back as text — were already close to safe for everyone: 0% for Claude in"
+        " auto mode, 2.00% even for GPT-5.6 Sol in Codex's Auto-review mode. Browser-use tasks,"
+        " where the model reads a screenshot instead of structured text, are where the gap opens:"
+        " still 0% for Claude, but 7.87% for GPT-5.6 Sol in Auto-review and 25.53% in Full Access."
+        " The vulnerability isn't the model reasoning about untrusted content in general — it's"
+        " specifically the harder-to-screen channel of a rendered image.",
+
         "The classifier isn't static, either. A two-week adversarial pilot with Apollo Research"
         " injected synthetic attacks into real coding trajectories; Anthropic hardened the"
         " classifier mainly by giving it more context about what it's protecting — repo"
@@ -62,6 +71,8 @@ NOTE = {
         {"value": "6.3 vs 2.4", "unit": "%", "label": "manual vs. auto-mode sessions with unintended production-severity harm"},
         {"value": "12 → 7", "unit": "% miss rate", "label": "classifier's miss rate on held-out attacks, before and after Apollo Research hardening"},
         {"value": "25", "unit": "% more PRs", "label": "shipped by Teams & Enterprise auto mode adopters"},
+        {"value": "0 vs 7.87", "unit": "%", "label": "attack success on browser-use tasks: Claude auto mode vs. GPT-5.6 Sol Auto-review"},
+        {"value": "0 vs 2.00", "unit": "%", "label": "attack success on tool-calling tasks: Claude auto mode vs. GPT-5.6 Sol Auto-review"},
     ],
 
     "analogy": None,
@@ -100,30 +111,32 @@ NOTE = {
 </svg>''',
         },
         {
-            "title": "Prompt injection: attack success by permission mode",
-            "caption": "720 held-out attacks, tested 10x each. Auto mode blocked all of them;"
-                       " unrestricted modes did not.",
-            "svg": '''<svg viewBox="0 0 520 190" role="img"
-  aria-label="Bar chart of prompt injection attack success rate by mode. Claude auto mode: 0 percent. Claude bypassPermissions mode, an unguarded baseline: 0.09 percent. Codex Auto-review mode: 5.83 percent. Codex Full Access mode: 19.03 percent.">
-  <text x="0" y="16" class="d-label">attack success rate, third-party evaluation</text>
+            "title": "Prompt injection risk concentrates in one channel: the screenshot",
+            "caption": "Same two systems, split by task type. Reading tool results as text is"
+                       " already close to safe for both; reading a rendered screenshot is where"
+                       " the gap between them opens up.",
+            "svg": '''<svg viewBox="0 0 520 230" role="img"
+  aria-label="Grouped bar chart, attack success rate by task type. Tool-calling tasks, where results return as text: Claude auto mode 0 percent, Codex Auto-review 2.00 percent. Browser-use tasks, where the model reads a screenshot: Claude auto mode still 0 percent, Codex Auto-review 7.87 percent.">
+  <line x1="40" y1="170" x2="480" y2="170" stroke="var(--line)" stroke-width="1"/>
 
-  <text x="0" y="46" class="d-label">Claude &#183; auto mode</text>
-  <rect x="180" y="34" width="2" height="16" fill="var(--signal)"/>
-  <text x="188" y="46" class="d-num">0%</text>
+  <rect x="20" y="8" width="10" height="10" fill="var(--signal)"/>
+  <text x="36" y="17" class="d-label">Claude &#183; auto mode</text>
+  <rect x="200" y="8" width="10" height="10" fill="var(--interference)"/>
+  <text x="216" y="17" class="d-label">Codex &#183; Auto-review</text>
 
-  <text x="0" y="76" class="d-label">Claude &#183; bypassPermissions</text>
-  <rect x="180" y="64" width="3" height="16" fill="var(--signal)"/>
-  <text x="188" y="76" class="d-num">0.09%</text>
+  <rect x="90" y="168" width="34" height="2" fill="var(--signal)"/>
+  <text x="107" y="158" class="d-num" text-anchor="middle">0%</text>
+  <rect x="134" y="150" width="34" height="20" fill="var(--interference)"/>
+  <text x="151" y="144" class="d-num" text-anchor="middle">2.00%</text>
+  <text x="129" y="196" class="d-node" text-anchor="middle">tool-calling</text>
+  <text x="129" y="212" class="d-label" text-anchor="middle">results return as text</text>
 
-  <text x="0" y="106" class="d-label">Codex &#183; Auto-review</text>
-  <rect x="180" y="94" width="80" height="16" fill="var(--sand)"/>
-  <text x="266" y="106" class="d-num">5.83%</text>
-
-  <text x="0" y="136" class="d-label">Codex &#183; Full Access</text>
-  <rect x="180" y="124" width="260" height="16" fill="var(--interference)"/>
-  <text x="446" y="136" class="d-num">19.03%</text>
-
-  <text x="0" y="170" class="d-label">source: Trajectory Labs, 72 scenarios x 10 runs, evaluated July 2026</text>
+  <rect x="330" y="168" width="34" height="2" fill="var(--signal)"/>
+  <text x="347" y="158" class="d-num" text-anchor="middle">0%</text>
+  <rect x="374" y="91" width="34" height="79" fill="var(--interference)"/>
+  <text x="391" y="85" class="d-num" text-anchor="middle">7.87%</text>
+  <text x="369" y="196" class="d-node" text-anchor="middle">browser-use</text>
+  <text x="369" y="212" class="d-label" text-anchor="middle">model reads a screenshot</text>
 </svg>''',
         },
     ],

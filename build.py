@@ -56,7 +56,8 @@ CSS = """
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --measure:63ch;
+  --measure:min(78ch, 92vw);
+  --wide:min(980px, 92vw);
 }
 @media (prefers-color-scheme:light){
   :root{
@@ -68,11 +69,11 @@ CSS = """
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--ink);
-  font-family:var(--serif); font-size:19px; line-height:1.62;
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
   -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
-.wide{max-width:860px; margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
 
 /* ---- signature: the context rail ---- */
 .rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
@@ -129,7 +130,7 @@ p{margin:0 0 20px}
 .figs{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:1px; background:var(--line); border:1px solid var(--line);
-  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
 }
 .fig{background:var(--surface); padding:18px 16px}
 .fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
@@ -137,7 +138,7 @@ p{margin:0 0 20px}
 .fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
 
 /* ---- diagrams ---- */
-figure{margin:44px auto; max-width:860px; padding:0 22px}
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
 /* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
    so they scroll inside the plate instead of becoming illegible. */
@@ -151,7 +152,7 @@ figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight
 figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
-.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
 .analogy q{
   display:block; font-size:23px; line-height:1.4; quotes:none;
   border-left:2px solid var(--signal); padding-left:20px
@@ -159,7 +160,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
 
 /* ---- practice ---- */
-.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
 .do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
 .do ul{margin:0; padding:0; list-style:none}
 .do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
@@ -167,7 +168,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li::before{content:"\\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
 /* ---- source ---- */
-.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
   font:400 12px var(--mono); color:var(--muted); text-decoration:none;
   border-bottom:1px solid var(--line)
@@ -674,7 +675,7 @@ def build_index(all_lessons):
         "<title>Lessons</title>\n<style>"
         + CSS
         + """
-        .ix{max-width:860px;margin:0 auto;padding:14vh 22px 12vh}
+        .ix{max-width:var(--wide);margin:0 auto;padding:14vh 22px 12vh}
         .ix ul{list-style:none;margin:44px 0 0;padding:0}
         .ix li{border-top:1px solid var(--line)}
         .ix a{display:block;padding:30px 0;text-decoration:none;color:inherit}

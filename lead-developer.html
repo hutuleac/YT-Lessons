@@ -14,7 +14,8 @@
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --measure:63ch;
+  --measure:min(78ch, 92vw);
+  --wide:min(980px, 92vw);
 }
 @media (prefers-color-scheme:light){
   :root{
@@ -26,11 +27,11 @@
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--ink);
-  font-family:var(--serif); font-size:19px; line-height:1.62;
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
   -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
-.wide{max-width:860px; margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
 
 /* ---- signature: the context rail ---- */
 .rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
@@ -87,7 +88,7 @@ p{margin:0 0 20px}
 .figs{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:1px; background:var(--line); border:1px solid var(--line);
-  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
 }
 .fig{background:var(--surface); padding:18px 16px}
 .fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
@@ -95,7 +96,7 @@ p{margin:0 0 20px}
 .fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
 
 /* ---- diagrams ---- */
-figure{margin:44px auto; max-width:860px; padding:0 22px}
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
 /* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
    so they scroll inside the plate instead of becoming illegible. */
@@ -109,7 +110,7 @@ figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight
 figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
-.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
 .analogy q{
   display:block; font-size:23px; line-height:1.4; quotes:none;
   border-left:2px solid var(--signal); padding-left:20px
@@ -117,7 +118,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
 
 /* ---- practice ---- */
-.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
 .do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
 .do ul{margin:0; padding:0; list-style:none}
 .do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
@@ -125,7 +126,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
 /* ---- source ---- */
-.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
   font:400 12px var(--mono); color:var(--muted); text-decoration:none;
   border-bottom:1px solid var(--line)
@@ -331,6 +332,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>The case for auto mode isn't that people are careless — it's that permission prompts are the wrong shape for the decision being asked. A session can throw dozens or hundreds of prompts at a developer who is mid-task, and the data shows what happens to any review process under that load: it becomes habitual. Users approve 97% of prompts, and 62% have at some point used bypassPermissions or clicked "don't ask again" on Bash outright. Tellingly, people don't review everything equally badly — when Claude proposes a full plan for approval, users reject it 39% of the time. It's the small, frequent, individual permission request that gets rubber-stamped, at a 3% rejection rate.</p>
 <p>To test whether a classifier does better, Anthropic ran a blind study: 1,053 paid testers worked through a coding task, and partway through, one ordinary permission prompt was swapped for a clearly dangerous command — with the action itself never actually run, only the prompt text changed. Humans caught it 13.6% of the time. Auto mode, given the same swapped prompts, caught 89%. The gap widened with fatigue: human catch rate dropped from about 17% early in a session to about 5% after 50-plus prior prompts, while the classifier's rate held flat — it doesn't get tired, because it evaluates each action on its own, with no memory of how many prompts came before.</p>
 <p>That result held outside the lab too. Anthropic re-graded real sessions flagged by its safety pipeline on a 0-10 harm-severity scale, and at production-level severity (7+), sessions using manual approval contained a harmful action the user hadn't explicitly asked for 6.3% of the time, versus 2.4% for auto mode sessions — the gap held at every severity level tested.</p>
+<p>The prompt-injection numbers hide a detail worth pulling out: the risk isn't spread evenly across what an agent does. Split by task type, tool-calling tasks — where a result comes back as text — were already close to safe for everyone: 0% for Claude in auto mode, 2.00% even for GPT-5.6 Sol in Codex's Auto-review mode. Browser-use tasks, where the model reads a screenshot instead of structured text, are where the gap opens: still 0% for Claude, but 7.87% for GPT-5.6 Sol in Auto-review and 25.53% in Full Access. The vulnerability isn't the model reasoning about untrusted content in general — it's specifically the harder-to-screen channel of a rendered image.</p>
 <p>The classifier isn't static, either. A two-week adversarial pilot with Apollo Research injected synthetic attacks into real coding trajectories; Anthropic hardened the classifier mainly by giving it more context about what it's protecting — repo visibility, git state, data-handling rules — rather than patching individual attacks. Re-tested on a held-out attack set Anthropic never saw, the miss rate fell from 12% to 7%, evidence the fix generalized rather than just covering the shared examples. The same logic shows up in specific, narrow defenses layered on top: hard denies that can never be approved even if asked (data exfiltration), a check on whether a git push target is public or private before it runs, and a git-status check before destructive commands like `git reset --hard`.</p>
 </div>
 <div class="figs">
@@ -342,6 +344,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="fig"><b>6.3 vs 2.4</b><i>%</i><span>manual vs. auto-mode sessions with unintended production-severity harm</span></div>
 <div class="fig"><b>12 → 7</b><i>% miss rate</i><span>classifier's miss rate on held-out attacks, before and after Apollo Research hardening</span></div>
 <div class="fig"><b>25</b><i>% more PRs</i><span>shipped by Teams &amp; Enterprise auto mode adopters</span></div>
+<div class="fig"><b>0 vs 7.87</b><i>%</i><span>attack success on browser-use tasks: Claude auto mode vs. GPT-5.6 Sol Auto-review</span></div>
+<div class="fig"><b>0 vs 2.00</b><i>%</i><span>attack success on tool-calling tasks: Claude auto mode vs. GPT-5.6 Sol Auto-review</span></div>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 520 200" role="img"
   aria-label="Line chart. Human catch rate of a dangerous command starts around 17 percent early in a session and falls to about 5 percent after fifty or more prior prompts. Auto mode's catch rate stays flat around 89 percent regardless of session length.">
@@ -360,28 +364,29 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="60" y="180" class="d-label">early in session</text>
   <text x="480" y="180" class="d-label" text-anchor="end">50+ prior prompts</text>
 </svg></div><figcaption><b>Catch rate over a session: human fatigue vs. a classifier that doesn't tire</b><span>Same dangerous command, same testers. Human review degrades as the session goes on; auto mode's rate doesn't move.</span></figcaption></figure>
-<figure><div class="plate"><svg viewBox="0 0 520 190" role="img"
-  aria-label="Bar chart of prompt injection attack success rate by mode. Claude auto mode: 0 percent. Claude bypassPermissions mode, an unguarded baseline: 0.09 percent. Codex Auto-review mode: 5.83 percent. Codex Full Access mode: 19.03 percent.">
-  <text x="0" y="16" class="d-label">attack success rate, third-party evaluation</text>
+<figure><div class="plate"><svg viewBox="0 0 520 230" role="img"
+  aria-label="Grouped bar chart, attack success rate by task type. Tool-calling tasks, where results return as text: Claude auto mode 0 percent, Codex Auto-review 2.00 percent. Browser-use tasks, where the model reads a screenshot: Claude auto mode still 0 percent, Codex Auto-review 7.87 percent.">
+  <line x1="40" y1="170" x2="480" y2="170" stroke="var(--line)" stroke-width="1"/>
 
-  <text x="0" y="46" class="d-label">Claude &#183; auto mode</text>
-  <rect x="180" y="34" width="2" height="16" fill="var(--signal)"/>
-  <text x="188" y="46" class="d-num">0%</text>
+  <rect x="20" y="8" width="10" height="10" fill="var(--signal)"/>
+  <text x="36" y="17" class="d-label">Claude &#183; auto mode</text>
+  <rect x="200" y="8" width="10" height="10" fill="var(--interference)"/>
+  <text x="216" y="17" class="d-label">Codex &#183; Auto-review</text>
 
-  <text x="0" y="76" class="d-label">Claude &#183; bypassPermissions</text>
-  <rect x="180" y="64" width="3" height="16" fill="var(--signal)"/>
-  <text x="188" y="76" class="d-num">0.09%</text>
+  <rect x="90" y="168" width="34" height="2" fill="var(--signal)"/>
+  <text x="107" y="158" class="d-num" text-anchor="middle">0%</text>
+  <rect x="134" y="150" width="34" height="20" fill="var(--interference)"/>
+  <text x="151" y="144" class="d-num" text-anchor="middle">2.00%</text>
+  <text x="129" y="196" class="d-node" text-anchor="middle">tool-calling</text>
+  <text x="129" y="212" class="d-label" text-anchor="middle">results return as text</text>
 
-  <text x="0" y="106" class="d-label">Codex &#183; Auto-review</text>
-  <rect x="180" y="94" width="80" height="16" fill="var(--sand)"/>
-  <text x="266" y="106" class="d-num">5.83%</text>
-
-  <text x="0" y="136" class="d-label">Codex &#183; Full Access</text>
-  <rect x="180" y="124" width="260" height="16" fill="var(--interference)"/>
-  <text x="446" y="136" class="d-num">19.03%</text>
-
-  <text x="0" y="170" class="d-label">source: Trajectory Labs, 72 scenarios x 10 runs, evaluated July 2026</text>
-</svg></div><figcaption><b>Prompt injection: attack success by permission mode</b><span>720 held-out attacks, tested 10x each. Auto mode blocked all of them; unrestricted modes did not.</span></figcaption></figure>
+  <rect x="330" y="168" width="34" height="2" fill="var(--signal)"/>
+  <text x="347" y="158" class="d-num" text-anchor="middle">0%</text>
+  <rect x="374" y="91" width="34" height="79" fill="var(--interference)"/>
+  <text x="391" y="85" class="d-num" text-anchor="middle">7.87%</text>
+  <text x="369" y="196" class="d-node" text-anchor="middle">browser-use</text>
+  <text x="369" y="212" class="d-label" text-anchor="middle">model reads a screenshot</text>
+</svg></div><figcaption><b>Prompt injection risk concentrates in one channel: the screenshot</b><span>Same two systems, split by task type. Reading tool results as text is already close to safe for both; reading a rendered screenshot is where the gap between them opens up.</span></figcaption></figure>
 <div class="do"><h3>What to do</h3><ul>
 <li>Treat 97% approval rates on your own prompts as a warning sign, not reassurance — that's exactly the habituation the data shows.</li>
 <li>Still review high-stakes changes to production infrastructure yourself; auto mode reduces risk, it doesn't eliminate it.</li>

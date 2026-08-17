@@ -13,7 +13,8 @@
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --measure:63ch;
+  --measure:min(78ch, 92vw);
+  --wide:min(980px, 92vw);
 }
 @media (prefers-color-scheme:light){
   :root{
@@ -25,11 +26,11 @@
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--ink);
-  font-family:var(--serif); font-size:19px; line-height:1.62;
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
   -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
-.wide{max-width:860px; margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
 
 /* ---- signature: the context rail ---- */
 .rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
@@ -86,7 +87,7 @@ p{margin:0 0 20px}
 .figs{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:1px; background:var(--line); border:1px solid var(--line);
-  border-radius:6px; overflow:hidden; margin:34px auto; max-width:860px
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
 }
 .fig{background:var(--surface); padding:18px 16px}
 .fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
@@ -94,7 +95,7 @@ p{margin:0 0 20px}
 .fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
 
 /* ---- diagrams ---- */
-figure{margin:44px auto; max-width:860px; padding:0 22px}
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
 /* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
    so they scroll inside the plate instead of becoming illegible. */
@@ -108,7 +109,7 @@ figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight
 figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
-.analogy{max-width:860px; margin:38px auto; padding:0 22px}
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
 .analogy q{
   display:block; font-size:23px; line-height:1.4; quotes:none;
   border-left:2px solid var(--signal); padding-left:20px
@@ -116,7 +117,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
 
 /* ---- practice ---- */
-.do{max-width:860px; margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
 .do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
 .do ul{margin:0; padding:0; list-style:none}
 .do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
@@ -124,7 +125,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
 /* ---- source ---- */
-.src{max-width:860px; margin:26px auto 0; padding:0 22px}
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
   font:400 12px var(--mono); color:var(--muted); text-decoration:none;
   border-bottom:1px solid var(--line)
@@ -382,29 +383,30 @@ body{font-family:var(--sans)}
   <text x="60" y="180" class="d-label">early in session</text>
   <text x="480" y="180" class="d-label" text-anchor="end">50+ prior prompts</text>
 </svg></div><figcaption><b>Catch rate over a session: human fatigue vs. a classifier that doesn't tire</b><span>Same dangerous command, same testers. Human review degrades as the session goes on; auto mode's rate doesn't move.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:44.7%"></i></div></section>
-<section class="slide k-figs"><div class="tick"><span>Auto mode's empirical safety record</span><s>22 / 47</s></div><figure><div class="plate"><svg viewBox="0 0 520 190" role="img"
-  aria-label="Bar chart of prompt injection attack success rate by mode. Claude auto mode: 0 percent. Claude bypassPermissions mode, an unguarded baseline: 0.09 percent. Codex Auto-review mode: 5.83 percent. Codex Full Access mode: 19.03 percent.">
-  <text x="0" y="16" class="d-label">attack success rate, third-party evaluation</text>
+<section class="slide k-figs"><div class="tick"><span>Auto mode's empirical safety record</span><s>22 / 47</s></div><figure><div class="plate"><svg viewBox="0 0 520 230" role="img"
+  aria-label="Grouped bar chart, attack success rate by task type. Tool-calling tasks, where results return as text: Claude auto mode 0 percent, Codex Auto-review 2.00 percent. Browser-use tasks, where the model reads a screenshot: Claude auto mode still 0 percent, Codex Auto-review 7.87 percent.">
+  <line x1="40" y1="170" x2="480" y2="170" stroke="var(--line)" stroke-width="1"/>
 
-  <text x="0" y="46" class="d-label">Claude &#183; auto mode</text>
-  <rect x="180" y="34" width="2" height="16" fill="var(--signal)"/>
-  <text x="188" y="46" class="d-num">0%</text>
+  <rect x="20" y="8" width="10" height="10" fill="var(--signal)"/>
+  <text x="36" y="17" class="d-label">Claude &#183; auto mode</text>
+  <rect x="200" y="8" width="10" height="10" fill="var(--interference)"/>
+  <text x="216" y="17" class="d-label">Codex &#183; Auto-review</text>
 
-  <text x="0" y="76" class="d-label">Claude &#183; bypassPermissions</text>
-  <rect x="180" y="64" width="3" height="16" fill="var(--signal)"/>
-  <text x="188" y="76" class="d-num">0.09%</text>
+  <rect x="90" y="168" width="34" height="2" fill="var(--signal)"/>
+  <text x="107" y="158" class="d-num" text-anchor="middle">0%</text>
+  <rect x="134" y="150" width="34" height="20" fill="var(--interference)"/>
+  <text x="151" y="144" class="d-num" text-anchor="middle">2.00%</text>
+  <text x="129" y="196" class="d-node" text-anchor="middle">tool-calling</text>
+  <text x="129" y="212" class="d-label" text-anchor="middle">results return as text</text>
 
-  <text x="0" y="106" class="d-label">Codex &#183; Auto-review</text>
-  <rect x="180" y="94" width="80" height="16" fill="var(--sand)"/>
-  <text x="266" y="106" class="d-num">5.83%</text>
-
-  <text x="0" y="136" class="d-label">Codex &#183; Full Access</text>
-  <rect x="180" y="124" width="260" height="16" fill="var(--interference)"/>
-  <text x="446" y="136" class="d-num">19.03%</text>
-
-  <text x="0" y="170" class="d-label">source: Trajectory Labs, 72 scenarios x 10 runs, evaluated July 2026</text>
-</svg></div><figcaption><b>Prompt injection: attack success by permission mode</b><span>720 held-out attacks, tested 10x each. Auto mode blocked all of them; unrestricted modes did not.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:46.8%"></i></div></section>
-<section class="slide k-nums"><div class="tick"><span>Auto mode's empirical safety record</span><s>23 / 47</s></div><h2>By the numbers</h2><div class="nums"><div><b>97</b><i>%</i><span>of permission prompts users approve</span></div><div><b>3</b><i>% vs 39%</i><span>rejection rate for individual permission requests vs. full plans</span></div><div><b>13.6</b><i>%</i><span>of a swapped-in dangerous command humans caught (143 of 1,053 testers)</span></div><div><b>89</b><i>%</i><span>of the same dangerous command auto mode caught (937 of 1,053)</span></div><div><b>17 → 5</b><i>%</i><span>human catch rate early in a session vs. after 50+ prior prompts</span></div><div><b>6.3 vs 2.4</b><i>%</i><span>manual vs. auto-mode sessions with unintended production-severity harm</span></div><div><b>12 → 7</b><i>% miss rate</i><span>classifier's miss rate on held-out attacks, before and after Apollo Research hardening</span></div><div><b>25</b><i>% more PRs</i><span>shipped by Teams &amp; Enterprise auto mode adopters</span></div></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:48.9%"></i></div></section>
+  <rect x="330" y="168" width="34" height="2" fill="var(--signal)"/>
+  <text x="347" y="158" class="d-num" text-anchor="middle">0%</text>
+  <rect x="374" y="91" width="34" height="79" fill="var(--interference)"/>
+  <text x="391" y="85" class="d-num" text-anchor="middle">7.87%</text>
+  <text x="369" y="196" class="d-node" text-anchor="middle">browser-use</text>
+  <text x="369" y="212" class="d-label" text-anchor="middle">model reads a screenshot</text>
+</svg></div><figcaption><b>Prompt injection risk concentrates in one channel: the screenshot</b><span>Same two systems, split by task type. Reading tool results as text is already close to safe for both; reading a rendered screenshot is where the gap between them opens up.</span></figcaption></figure><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:46.8%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Auto mode's empirical safety record</span><s>23 / 47</s></div><h2>By the numbers</h2><div class="nums"><div><b>97</b><i>%</i><span>of permission prompts users approve</span></div><div><b>3</b><i>% vs 39%</i><span>rejection rate for individual permission requests vs. full plans</span></div><div><b>13.6</b><i>%</i><span>of a swapped-in dangerous command humans caught (143 of 1,053 testers)</span></div><div><b>89</b><i>%</i><span>of the same dangerous command auto mode caught (937 of 1,053)</span></div><div><b>17 → 5</b><i>%</i><span>human catch rate early in a session vs. after 50+ prior prompts</span></div><div><b>6.3 vs 2.4</b><i>%</i><span>manual vs. auto-mode sessions with unintended production-severity harm</span></div><div><b>12 → 7</b><i>% miss rate</i><span>classifier's miss rate on held-out attacks, before and after Apollo Research hardening</span></div><div><b>25</b><i>% more PRs</i><span>shipped by Teams &amp; Enterprise auto mode adopters</span></div><div><b>0 vs 7.87</b><i>%</i><span>attack success on browser-use tasks: Claude auto mode vs. GPT-5.6 Sol Auto-review</span></div><div><b>0 vs 2.00</b><i>%</i><span>attack success on tool-calling tasks: Claude auto mode vs. GPT-5.6 Sol Auto-review</span></div></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:48.9%"></i></div></section>
 <section class="slide k-do"><div class="tick"><span>Auto mode's empirical safety record</span><s>24 / 47</s></div><h2>What to do</h2><ul class="acts"><li>Treat 97% approval rates on your own prompts as a warning sign, not reassurance — that's exactly the habituation the data shows.</li><li>Still review high-stakes changes to production infrastructure yourself; auto mode reduces risk, it doesn't eliminate it.</li><li>Don't rely on broad allow-rules like Bash(python:*) — they're set aside entirely while in auto mode, since they'd let a command skip the classifier.</li><li>Use hard-deny rules for anything your org should never approve, even on request.</li></ul><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:51.1%"></i></div></section>
 <section class="slide k-section"><div class="tick"><span>Your effort level is too high</span><s>25 / 47</s></div><p class="idx">05</p><h2>Your effort level is too high</h2><p class="lead">Effort is thinking tokens spent per task, and the benchmarks that justify cranking it up hold the task fixed — but you can rewrite the task, and a better-specified task needs less effort.</p><div class="src"><a href="https://www.youtube.com/shorts/iQb3F9UzBR4" target="_blank" rel="noopener">Matt Pocock &middot; Your effort level is TOO DAMN HIGH &middot; 1:17 &#8599;</a></div><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:53.2%"></i></div></section>
 <section class="slide k-bullets"><div class="tick"><span>Your effort level is too high</span><s>26 / 47</s></div><h2>Your effort level is too high</h2><ol class="bul"><li>Higher effort means more thinking tokens for the same work.</li><li>Exploration barely benefits from effort — it just costs more.</li><li>Benchmarks hold the task static. You don't have to.</li><li>Start at the lowest effort you have and crank up only if you need to.</li></ol><div class="foot"><em>Working above the agent</em><em>You are the lead developer now</em></div><div class="bar"><i style="width:55.3%"></i></div></section>
