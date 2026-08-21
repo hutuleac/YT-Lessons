@@ -272,28 +272,46 @@ body{font-family:var(--sans)}
   .bar{display:none}
 }
 
-/* ---- overview: O shrinks every slide into a clickable grid, click jumps and exits ---- */
-html.overview{scroll-snap-type:none; overflow:hidden}
+/* ---- overview: O shrinks every slide into a clickable grid, click jumps and exits ----
+   clamp() sizes vw off the real viewport, so shrinking the box (grid track, transform,
+   zoom — any of them) never shrinks the text inside it: the same 84px headline that fits
+   a full slide just overflows a thumbnail. Fighting that with overflow:hidden clips text
+   mid-glyph, which reads as broken, not small. Cheaper fix: don't scale the slide down,
+   thin it down — hide the bulky body content (lists, diagrams, quotes) and give the
+   heading its own small fixed size, so every card is a title card. */
+html.overview{scroll-snap-type:none; overflow:hidden; counter-reset:ov}
 html.overview body{
   height:100dvh; overflow-y:auto; display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); grid-auto-rows:135px;
-  gap:14px; padding:14px; align-content:start
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); grid-auto-rows:110px;
+  gap:12px; padding:14px; align-content:start
 }
-/* No content re-flow trick here (clamp() ignores font-size, and percentage sizing on a grid
-   item fights the track). A cropped top-left corner of each slide is enough to recognize
-   and click it — that's all an overview picker needs to do. */
-html.overview{counter-reset:ov}
 html.overview .slide{
   min-height:0; cursor:pointer; scroll-snap-align:none; overflow:hidden;
   border:1px solid var(--line); border-radius:6px; padding:10px 12px;
-  counter-increment:ov
+  display:flex; flex-direction:column; justify-content:center; counter-increment:ov
 }
 html.overview .slide::after{
   content:counter(ov); position:absolute; top:6px; right:8px;
   font:400 10px var(--mono); color:var(--muted)
 }
 html.overview .slide:hover{border-color:var(--signal)}
-html.overview .tick, html.overview .foot, html.overview .bar{display:none}
+html.overview .tick, html.overview .foot, html.overview .bar,
+html.overview .lead, html.overview .audience, html.overview .src,
+html.overview .bul, html.overview .nums, html.overview .acts, html.overview .plate,
+html.overview q, html.overview figcaption span{display:none}
+html.overview .slide h1, html.overview .slide h2{
+  font-size:13px; line-height:1.3; margin:0; max-width:none;
+  max-height:3.9em; overflow:hidden
+}
+html.overview .slide .idx{font-size:22px; margin:0 0 4px; line-height:1}
+/* .k-section carries leftover grid-column/grid-row from its >=1000px two-column layout.
+   Those should be inert once display switches to flex above, but a Chromium quirk lets
+   them corrupt a sibling's box (collapses h2 to 0 height) unless block layout is forced
+   instead of flex for this one kind. */
+html.overview .k-section{display:block}
+html.overview .k-section .idx, html.overview .k-section h2{display:block}
+html.overview .slide figcaption{margin:0}
+html.overview .slide figcaption b{font-size:11px; line-height:1.3}
 </style>
 </head>
 <body>
