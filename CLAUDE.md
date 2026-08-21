@@ -81,6 +81,22 @@ same argument out of the same notes.
   (boxes/plates/lists) both scale with `vw` up to a cap (900px / 1360px), so the page keeps using
   more of a wide monitor instead of stranding content in a narrow column on anything past a
   laptop. A regression here only shows up at 1920px+ — checking 390px and 1440px won't catch it.
+- **The deck (`<id>-deck.html`) has F/D/O/←→ controls, built once in `DECK_JS`/`DECK_CSS` in
+  `build.py` — never per-lesson.** F toggles fullscreen, D toggles `data-theme` (persisted in
+  `localStorage`), O toggles a keyboard-only overview grid (click a thumbnail to jump), ←/→ step
+  one slide. If a feature request wants any of this changed, it's a `build.py` edit, not a note
+  edit — same rule as `sys.dont_write_bytecode`, rebuild `--all` and re-verify with `/browse`
+  before trusting it.
+- **`.k-section`'s two-column layout (`grid-column`/`grid-row`, ≥1000px media query) corrupts
+  flex siblings in overview mode — a real Chromium bug, not a spec violation.** Overview forces
+  `display:flex` on `.slide` (via `html.overview .slide`) to override `.k-section`'s
+  `display:grid`, which should make the leftover `grid-column`/`grid-row` on its children inert.
+  Instead a preceding sibling collapses the next element's box to 0 height. Confirmed by isolating
+  it to exactly `.k-section` + any 2+ children + `display:flex` — none of grid-column, grid-row,
+  align-items, or align-content individually fixed it; only forcing `display:block` on
+  `.k-section` in overview (`html.overview .k-section{display:block}`) did. If overview ever
+  looks broken again (blank/overlapping cards) for section-divider slides specifically, this is
+  the first thing to check — don't assume the new CSS is wrong before checking whether it's this.
 
 ## Design
 Dark-first, light is a media-query override. Monospace display / serif body — the machine speaks
