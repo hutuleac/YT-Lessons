@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to design a skill an agent actually follows</title>
+<meta name="description" content="Six small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 30px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. SVG text scales with
+   the plate (vector, not raster), so the cap is set high to fill the wide-page plate
+   and keep labels legible rather than near-1:1 with their viewBox. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:820px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">Skill design</p>
+<h1>How to design a skill an agent actually follows</h1>
+<p class="standfirst">Six small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.</p>
+<p class="audience">You write skills or specs for a coding agent, or maintain a codebase agents work in, and want fewer rewrites and less wasted context per request.</p>
+</div></header>
+<section id="grooming-skill">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 6 &middot; start here</span>
+<h2>The grooming skill</h2>
+<p class="oneline">A skill that turns a vague request into a shared understanding by interviewing you one branch, one question at a time — never acting until you confirm.</p>
+</div></div>
+<div class="wrap">
+<p>The problem it answers is that an agent given everything at once — colours, copy, functionality — has no way to build any of it with real accuracy, and asking the user to dump all of that context up front does not work because the user does not know what context the agent needs. The grooming skill inverts the direction: the agent interviews the user instead of the user briefing the agent.</p>
+<p>The five rules are what make the interview usable rather than exhausting. One branch at a time keeps the questions from jumping between the checkout page and the about page mid-thought — a decision tree is walked one path to its end before the next path opens. One question at a time means the agent waits for an answer instead of stacking three questions the user has to hold in their head. Recommend one means every question ships with a default the user can just accept, so the interview does not stall on questions the user has no opinion about. Do not act is the backstop: nothing gets built until the user has confirmed, so a misunderstanding costs a correction, not a rewrite.</p>
+<p>The result is closer to a decision machine than a chat: the model supplies options, the user picks, and each pick stacks onto the last until the tree runs out of branches. That is also why it pairs with a spec — see [[spec-driven-trap]] and the sibling note on writing the result down before the conversation is lost.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="A decision tree with two branches, checkout page and about page. The checkout branch is fully walked through three questions before the about page branch begins, shown greyed out and untouched until the checkout branch completes.">
+  <text x="0" y="14" class="d-label">REQUEST</text>
+  <rect x="0" y="24" width="120" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="60" y="46" class="d-node" text-anchor="middle">build the app</text>
+
+  <path d="M60 58 V78 M60 78 H150 M60 78 H0" stroke="var(--line)" stroke-width="1.4"/>
+
+  <rect x="90" y="86" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="150" y="105" class="d-node" text-anchor="middle">checkout page</text>
+
+  <rect x="0" y="86" width="70" height="30" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="35" y="105" class="d-label" text-anchor="middle">about</text>
+
+  <rect x="90" y="130" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.3"/>
+  <text x="150" y="147" class="d-label" text-anchor="middle">Q1: card or wallet?</text>
+  <rect x="90" y="162" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.3"/>
+  <text x="150" y="179" class="d-label" text-anchor="middle">Q2: guest checkout?</text>
+  <rect x="90" y="194" width="120" height="12" rx="3" fill="var(--signal)" opacity="0.2"/>
+
+  <text x="230" y="147" class="d-fix">answered, one at a time</text>
+  <text x="0" y="205" class="d-label">about page waits, untouched, until checkout is fully cleared</text>
+</svg></div><figcaption><b>One branch, fully cleared, before the next</b><span>The interview walks one path of the decision tree to its end — checkout, then about page — instead of hopping between branches mid-question.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Let the agent ask before it builds — resist the urge to front-load every requirement.</li>
+<li>Answer one branch fully before letting the conversation jump to the next.</li>
+<li>Take the recommended default when you have no strong opinion; it keeps the interview moving.</li>
+<li>Don't let the agent act on an answer you haven't actually confirmed.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
+</section>
+<p class="bridge">The grooming interview ends in a shared understanding that lives only in the conversation — the spec is what makes it survive.</p>
+<section id="spec-without-code">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 6 &middot; start here</span>
+<h2>No code blocks in the spec</h2>
+<p class="oneline">A spec should point at the code, not paste it — a pasted snippet goes stale the moment implementation starts, and an agent will follow stale code over the live codebase in front of it.</p>
+</div></div>
+<div class="wrap">
+<p>Once a grooming interview reaches a shared understanding, that understanding only exists in the conversation — close it without writing it down and every question, every answer, every decision is gone. The spec is that write-down: a design plan converted from the conversation into a document the next step can build from.</p>
+<p>The rule that makes this spec different from a typical design doc is what it leaves out. No code block goes in the file, even when the content is highly technical. The reasoning is about staleness, not style: if a spec contains code, the agent treats that code as instruction and follows it — but code written during a planning conversation is a snapshot, and by the time implementation starts the real codebase has usually moved. An agent following stale pasted code over the live file in front of it produces exactly the kind of bug that looks like it followed instructions correctly.</p>
+<p>Dropping code from the spec forces the alternative: the agent has to look at the actual code and cross-reference it to decide what is right, rather than trusting a fossil. The spec stays cleaner as a description of intent, and the codebase — not the document — stays the source of truth for how anything is actually implemented.</p>
+</div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write specs as prose and intent, never as pasted implementation code.</li>
+<li>If a decision feels like it needs a code sample to be clear, point at the file and line instead of copying it in.</li>
+<li>Treat the codebase, not the spec, as the source of truth once implementation starts.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
+</section>
+<p class="bridge">A spec is only useful once it's broken into tickets an agent can pick up one at a time — how you slice them decides what's testable after the first one ships.</p>
+<section id="slice-by-feature">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 6 &middot; start here</span>
+<h2>Slice tickets by feature, not by layer</h2>
+<p class="oneline">Group tickets by feature — login, checkout — instead of by layer — database, API, UI — so each ticket lands as something you can actually test end to end.</p>
+</div></div>
+<div class="wrap">
+<p>Once a spec exists, it has to be broken into tickets an agent can pick up one at a time. The default most spec-driven frameworks use is to slice by layer: one ticket for the database schema, one for the API, one for the UI. That grouping mirrors how a team is often organised, but it has a specific cost for agent-driven work — after the database ticket ships, the only thing that exists is a database. There is nothing to run, click, or test until the API and UI tickets land too.</p>
+<p>Slicing by feature instead means ticket one is the login page end to end: its schema, its endpoint, its UI, all in one ticket. The payoff is that each ticket is a fully functional slice the moment it merges — it can be tested for real, not just reviewed as a diff. That also keeps the application modular: a later change to how login works touches one feature's ticket, not a layer shared by every feature in the app.</p>
+<p>This is the same shift in checkpoint placement as [[review-checkpoints]] applied to how work gets divided rather than when it gets reviewed — smaller, self-contained units are easier to verify and easier to change without touching everything else.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 480 200" role="img"
+  aria-label="Two ways of slicing three tickets. By layer: ticket one is database, ticket two is API, ticket three is UI — after ticket one, only a database exists, nothing testable. By feature: ticket one is the full login feature end to end, immediately testable; ticket two and three are the next features.">
+  <text x="0" y="14" class="d-label">BY LAYER</text>
+  <rect x="0" y="24" width="90" height="34" rx="4" fill="var(--interference)" opacity="0.45"/>
+  <text x="45" y="46" class="d-label" text-anchor="middle">database</text>
+  <rect x="98" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="143" y="46" class="d-label" text-anchor="middle">API</text>
+  <rect x="196" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="241" y="46" class="d-label" text-anchor="middle">UI</text>
+  <text x="300" y="46" class="d-fix">nothing to test yet</text>
+
+  <text x="0" y="98" class="d-label">BY FEATURE</text>
+  <rect x="0" y="108" width="188" height="46" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="94" y="128" class="d-node" text-anchor="middle">login: db + API + UI</text>
+  <text x="94" y="145" class="d-label" text-anchor="middle">ticket 1</text>
+  <text x="200" y="132" class="d-fix">works end to end</text>
+
+  <rect x="0" y="164" width="188" height="26" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="94" y="181" class="d-label" text-anchor="middle">next feature: ticket 2</text>
+</svg></div><figcaption><b>What exists after ticket one ships</b><span>By layer, one ticket in, you have a database and nothing to click. By feature, one ticket in, you have a working login page.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>When breaking a spec into tickets, ask "can I test this alone once it's done?" — if not, it's a layer slice, not a feature slice.</li>
+<li>Keep a feature's schema, endpoint, and UI in the same ticket rather than splitting them across a database ticket and a UI ticket.</li>
+<li>Expect each finished ticket to be runnable, not just reviewable.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
+</section>
+<p class="bridge">Once code exists, it needs review — and a review checklist is just another set of instructions with the same bloat risk as a spec or a skill.</p>
+<section id="code-smell-vocabulary">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 6 &middot; start here</span>
+<h2>Named vocabulary instead of instructions</h2>
+<p class="oneline">A code review checklist built from named smells — shotgun surgery, feature envy, data clumps — packs a whole diagnostic step into one word the model already knows, instead of a paragraph explaining what to look for.</p>
+</div></div>
+<div class="wrap">
+<p>A skill that spells out every review step in plain instructions grows long, and every extra word in a skill is something that can distract the model rather than help it. The fix demonstrated here is to replace instructions with names: instead of writing out what counts as a review problem, the skill points at twelve terms lifted from Martin Fowler's Refactoring — shotgun surgery, feature envy, data clumps, and others — and tells the model to check for them.</p>
+<p>This works because those terms already carry their full definition inside a model that has ingested the book they come from. Shotgun surgery names the case where one logical change requires edits scattered across many files — miss one and the change is inconsistent. Feature envy names logic that references another module's data more than its own, meaning it is filed in the wrong place — logic that belongs to orders.ts but lives in inventory.ts. Data clumps names a group of fields — say three related IDs — that keep travelling together as separate arguments across many functions, when they should be one type. Each term compresses a diagnostic paragraph into a single lookup.</p>
+<p>The same move is why this checklist runs in a fresh context window rather than the session that wrote the code: a reviewer checking its own recent work is reviewing its own blind spots, so a clean window walking a checklist of named smells catches what a same-session self-check would miss.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>12</b><i>words</i><span>the entire review checklist</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 480 150" role="img"
+  aria-label="A paragraph of review instructions compresses down to a single named term, shotgun surgery, because the model already knows the term's meaning from having read Fowler's Refactoring.">
+  <rect x="0" y="10" width="230" height="80" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="10" y="28" class="d-label">"check whether a single</text>
+  <text x="10" y="42" class="d-label">logical change requires</text>
+  <text x="10" y="56" class="d-label">edits across many files,</text>
+  <text x="10" y="70" class="d-label">and flag it if one is</text>
+  <text x="10" y="84" class="d-label">likely to be missed..."</text>
+
+  <path d="M236 50 H278" stroke="var(--signal)" stroke-width="1.6"/>
+  <text x="257" y="44" class="d-fix" text-anchor="middle">compresses to</text>
+
+  <rect x="286" y="30" width="194" height="40" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="383" y="55" class="d-node" text-anchor="middle">shotgun surgery</text>
+
+  <text x="0" y="118" class="d-label">the term already means this &#8212; from the book, not the skill</text>
+</svg></div><figcaption><b>One word instead of one paragraph</b><span>The model already knows what the term means from the book — the skill only has to name it.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>When writing a review or audit skill, reach for an established vocabulary the model already knows before writing new instructions from scratch.</li>
+<li>Run code review in a fresh context window, not the session that wrote the code.</li>
+<li>Learn the term, not just the fix — 'feature envy' catches more than the one instance you first spotted it in.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
+</section>
+<p class="bridge">The same instinct that shrinks a review checklist to twelve words applies to the codebase itself: fewer things to read is fewer things to get wrong.</p>
+<section id="one-door">
+<div class="wrap"><div class="chead">
+<span class="cnum">5 / 6 &middot; builds on <a class="out" href="context-engineering.html#tool-overload">tool-overload</a></span>
+<h2>One door instead of many</h2>
+<p class="oneline">Encapsulate a function's fan-out behind a single entry point so an agent learns what it does by reading one function instead of jumping through every function it calls.</p>
+</div></div>
+<div class="wrap">
+<p>Picture a payment-processing function that calls calculate discounts, validate cards, and several other small functions. To understand what the main function does, an agent has to open every one of those doors — read each called function, and often what those call in turn — before it has learned how the whole thing behaves. That is a real benefit for unit testing, since each small function is independently testable, but it is a token cost for comprehension: understanding the main function this way might spend on the order of ten thousand tokens working through every door.</p>
+<p>The fix is not to merge everything into one giant file — that trades a comprehension problem for an unmaintainable one. Each function keeps its own file. What changes is that the many small functions get one shared entry point in front of them, so the agent — and the rest of the program — has a single door to walk through instead of many. Reading that one door can cost closer to a thousand tokens instead of ten thousand, because the agent no longer has to trace every function calling every other function back and forth to build a mental model.</p>
+<p>This only pays off if the door is real, not decorative — a wrapper that just forwards every call unchanged adds a hop without removing any of the underlying ones. The companion move for finding out which of those many small functions are still pulling their weight is the [[deletion-test]].</p>
+</div>
+<div class="figs">
+<div class="fig"><b>~10,000</b><i>tokens</i><span>estimated cost of learning via many doors</span></div>
+<div class="fig"><b>~1,000</b><i>tokens</i><span>estimated cost of learning via one door</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="Left: a main function connected directly to five small functions, each a separate door the agent must open, costing about ten thousand tokens to understand. Right: the same five functions behind one shared entry point, so the agent opens a single door, costing about one thousand tokens.">
+  <text x="0" y="14" class="d-label">MANY DOORS</text>
+  <rect x="60" y="24" width="90" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="105" y="43" class="d-node" text-anchor="middle">main</text>
+  <path d="M105 54 V70" stroke="var(--interference)" stroke-width="1.2"/>
+  <path d="M105 70 H10 M105 70 H200" stroke="var(--interference)" stroke-width="1.2"/>
+  <path d="M10 70 V80 M55 70 V80 M105 70 V80 M155 70 V80 M200 70 V80" stroke="var(--interference)" stroke-width="1.2"/>
+  <rect x="0" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="40" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="88" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="136" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="184" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <text x="110" y="124" class="d-fix" text-anchor="middle">5 doors to open</text>
+  <text x="110" y="140" class="d-num" text-anchor="middle">~10,000 tokens</text>
+
+  <text x="280" y="14" class="d-label">ONE DOOR</text>
+  <rect x="340" y="24" width="90" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="385" y="43" class="d-node" text-anchor="middle">main</text>
+  <path d="M385 54 V70" stroke="var(--signal)" stroke-width="1.4"/>
+  <rect x="350" y="70" width="70" height="26" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="385" y="88" class="d-fix" text-anchor="middle">entry point</text>
+  <path d="M385 96 V110" stroke="var(--line)" stroke-width="1"/>
+  <path d="M385 110 H310 M385 110 H460" stroke="var(--line)" stroke-width="1"/>
+  <rect x="300" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="340" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="380" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="420" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="385" y="164" class="d-fix" text-anchor="middle">1 door to open</text>
+  <text x="385" y="180" class="d-num" text-anchor="middle">~1,000 tokens</text>
+</svg></div><figcaption><b>Many doors vs. one door</b><span>Same functions, same files — the difference is how many hops it takes to learn what the whole thing does.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Give a cluster of small, related functions one shared entry point instead of exposing each one directly.</li>
+<li>Keep each function in its own file — the fix is one door, not one giant file.</li>
+<li>Before adding an entry point, check it actually reduces hops rather than just adding one.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
+</section>
+<p class="bridge">Encapsulating behind one door only helps if what's behind it still earns its place — the deletion test is how you find out.</p>
+<section id="deletion-test">
+<div class="wrap"><div class="chead">
+<span class="cnum">6 / 6 &middot; start here</span>
+<h2>The deletion test</h2>
+<p class="oneline">To find out if a function still earns its place, delete it and run the tests — if nothing breaks, it wasn't load-bearing.</p>
+</div></div>
+<div class="wrap">
+<p>A codebase accumulates functions that stop being called anywhere except by a chain that no longer matters, and no amount of reading the code tells you for certain whether one of them is safe to remove — a reference could be hiding somewhere unglamorous. The deletion test turns that uncertainty into a fact by running an experiment instead of reasoning about it: delete the function, run every test, and see what happens.</p>
+<p>If the test suite fails, the function was a real dependency of the main program and goes back in — the failure itself is the proof it was doing work. If every test still passes with the function gone, that is proof in the other direction: nothing in the program's observable behaviour needed it, so it is dead weight kept alive only by its presence in the file, and it should be deleted for real, not just deleted in the experiment.</p>
+<p>This is the mechanical core of the architecture-review skill described alongside it: it walks a project's hot files, runs this test against candidate functions, and surfaces what to cut or unify — including duplicate functions that turned out to do the same thing and can be merged into one. It only works with a test suite that actually exercises the behaviour in question; a deletion test against thin or missing tests just proves the tests were incomplete, not that the function was unused.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 170" role="img"
+  aria-label="Flow: delete the function, run the test suite. If tests fail, keep the function because it was a real dependency. If tests still pass, delete it for real because nothing needed it.">
+  <rect x="30" y="10" width="140" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="100" y="32" class="d-node" text-anchor="middle">delete function</text>
+  <path d="M174 27 H216" stroke="var(--line)" stroke-width="1.4"/>
+  <rect x="220" y="10" width="140" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="290" y="32" class="d-node" text-anchor="middle">run test suite</text>
+
+  <path d="M290 44 V64" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M290 64 H120 M290 64 H425" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M120 64 V84 M425 64 V84" stroke="var(--line)" stroke-width="1.2"/>
+
+  <rect x="40" y="84" width="160" height="36" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="120" y="103" class="d-label" text-anchor="middle">tests fail</text>
+  <text x="120" y="134" class="d-fix" text-anchor="middle">keep it &#8212; real dependency</text>
+
+  <rect x="350" y="84" width="150" height="36" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="425" y="103" class="d-label" text-anchor="middle">tests pass</text>
+  <text x="425" y="134" class="d-fix" text-anchor="middle">delete it &#8212; unused</text>
+</svg></div><figcaption><b>Delete, then let the tests answer</b><span>The experiment settles what reading the code can't.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before deleting a function you suspect is dead, delete it and run the full suite rather than trusting a manual read of call sites.</li>
+<li>Treat a passing suite after deletion as the actual proof, not a hunch confirmed.</li>
+<li>If the deletion test doesn't feel trustworthy, that's a signal your test coverage has a gap, not that the function is safe.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>The pattern under all six</h2><p>Every technique here trades a bigger, vaguer thing for a smaller, sharper one: one question instead of a brief, one word instead of a paragraph, one door instead of five. None of it is about the agent getting smarter — it's about giving it less to wade through before it can do the part only it can do.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
+</body>
+</html>

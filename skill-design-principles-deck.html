@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to design a skill an agent actually follows &mdash; deck</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 30px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. SVG text scales with
+   the plate (vector, not raster), so the cap is set high to fill the wide-page plate
+   and keep labels legible rather than near-1:1 with their viewBox. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:820px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+
+html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
+body{font-family:var(--sans)}
+.slide{
+  min-height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(58px,7vh,96px) clamp(30px,5vw,86px); position:relative; overflow:hidden
+}
+.slide>*{max-width:none}
+
+/* ---- slide chrome: the same bar on every slide, the way a deck master works ---- */
+.tick{
+  position:absolute; top:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
+}
+.tick s{text-decoration:none; color:var(--signal)}
+.foot{
+  position:absolute; bottom:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  align-items:center; font:400 11px/1 var(--mono); color:var(--muted)
+}
+.foot em{font-style:normal; letter-spacing:.06em}
+.bar{position:absolute; left:0; right:0; bottom:0; height:3px; background:var(--line)}
+.bar i{display:block; height:100%; background:var(--signal)}
+
+/* ---- kinds ---- */
+.k-title, .k-section, .k-close{background:var(--surface)}
+/* The divider is the one slide with room to spare, so it splits: number left, concept right. */
+@media (min-width:1000px){
+  .k-section{display:grid; grid-template-columns:minmax(200px,22%) 1fr;
+             gap:clamp(30px,4vw,70px); align-items:center; align-content:center}
+  .k-section .idx{grid-row:1 / span 3; align-self:start; margin:0}
+  .k-section h2, .k-section .lead, .k-section .src{grid-column:2}
+}
+.k-section .idx{
+  font:600 clamp(64px,13vw,180px)/0.82 var(--mono); letter-spacing:-.05em;
+  color:var(--line); margin:0 0 clamp(14px,2vh,26px)
+}
+.slide h1{font-size:clamp(34px,6.4vw,84px); margin:0 0 clamp(18px,3vh,32px)}
+.slide h2{font-size:clamp(28px,5vw,64px); margin:0 0 clamp(16px,2.6vh,28px)}
+.k-bullets h2, .k-do h2, .k-figs h2{font-size:clamp(22px,3.2vw,40px); color:var(--muted)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.3vw,30px); line-height:1.42;
+  color:var(--muted); margin:0; max-width:36ch
+}
+.k-close .lead{color:var(--ink); max-width:44ch}
+.k-title .audience{margin-top:clamp(20px,3vh,36px); font-size:clamp(12px,1.2vw,15px)}
+
+/* ---- bullets ---- */
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.6vh,30px); counter-reset:b}
+.bul li{
+  font-size:clamp(21px,2.9vw,42px); line-height:1.22; padding-left:1.5em; position:relative;
+  text-wrap:balance; counter-increment:b
+}
+.bul li::before{
+  content:counter(b); position:absolute; left:0; top:.3em;
+  font:500 .42em var(--mono); color:var(--signal); letter-spacing:.1em
+}
+
+/* ---- big numbers ---- */
+.nums{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(20px,3vw,44px)}
+.nums div{border-top:2px solid var(--line); padding-top:clamp(12px,2vh,20px)}
+.nums b{display:block; font:600 clamp(34px,5.4vw,68px)/1 var(--mono); letter-spacing:-.04em; color:var(--sand)}
+.nums i{display:block; font:400 clamp(12px,1.2vw,15px) var(--mono); font-style:normal; color:var(--muted); margin:10px 0 8px}
+.nums span{font-size:clamp(13px,1.3vw,17px); line-height:1.4; color:var(--muted)}
+
+/* ---- quote ---- */
+.k-quote q{
+  display:block; quotes:none; font-family:var(--serif); font-size:clamp(28px,4.6vw,62px);
+  line-height:1.22; border-left:3px solid var(--signal); padding-left:clamp(20px,2.6vw,40px);
+  text-wrap:balance
+}
+.k-quote p{
+  margin:clamp(18px,3vh,32px) 0 0 clamp(23px,2.9vw,43px); color:var(--muted);
+  font-size:clamp(14px,1.5vw,20px); max-width:52ch
+}
+
+/* ---- what to do ---- */
+.acts{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.4vh,26px);
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.acts li{
+  font-size:clamp(16px,1.8vw,24px); line-height:1.35; padding-left:1.5em; position:relative;
+  background:var(--surface-2); border-radius:8px; padding:clamp(16px,2vh,24px) clamp(18px,2vw,26px)
+              clamp(16px,2vh,24px) clamp(38px,3.4vw,52px)
+}
+.acts li::before{
+  content:"\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
+  color:var(--interference); font-family:var(--mono)
+}
+
+/* ---- diagrams ---- */
+/* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
+   Twice the page's cap is the ceiling that stays proportionate on a projector. These are
+   clamp()-based like everything else on the slide, so a window wider than a laptop keeps
+   growing the diagram instead of freezing at a fixed px the moment it's hit. */
+.slide figure{margin:0 auto; padding:0; max-width:clamp(1180px,74vw,1560px); width:100%}
+.slide .plate{padding:clamp(20px,3vw,42px); width:100%}
+.slide .plate svg{max-width:clamp(1040px,65vw,1400px)}
+.slide .plate.photo{padding:0; max-width:clamp(820px,51vw,1100px); margin:0 auto}
+.slide .plate.photo img{width:100%; height:auto; border-radius:9px}
+.slide figcaption{margin:clamp(16px,2.4vh,26px) auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(15px,1.5vw,21px)}
+.slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
+
+.slide .src{max-width:none; margin:clamp(22px,4vh,44px) 0 0; padding:0}
+@media print{
+  html{scroll-snap-type:none}
+  .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
+  .bar{display:none}
+}
+
+/* ---- overview: O shrinks every slide into a clickable grid, click jumps and exits ----
+   clamp() sizes vw off the real viewport, so shrinking the box (grid track, transform,
+   zoom — any of them) never shrinks the text inside it: the same 84px headline that fits
+   a full slide just overflows a thumbnail. Fighting that with overflow:hidden clips text
+   mid-glyph, which reads as broken, not small. Cheaper fix: don't scale the slide down,
+   thin it down — hide the bulky body content (lists, diagrams, quotes) and give the
+   heading its own small fixed size, so every card is a title card. */
+html.overview{scroll-snap-type:none; overflow:hidden; counter-reset:ov}
+html.overview body{
+  height:100dvh; overflow-y:auto; display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); grid-auto-rows:110px;
+  gap:12px; padding:14px; align-content:start
+}
+html.overview .slide{
+  min-height:0; cursor:pointer; scroll-snap-align:none; overflow:hidden;
+  border:1px solid var(--line); border-radius:6px; padding:10px 12px;
+  display:flex; flex-direction:column; justify-content:center; counter-increment:ov
+}
+html.overview .slide::after{
+  content:counter(ov); position:absolute; top:6px; right:8px;
+  font:400 10px var(--mono); color:var(--muted)
+}
+html.overview .slide:hover{border-color:var(--signal)}
+html.overview .tick, html.overview .foot, html.overview .bar,
+html.overview .lead, html.overview .audience, html.overview .src,
+html.overview .bul, html.overview .nums, html.overview .acts, html.overview .plate,
+html.overview q, html.overview figcaption span{display:none}
+html.overview .slide h1, html.overview .slide h2{
+  font-size:13px; line-height:1.3; margin:0; max-width:none;
+  max-height:3.9em; overflow:hidden
+}
+html.overview .slide .idx{font-size:22px; margin:0 0 4px; line-height:1}
+/* .k-section carries leftover grid-column/grid-row from its >=1000px two-column layout.
+   Those should be inert once display switches to flex above, but a Chromium quirk lets
+   them corrupt a sibling's box (collapses h2 to 0 height) unless block layout is forced
+   instead of flex for this one kind. */
+html.overview .k-section{display:block}
+html.overview .k-section .idx, html.overview .k-section h2{display:block}
+html.overview .slide figcaption{margin:0}
+html.overview .slide figcaption b{font-size:11px; line-height:1.3}
+</style>
+</head>
+<body>
+<section class="slide k-title"><div class="tick"><span>Skill design</span><s>1 / 28</s></div><h1>How to design a skill an agent actually follows</h1><p class="lead">Six small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.</p><p class="audience">You write skills or specs for a coding agent, or maintain a codebase agents work in, and want fewer rewrites and less wasted context per request.</p><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:3.6%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Where this goes</span><s>2 / 28</s></div><figure><div class="plate"><svg viewBox="-2 -2 774 202" role="img" aria-label="Concept map of the lesson: The grooming skill, No code blocks in the spec, Slice tickets by feature, not by layer, Named vocabulary instead of instructions, One door instead of many, The deletion test, joined by arrows showing which concept each one builds on."><defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs><rect x="0" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="25" class="d-num">01</text><text x="16" y="47" class="d-node"><tspan x="16" dy="0">The grooming skill</tspan></text><rect x="270" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="25" class="d-num">02</text><text x="286" y="47" class="d-node"><tspan x="286" dy="0">No code blocks in the</tspan><tspan x="286" dy="17">spec</tspan></text><rect x="540" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="25" class="d-num">03</text><text x="556" y="47" class="d-node"><tspan x="556" dy="0">Slice tickets by</tspan><tspan x="556" dy="17">feature, not by layer</tspan></text><rect x="540" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="151" class="d-num">04</text><text x="556" y="173" class="d-node"><tspan x="556" dy="0">Named vocabulary instead</tspan><tspan x="556" dy="17">of instructions</tspan></text><rect x="270" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="151" class="d-num">05</text><text x="286" y="173" class="d-node"><tspan x="286" dy="0">One door instead of many</tspan></text><rect x="0" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="151" class="d-num">06</text><text x="16" y="173" class="d-node"><tspan x="16" dy="0">The deletion test</tspan></text></svg></div><figcaption><b>The concepts, and what each one needs first</b><span>Drawn from the prerequisites the build checks, so the map cannot drift from the lesson.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:7.1%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>The grooming skill</span><s>3 / 28</s></div><p class="idx">01</p><h2>The grooming skill</h2><p class="lead">A skill that turns a vague request into a shared understanding by interviewing you one branch, one question at a time — never acting until you confirm.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:10.7%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>The grooming skill</span><s>4 / 28</s></div><h2>The grooming skill</h2><ol class="bul"><li>Relentless: keep asking until you and the agent share understanding.</li><li>One branch: finish the checkout page before moving to the about page.</li><li>One question: wait for your answer before asking the next.</li><li>Recommend: never a blank question — always options and a pick.</li><li>Do not act: no building until you confirm.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:14.3%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>The grooming skill</span><s>5 / 28</s></div><figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="A decision tree with two branches, checkout page and about page. The checkout branch is fully walked through three questions before the about page branch begins, shown greyed out and untouched until the checkout branch completes.">
+  <text x="0" y="14" class="d-label">REQUEST</text>
+  <rect x="0" y="24" width="120" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="60" y="46" class="d-node" text-anchor="middle">build the app</text>
+
+  <path d="M60 58 V78 M60 78 H150 M60 78 H0" stroke="var(--line)" stroke-width="1.4"/>
+
+  <rect x="90" y="86" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="150" y="105" class="d-node" text-anchor="middle">checkout page</text>
+
+  <rect x="0" y="86" width="70" height="30" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="35" y="105" class="d-label" text-anchor="middle">about</text>
+
+  <rect x="90" y="130" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.3"/>
+  <text x="150" y="147" class="d-label" text-anchor="middle">Q1: card or wallet?</text>
+  <rect x="90" y="162" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.3"/>
+  <text x="150" y="179" class="d-label" text-anchor="middle">Q2: guest checkout?</text>
+  <rect x="90" y="194" width="120" height="12" rx="3" fill="var(--signal)" opacity="0.2"/>
+
+  <text x="230" y="147" class="d-fix">answered, one at a time</text>
+  <text x="0" y="205" class="d-label">about page waits, untouched, until checkout is fully cleared</text>
+</svg></div><figcaption><b>One branch, fully cleared, before the next</b><span>The interview walks one path of the decision tree to its end — checkout, then about page — instead of hopping between branches mid-question.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:17.9%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The grooming skill</span><s>6 / 28</s></div><h2>What to do</h2><ul class="acts"><li>Let the agent ask before it builds — resist the urge to front-load every requirement.</li><li>Answer one branch fully before letting the conversation jump to the next.</li><li>Take the recommended default when you have no strong opinion; it keeps the interview moving.</li><li>Don't let the agent act on an answer you haven't actually confirmed.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:21.4%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>No code blocks in the spec</span><s>7 / 28</s></div><p class="idx">02</p><h2>No code blocks in the spec</h2><p class="lead">A spec should point at the code, not paste it — a pasted snippet goes stale the moment implementation starts, and an agent will follow stale code over the live codebase in front of it.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:25.0%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>No code blocks in the spec</span><s>8 / 28</s></div><h2>No code blocks in the spec</h2><ol class="bul"><li>The spec is what survives once the grooming conversation is closed.</li><li>Rule: never put a code block in the spec, even a highly technical one.</li><li>A pasted snippet is a snapshot — the real code moves on without it.</li><li>Without code, the agent has to cross-reference the live codebase instead.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:28.6%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>No code blocks in the spec</span><s>9 / 28</s></div><h2>What to do</h2><ul class="acts"><li>Write specs as prose and intent, never as pasted implementation code.</li><li>If a decision feels like it needs a code sample to be clear, point at the file and line instead of copying it in.</li><li>Treat the codebase, not the spec, as the source of truth once implementation starts.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:32.1%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Slice tickets by feature, not by layer</span><s>10 / 28</s></div><p class="idx">03</p><h2>Slice tickets by feature, not by layer</h2><p class="lead">Group tickets by feature — login, checkout — instead of by layer — database, API, UI — so each ticket lands as something you can actually test end to end.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:35.7%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Slice tickets by feature, not by layer</span><s>11 / 28</s></div><h2>Slice tickets by feature, not by layer</h2><ol class="bul"><li>Traditional slicing: ticket 1 database, ticket 2 API, ticket 3 UI.</li><li>After ticket 1, all you have is a database — nothing to test.</li><li>Feature slicing: ticket 1 is the whole login page, top to bottom.</li><li>Each ticket finishes as a working, testable feature.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:39.3%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Slice tickets by feature, not by layer</span><s>12 / 28</s></div><figure><div class="plate"><svg viewBox="0 0 480 200" role="img"
+  aria-label="Two ways of slicing three tickets. By layer: ticket one is database, ticket two is API, ticket three is UI — after ticket one, only a database exists, nothing testable. By feature: ticket one is the full login feature end to end, immediately testable; ticket two and three are the next features.">
+  <text x="0" y="14" class="d-label">BY LAYER</text>
+  <rect x="0" y="24" width="90" height="34" rx="4" fill="var(--interference)" opacity="0.45"/>
+  <text x="45" y="46" class="d-label" text-anchor="middle">database</text>
+  <rect x="98" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="143" y="46" class="d-label" text-anchor="middle">API</text>
+  <rect x="196" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="241" y="46" class="d-label" text-anchor="middle">UI</text>
+  <text x="300" y="46" class="d-fix">nothing to test yet</text>
+
+  <text x="0" y="98" class="d-label">BY FEATURE</text>
+  <rect x="0" y="108" width="188" height="46" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="94" y="128" class="d-node" text-anchor="middle">login: db + API + UI</text>
+  <text x="94" y="145" class="d-label" text-anchor="middle">ticket 1</text>
+  <text x="200" y="132" class="d-fix">works end to end</text>
+
+  <rect x="0" y="164" width="188" height="26" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="94" y="181" class="d-label" text-anchor="middle">next feature: ticket 2</text>
+</svg></div><figcaption><b>What exists after ticket one ships</b><span>By layer, one ticket in, you have a database and nothing to click. By feature, one ticket in, you have a working login page.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:42.9%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Slice tickets by feature, not by layer</span><s>13 / 28</s></div><h2>What to do</h2><ul class="acts"><li>When breaking a spec into tickets, ask "can I test this alone once it's done?" — if not, it's a layer slice, not a feature slice.</li><li>Keep a feature's schema, endpoint, and UI in the same ticket rather than splitting them across a database ticket and a UI ticket.</li><li>Expect each finished ticket to be runnable, not just reviewable.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:46.4%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Named vocabulary instead of instructions</span><s>14 / 28</s></div><p class="idx">04</p><h2>Named vocabulary instead of instructions</h2><p class="lead">A code review checklist built from named smells — shotgun surgery, feature envy, data clumps — packs a whole diagnostic step into one word the model already knows, instead of a paragraph explaining what to look for.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:50.0%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Named vocabulary instead of instructions</span><s>15 / 28</s></div><h2>Named vocabulary instead of instructions</h2><ol class="bul"><li>The review checklist is 12 words, not 12 paragraphs of instructions.</li><li>The words come from Fowler's Refactoring — a book the model has already read.</li><li>Shotgun surgery: one change that has to be repeated in many places.</li><li>Feature envy: logic living in the wrong file.</li><li>Data clumps: the same group of fields passed around separately instead of as one type.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:53.6%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Named vocabulary instead of instructions</span><s>16 / 28</s></div><figure><div class="plate"><svg viewBox="0 0 480 150" role="img"
+  aria-label="A paragraph of review instructions compresses down to a single named term, shotgun surgery, because the model already knows the term's meaning from having read Fowler's Refactoring.">
+  <rect x="0" y="10" width="230" height="80" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="10" y="28" class="d-label">"check whether a single</text>
+  <text x="10" y="42" class="d-label">logical change requires</text>
+  <text x="10" y="56" class="d-label">edits across many files,</text>
+  <text x="10" y="70" class="d-label">and flag it if one is</text>
+  <text x="10" y="84" class="d-label">likely to be missed..."</text>
+
+  <path d="M236 50 H278" stroke="var(--signal)" stroke-width="1.6"/>
+  <text x="257" y="44" class="d-fix" text-anchor="middle">compresses to</text>
+
+  <rect x="286" y="30" width="194" height="40" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="383" y="55" class="d-node" text-anchor="middle">shotgun surgery</text>
+
+  <text x="0" y="118" class="d-label">the term already means this &#8212; from the book, not the skill</text>
+</svg></div><figcaption><b>One word instead of one paragraph</b><span>The model already knows what the term means from the book — the skill only has to name it.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:57.1%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Named vocabulary instead of instructions</span><s>17 / 28</s></div><h2>By the numbers</h2><div class="nums"><div><b>12</b><i>words</i><span>the entire review checklist</span></div></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:60.7%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Named vocabulary instead of instructions</span><s>18 / 28</s></div><h2>What to do</h2><ul class="acts"><li>When writing a review or audit skill, reach for an established vocabulary the model already knows before writing new instructions from scratch.</li><li>Run code review in a fresh context window, not the session that wrote the code.</li><li>Learn the term, not just the fix — 'feature envy' catches more than the one instance you first spotted it in.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:64.3%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>One door instead of many</span><s>19 / 28</s></div><p class="idx">05</p><h2>One door instead of many</h2><p class="lead">Encapsulate a function's fan-out behind a single entry point so an agent learns what it does by reading one function instead of jumping through every function it calls.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:67.9%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>One door instead of many</span><s>20 / 28</s></div><h2>One door instead of many</h2><ol class="bul"><li>A main function calling many small functions means many doors to open.</li><li>Learning it means jumping through every function it calls, one by one.</li><li>Each jump costs tokens — the hops add up fast.</li><li>Fix: one entry point in front, each function still keeps its own file.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:71.4%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>One door instead of many</span><s>21 / 28</s></div><figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="Left: a main function connected directly to five small functions, each a separate door the agent must open, costing about ten thousand tokens to understand. Right: the same five functions behind one shared entry point, so the agent opens a single door, costing about one thousand tokens.">
+  <text x="0" y="14" class="d-label">MANY DOORS</text>
+  <rect x="60" y="24" width="90" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="105" y="43" class="d-node" text-anchor="middle">main</text>
+  <path d="M105 54 V70" stroke="var(--interference)" stroke-width="1.2"/>
+  <path d="M105 70 H10 M105 70 H200" stroke="var(--interference)" stroke-width="1.2"/>
+  <path d="M10 70 V80 M55 70 V80 M105 70 V80 M155 70 V80 M200 70 V80" stroke="var(--interference)" stroke-width="1.2"/>
+  <rect x="0" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="40" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="88" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="136" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <rect x="184" y="80" width="34" height="26" rx="3" fill="var(--interference)" opacity="0.4"/>
+  <text x="110" y="124" class="d-fix" text-anchor="middle">5 doors to open</text>
+  <text x="110" y="140" class="d-num" text-anchor="middle">~10,000 tokens</text>
+
+  <text x="280" y="14" class="d-label">ONE DOOR</text>
+  <rect x="340" y="24" width="90" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="385" y="43" class="d-node" text-anchor="middle">main</text>
+  <path d="M385 54 V70" stroke="var(--signal)" stroke-width="1.4"/>
+  <rect x="350" y="70" width="70" height="26" rx="4" fill="var(--signal)" opacity="0.45"/>
+  <text x="385" y="88" class="d-fix" text-anchor="middle">entry point</text>
+  <path d="M385 96 V110" stroke="var(--line)" stroke-width="1"/>
+  <path d="M385 110 H310 M385 110 H460" stroke="var(--line)" stroke-width="1"/>
+  <rect x="300" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="340" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="380" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <rect x="420" y="118" width="30" height="20" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="385" y="164" class="d-fix" text-anchor="middle">1 door to open</text>
+  <text x="385" y="180" class="d-num" text-anchor="middle">~1,000 tokens</text>
+</svg></div><figcaption><b>Many doors vs. one door</b><span>Same functions, same files — the difference is how many hops it takes to learn what the whole thing does.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:75.0%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>One door instead of many</span><s>22 / 28</s></div><h2>By the numbers</h2><div class="nums"><div><b>~10,000</b><i>tokens</i><span>estimated cost of learning via many doors</span></div><div><b>~1,000</b><i>tokens</i><span>estimated cost of learning via one door</span></div></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:78.6%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>One door instead of many</span><s>23 / 28</s></div><h2>What to do</h2><ul class="acts"><li>Give a cluster of small, related functions one shared entry point instead of exposing each one directly.</li><li>Keep each function in its own file — the fix is one door, not one giant file.</li><li>Before adding an entry point, check it actually reduces hops rather than just adding one.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:82.1%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>The deletion test</span><s>24 / 28</s></div><p class="idx">06</p><h2>The deletion test</h2><p class="lead">To find out if a function still earns its place, delete it and run the tests — if nothing breaks, it wasn't load-bearing.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:85.7%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>The deletion test</span><s>25 / 28</s></div><h2>The deletion test</h2><ol class="bul"><li>Pick a function the main program depends on.</li><li>Delete it. Run the full test suite.</li><li>Tests fail: it was a real dependency — keep it.</li><li>Tests still pass: nothing needed it — delete it for real.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:89.3%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>The deletion test</span><s>26 / 28</s></div><figure><div class="plate"><svg viewBox="0 0 520 170" role="img"
+  aria-label="Flow: delete the function, run the test suite. If tests fail, keep the function because it was a real dependency. If tests still pass, delete it for real because nothing needed it.">
+  <rect x="30" y="10" width="140" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="100" y="32" class="d-node" text-anchor="middle">delete function</text>
+  <path d="M174 27 H216" stroke="var(--line)" stroke-width="1.4"/>
+  <rect x="220" y="10" width="140" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="290" y="32" class="d-node" text-anchor="middle">run test suite</text>
+
+  <path d="M290 44 V64" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M290 64 H120 M290 64 H425" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M120 64 V84 M425 64 V84" stroke="var(--line)" stroke-width="1.2"/>
+
+  <rect x="40" y="84" width="160" height="36" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="120" y="103" class="d-label" text-anchor="middle">tests fail</text>
+  <text x="120" y="134" class="d-fix" text-anchor="middle">keep it &#8212; real dependency</text>
+
+  <rect x="350" y="84" width="150" height="36" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="425" y="103" class="d-label" text-anchor="middle">tests pass</text>
+  <text x="425" y="134" class="d-fix" text-anchor="middle">delete it &#8212; unused</text>
+</svg></div><figcaption><b>Delete, then let the tests answer</b><span>The experiment settles what reading the code can't.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:92.9%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The deletion test</span><s>27 / 28</s></div><h2>What to do</h2><ul class="acts"><li>Before deleting a function you suspect is dead, delete it and run the full suite rather than trusting a manual read of call sites.</li><li>Treat a passing suite after deletion as the actual proof, not a hunch confirmed.</li><li>If the deletion test doesn't feel trustworthy, that's a signal your test coverage has a gap, not that the function is safe.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:96.4%"></i></div></section>
+<section class="slide k-close"><div class="tick"><span>In one move</span><s>28 / 28</s></div><h2>The pattern under all six</h2><p class="lead">Every technique here trades a bigger, vaguer thing for a smaller, sharper one: one question instead of a brief, one word instead of a paragraph, one door instead of five. None of it is about the agent getting smarter — it's about giving it less to wade through before it can do the part only it can do.</p><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  function current(){
+    var y=scrollY+innerHeight/2;
+    for(var i=slides.length-1;i>=0;i--) if(slides[i].offsetTop<=y) return i;
+    return 0;
+  }
+  function go(i){ slides[Math.max(0,Math.min(slides.length-1,i))].scrollIntoView({behavior:'smooth'}) }
+  var theme='dark';
+  function setTheme(t){
+    theme=t;
+    document.documentElement.setAttribute('data-theme',t);
+    try{ localStorage.setItem('deck-theme',t) }catch(e){}
+  }
+  try{
+    var saved=localStorage.getItem('deck-theme');
+    if(saved) setTheme(saved);
+    else if(matchMedia('(prefers-color-scheme:light)').matches) theme='light';
+  }catch(e){}
+  slides.forEach(function(s){ s.addEventListener('click',function(){
+    if(document.documentElement.classList.contains('overview')){
+      document.documentElement.classList.remove('overview');
+      s.scrollIntoView();
+    }
+  }) });
+  addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var k=e.key.toLowerCase();
+    if(k==='arrowright'){ e.preventDefault(); go(current()+1) }
+    else if(k==='arrowleft'){ e.preventDefault(); go(current()-1) }
+    else if(k==='f'){
+      if(document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen()
+    }
+    else if(k==='d'){ setTheme(theme==='dark'?'light':'dark') }
+    else if(k==='o'){
+      var i=current();
+      document.documentElement.classList.toggle('overview');
+      if(!document.documentElement.classList.contains('overview')) slides[i].scrollIntoView();
+    }
+  });
+})();
+</script>
+</body>
+</html>
