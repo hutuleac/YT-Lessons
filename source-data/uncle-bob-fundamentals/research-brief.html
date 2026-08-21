@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research: LIVE: Uncle Bob on Software Fundamentals in the Age of AI</title>
+<style>
+:root{
+  --ink:#20231f; --muted:#6b6f66; --line:#e4e2d8; --card:#fffdf8; --bg:#efece2;
+  --brand:#8a5a2e; --serif:'Iowan Old Style','Palatino Linotype',Georgia,serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:clamp(15px,1.05vw,18px);line-height:1.7;-webkit-font-smoothing:antialiased;}
+.page{max-width:1600px;width:100%;margin:0 auto;background:var(--card);box-shadow:0 0 0 1px var(--line);}
+.hero{padding:clamp(18px,2.4vw,34px) clamp(18px,4vw,56px) clamp(14px,1.8vw,22px);border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--serif);font-style:italic;font-size:clamp(13px,1vw,16px);color:var(--brand);margin-bottom:10px;}
+.backlink{margin-bottom:12px;}
+.backlink a{font-size:clamp(12.5px,.95vw,14px);color:var(--muted);text-decoration:none;border:1px solid var(--line);
+  border-radius:20px;padding:5px 14px;transition:color .15s,border-color .15s;}
+.backlink a:hover{color:var(--brand);border-color:var(--brand);}
+.hero h1{font-family:var(--serif);margin:0 0 14px;font-size:clamp(24px,3.4vw,42px);line-height:1.15;
+  letter-spacing:-.01em;font-weight:600;color:#171916;max-width:42ch;}
+.byline{border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:clamp(13px,1vw,15px);line-height:1.6;}
+.byline b{color:var(--ink);font-weight:600;}
+.stats-line{font-family:var(--serif);font-style:italic;color:var(--brand);font-size:clamp(12.5px,.95vw,14.5px);margin-top:4px;}
+.stats-line a{color:var(--brand);}
+.inner{padding:10px clamp(18px,4vw,56px) 48px;}
+section.sec{padding:34px 0;border-bottom:1px solid var(--line);}
+.sec-eye{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--brand);margin-bottom:4px;}
+.sec h2{font-family:var(--serif);margin:0;font-size:clamp(20px,2vw,26px);font-weight:600;color:#171916;
+  border-bottom:2px solid var(--brand);display:inline-block;padding-bottom:5px;}
+.card{background:#fbf7ef;border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,28px);}
+.snap{list-style:none;margin:0;padding:0;}
+.snap li{padding:12px 0;border-bottom:1px solid var(--line);line-height:1.6;font-size:clamp(14.5px,.95vw,16.5px);}
+.snap li:last-child{border-bottom:none}
+.theme{padding:36px 0;border-bottom:1px solid var(--line);}
+.theme-badgerow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:10px;}
+.badge{display:inline-block;padding:5px 13px;border-radius:3px;font-size:12px;font-weight:700;
+  white-space:nowrap;letter-spacing:.03em;text-transform:uppercase;color:#fffdf8;}
+.theme-status{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--muted);}
+.theme h2{font-family:var(--serif);margin:0 0 20px;font-size:clamp(20px,2.2vw,28px);font-weight:600;
+  color:#171916;line-height:1.25;max-width:32ch;padding-left:16px;}
+.theme-body{display:flex;flex-wrap:wrap;gap:28px;}
+.theme-main{flex:3 1 400px;min-width:0;}
+.theme-side{flex:2 1 260px;min-width:0;}
+.lead{margin:0 0 18px;font-size:clamp(16px,1.15vw,19px);line-height:1.6;color:#171916;font-weight:600;max-width:70ch;}
+.bullets{list-style:none;margin:0 0 22px;padding:0;max-width:76ch;}
+.bullets li{position:relative;padding:9px 0 9px 20px;border-bottom:1px solid var(--line);
+  font-size:clamp(14px,.95vw,15.5px);line-height:1.65;color:#2c2f28;}
+.bullets li .dot{position:absolute;left:0;top:16px;width:7px;height:7px;border-radius:50%;}
+.sidecard{position:relative;background:#fffefb;border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px 14px 26px;max-width:76ch;margin:0 0 18px;}
+.sidecard:last-child{margin-bottom:0;}
+.sidecard::before{content:"";position:absolute;left:11px;top:12px;bottom:12px;width:7px;border-radius:5px;
+  background:var(--sc-accent);}
+.sidecard .lbl{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--sc-accent);margin-bottom:8px;}
+.sidecard.quote{font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.1vw,18px);
+  line-height:1.5;color:#2c2f28;}
+.sidecard.quote .lbl{font-family:-apple-system,sans-serif;font-style:normal;}
+.sidecard.quote cite{display:block;font-family:-apple-system,sans-serif;font-style:normal;font-size:13px;
+  color:var(--muted);margin-top:9px;}
+.sidecard .txt{font-size:14.5px;line-height:1.55;color:#3a3d35;}
+.namechip{padding:0 0 10px;margin:0 0 10px;border-bottom:1px solid var(--line);}
+.namechip:last-child{padding-bottom:0;margin-bottom:0;border-bottom:none;}
+.namechip b{display:block;font-weight:600;font-size:14.5px;color:#171916;}
+.namechip span{font-size:13px;color:#4a4d44;line-height:1.5;}
+.icard{display:flex;gap:14px;align-items:flex-start;background:#fffefb;border:1px solid var(--line);
+  border-radius:12px;padding:14px 16px;margin:11px 0;}
+.icard .ic{flex:none;width:30px;height:30px;border-radius:6px;display:grid;place-items:center;
+  font-size:14px;background:#f4e9db;line-height:1;}
+.icard .title{font-weight:600;font-size:clamp(14px,.95vw,15.5px);color:#171916;line-height:1.42;margin-bottom:5px;}
+.icard .tag{display:inline-block;font-family:var(--serif);font-style:italic;font-size:13px;font-weight:600;color:var(--brand);}
+.icard .detail{font-size:13.5px;color:#4a4d44;line-height:1.55;margin-top:4px;}
+.riskcard{position:relative;background:#fffefb;border:1px solid var(--line);border-radius:12px;
+  padding:14px 18px 14px 28px;margin:11px 0;}
+.riskcard::before{content:"";position:absolute;left:11px;top:12px;bottom:12px;width:7px;border-radius:5px;background:#a23f22;}
+.riskcard .txt{font-weight:500;font-size:clamp(13.5px,.9vw,15px);color:#171916;line-height:1.55;}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 30px;}
+.gloss div{padding:9px 0;border-bottom:1px solid var(--line);font-size:13.8px;line-height:1.55;}
+.gloss b{font-family:var(--serif);color:#171916;}
+.empty{color:var(--muted);font-style:italic;font-size:14.5px;}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="backlink"><a href="index.html">&#8592; All Research Briefs</a></div>
+    <div class="kicker">A YouTube Research Brief</div>
+    <h1>LIVE: Uncle Bob on Software Fundamentals in the Age of AI</h1>
+    <div class="byline">
+      Channel: <b>Matt Pocock</b> &middot; Speaker: <b>Matt Pocock, Robert C. Martin ("Uncle Bob")</b> &middot; <b>2026-08-19</b>
+      <div class="stats-line">6 threads · why messy code still breaks agents, ditching steering for deterministic gauntlets, a 5-agent implement-clean-harden-QA pipeline, module structure as agent leverage, which human disciplines don't transfer to agents, and how juniors learn strategic programming when AI eats the tactical work &middot; <a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Watch on YouTube &#8599;</a></div>
+    </div>
+  </header>
+  <div class="inner">
+    <section class="sec">
+      <div class="sec-eye">The one-paragraph takeaway</div>
+      <h2>Video Snapshot</h2>
+      <div class="card" style="margin-top:16px;"><ol class="snap"><li>56-minute live interview: Matt Pocock hosts Robert C. Martin ("Uncle Bob", author of Clean Code) on how his agentic coding practice has evolved since he started using AI agents around December 2025.</li><li>Central arc: Martin tried steering agents with long prompt documents (TDD rules, clean-code rules) and found models treat written rules as "guidelines, not actual rules" (the Pirates of the Caribbean line) — he abandoned steering for deterministic tools (CRAP score, mutation testing) run in an enforced loop instead.</li><li>He resurrected two tools he'd shelved as impractical in the early 2000s — CRAP score (coverage + cyclomatic complexity) and mutation testing — because agents don't care how boring or slow the checks are.</li><li>He now runs a 5-stage agent pipeline per feature: specifier -&gt; coder -&gt; cleaner -&gt; hardener -&gt; QA agent, each with a narrow single-purpose context window; a task that takes one agent ~5 minutes with weak results takes the full gauntlet ~1 hour but at much higher quality (roughly 4-5x a human, not 10x).</li><li>He explicitly rejects both spec-driven development (upfront heavy planning) and imposing human process disciplines like strict red-green-refactor TDD on agents, favoring an Agile-style iterate-and-feedback loop instead.</li><li>Cites the 'lost in the middle' context-window effect and Dex Horthy's 'smart zone / dumb zone' framing as the technical reason steering documents fail once they exceed a few sentences.</li><li>Introduces a 'trajectory' concept: whatever direction a context window has been steered toward persists and contaminates every subsequent turn in that session — the only fix is starting a clean context.</li><li>Closing argument: software fundamentals (clean modules, small deep interfaces, low complexity) matter more, not less, because AI models are trained on human-organized complexity and hit the same walls humans do past a complexity threshold.</li></ol></div>
+    </section>
+
+    
+<section class="theme" id="steering-vs-deterministic-checks">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#93711b;">Structural critique</span>
+    <span class="theme-status">PRACTICE SHIFT, DEC 2025-AUG 2026</span>
+  </div>
+  <h2 style="border-left:4px solid #93711b;">Prompt-based "steering" documents don't hold — deterministic tools in an enforced loop do</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">Martin's first instinct was to write Claude.md-style instruction documents ("here's how you do TDD, here's what clean code looks like"); he found models treat that content as soft guidance that decays with context length, not as rules.</p>
+      <ul class="bullets"><li><span class="dot" style="background:#93711b;"></span>His early prompts grew into 5-10 page documents describing TDD and clean-code rules; he says models treat those rules "in the Pirates of the Caribbean sense... more like guidelines."</li><li><span class="dot" style="background:#93711b;"></span>Root cause per his own research: 'lost in the middle' — content at the very start and very end of a context window keeps priority, content in the middle gets effectively ignored as the window grows, no matter how important it was when written.</li><li><span class="dot" style="background:#93711b;"></span>Practical implication he draws: trim the initial prompt to its absolute minimum so it stays in the high-priority zone, then enforce everything else with deterministic tools that run after the fact and don't live in the context window at all.</li><li><span class="dot" style="background:#93711b;"></span>Deterministic tools scale where prompted rules don't: you can "layer them up and up" without them competing for context-window priority the way instructions do.</li><li><span class="dot" style="background:#93711b;"></span>He flags the open question honestly: there is a point where enough automated checks slow the agent down below human speed and "you've lost the game" — he hasn't found that ceiling yet, but currently gets roughly a 2-4x productivity margin over an unconstrained agent.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#93711b;"><div class="lbl">Pull quote</div>&#8220;They definitely will soften... they treat those rules in the Pirates of the Caribbean sense. They're more like guidelines.&#8221;<cite>— Robert C. Martin</cite></div>
+      
+      <div class="sidecard" style="--sc-accent:#93711b;"><div class="lbl">Worth noting</div><div class="txt">Martin frames this as his own limited research into model behavior, not a formal study — the 'lost in the middle' mechanism is presented as his working explanation, not a cited paper.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="theme" id="crap-and-mutation-testing-revival">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#3f6b2e;">Recommendation</span>
+    <span class="theme-status">TOOLS ORIGINALLY SHELVED AS IMPRACTICAL, c. 2000</span>
+  </div>
+  <h2 style="border-left:4px solid #3f6b2e;">Two early-2000s tools he'd abandoned as too slow for humans are now core to his agent harness</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">CRAP score and mutation testing were both tools Martin tried around the year 2000, found valuable, and shelved because fixing what they found took a human too long to be worth it — agents remove that constraint.</p>
+      <ul class="bullets"><li><span class="dot" style="background:#3f6b2e;"></span>CRAP (an acronym for a coverage + cyclomatic-complexity formula) scores how "crappy" a function is; running it over a big project around 2000 surfaced many bad functions, but manually fixing and re-testing them all wasn't worth the time.</li><li><span class="dot" style="background:#3f6b2e;"></span>Mutation testing flips code operators (negative&lt;-&gt;positive signs, less-than&lt;-&gt;greater-than, equal&lt;-&gt;not-equal) and re-runs the full test suite expecting a failure; a passing 'surviving mutant' signals an inadequate test. His year-2000 run took an overnight batch (the suite alone ran 4 minutes, run several hundred times).</li><li><span class="dot" style="background:#3f6b2e;"></span>By December 2025 he started telling agents to run both tools after every change and clean up whatever they flagged — turning a previously impractical overnight process into a routine ~30-minute step.</li><li><span class="dot" style="background:#3f6b2e;"></span>His current goal: reach a point where he doesn't look at the generated code at all, verifying quality instead via CRAP scores staying low, mutation-testing coverage, and periodic spot checks — not code review of every diff.</li><li><span class="dot" style="background:#3f6b2e;"></span>For humans he keeps CRAP scores below 4; for agents he's deliberately widened the threshold to 6 (considering pushing to 8), reasoning agents have a much larger and more accurate short-term memory than humans and can handle more pathways-per-function before losing track.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#3f6b2e;"><div class="lbl">Pull quote</div>&#8220;These things are fast, and they are, and if I can constrain them to do a good job, then I am not going to impose my slowness upon them.&#8221;<cite>— Robert C. Martin</cite></div>
+      
+      <div class="sidecard" style="--sc-accent:#93711b;"><div class="lbl">Worth noting</div><div class="txt">The crap-score threshold of 6 (vs. 4 for humans) is Martin's own experimental guess, arrived at partly by debating the number with agents themselves — which he explicitly says not to trust as a source of truth.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="theme" id="five-agent-pipeline">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#3f6b2e;">Recommendation</span>
+    <span class="theme-status">CURRENT WORKFLOW, ~1HR PER FEATURE</span>
+  </div>
+  <h2 style="border-left:4px solid #3f6b2e;">A 5-stage specifier -&gt; coder -&gt; cleaner -&gt; hardener -&gt; QA pipeline, each agent single-purpose and short-lived</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">Rather than one agent or many loosely-coordinated "specialist" agents with persistent roles, Martin runs a fixed sequential gauntlet where each agent is born, does one narrow task, and dies so the next starts with a clean context.</p>
+      <ul class="bullets"><li><span class="dot" style="background:#3f6b2e;"></span>Specifier: turns a human-written document into a Gherkin acceptance test (given/when/then) plus a QA procedure written from a human-at-the-UI point of view.</li><li><span class="dot" style="background:#3f6b2e;"></span>Coder: writes unit tests and the implementation to satisfy the story and make the Gherkin test pass; expected to leave a mess behind.</li><li><span class="dot" style="background:#3f6b2e;"></span>Cleaner: runs CRAP analysis and general code review to clean up the coder's mess.</li><li><span class="dot" style="background:#3f6b2e;"></span>Hardener: runs mutation testing to a target of 100% coverage, described as "absolutely merciless" — this stage takes the longest.</li><li><span class="dot" style="background:#3f6b2e;"></span>QA agent: turns the written QA procedure into an executable script that drives the system and produces a deterministic pass/fail result.</li><li><span class="dot" style="background:#3f6b2e;"></span>Net effect: a task one agent completes in ~5 minutes with 'questionable results' takes the full pipeline about an hour, versus roughly half a day for a human doing equivalent-quality work — a ~4-5x productivity gain with materially higher quality than a human would typically produce.</li><li><span class="dot" style="background:#3f6b2e;"></span>Two structural benefits of splitting into narrow single-task agents: they can run in parallel (his laptop supports more than 3 concurrent coders), and each agent's context window stays small enough that the 'lost in the middle' problem barely applies, so a few more rules can be piled on and actually get followed.</li><li><span class="dot" style="background:#3f6b2e;"></span>Named tradeoff: each new agent has real startup/cold-context overhead (roughly 10-15 seconds plus re-establishing context), and coordinating handoffs between agents has real communication overhead — but he says it's still faster overall than a human by a large margin.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#3f6b2e;"><div class="lbl">Pull quote</div>&#8220;It's going to mutate it and it's going to have 100% coverage... it's going to do that work, which takes a good long time.&#8221;<cite>— Robert C. Martin, describing the hardener stage</cite></div>
+      
+      <div class="sidecard" style="--sc-accent:#93711b;"><div class="lbl">Worth noting</div><div class="txt">Martin distinguishes this from large swarms of many differently-"personified" agents (his phrase: agents with their own email accounts) which Pocock says he's skeptical of — this is a narrow, sequential specialization, not a large autonomous org of agents.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="theme" id="context-trajectory">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#93711b;">Structural critique</span>
+    <span class="theme-status">OBSERVED PATTERN, NOT A CITED STUDY</span>
+  </div>
+  <h2 style="border-left:4px solid #93711b;">A context window develops a "trajectory" that contaminates everything after it — the only fix is a clean context</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">Pocock introduces the term "trajectory": once a session is steered a certain way (e.g., told to test via the UI), every subsequent instruction in that same context window gets pulled toward that same direction regardless of what's actually asked next.</p>
+      <ul class="bullets"><li><span class="dot" style="background:#93711b;"></span>Martin agrees and offers an analogy: a person having a calm chat with a model about brewing coffee, interrupted by someone else's unrelated remark about a soap opera getting pulled into context — from that point on, the model can't fully separate the two threads and coffee answers start drifting toward the soap-opera content.</li><li><span class="dot" style="background:#93711b;"></span>Framed as a specific driver of agent hallucination and misalignment distinct from factual hallucination: the model isn't inventing false facts, it's failing to keep threads in the same context window separated.</li><li><span class="dot" style="background:#93711b;"></span>Practical consequence for the pipeline design above: narrow, short-lived, single-purpose agents keep trajectory clean by construction, because each one only ever sees content relevant to its one job before it's discarded.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#93711b;"><div class="lbl">Pull quote</div>&#8220;As long as you can keep the direction of the model unconfused... it's not going to have these crazy hallucinations that people often deal with.&#8221;<cite>— Robert C. Martin</cite></div>
+      
+      <div class="sidecard" style="--sc-accent:#93711b;"><div class="lbl">Worth noting</div><div class="txt">This is offered as a well-known effect Martin has personally observed with models and non-programmers alike, not as a named, citable research result.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="theme" id="module-structure-as-agent-leverage">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#3f6b2e;">Recommendation</span>
+    <span class="theme-status">TOOLING IN PROGRESS, ARCHITECTURE ENFORCEMENT PARTIALLY MANUAL</span>
+  </div>
+  <h2 style="border-left:4px solid #3f6b2e;">Well-partitioned modules with deep, narrow interfaces are the single biggest lever for agent (and human) performance</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">Martin argues the same case he's always made for clean module boundaries now applies to agents for an identical reason: both humans and models can only "focus on" a bounded amount of context at once, and a well-scoped module keeps a model's attention from being diluted the same way a bloated one dilutes a human's.</p>
+      <ul class="bullets"><li><span class="dot" style="background:#3f6b2e;"></span>Until roughly a month before this interview he did architecture design manually: interrogating agents about existing module relationships, getting alarmed by the answers, then hand-designing the target module structure and handing agents an implementation plan.</li><li><span class="dot" style="background:#3f6b2e;"></span>He had his agents build him a custom UML-style architecture viewer he can use to drill down from system level into modules, sub-modules, and the underlying code on screen — he calls this genuinely useful and uses it regularly.</li><li><span class="dot" style="background:#3f6b2e;"></span>He also built a deterministic dependency-direction checker: a specification file defines which modules may depend on which; a checker enforces it at the end of a run, and violations must be fixed (typically by inverting a dependency, inserting an interface, or splitting a module). He says he's trying, without much luck yet, to automate the design step itself.</li><li><span class="dot" style="background:#3f6b2e;"></span>Explicitly endorses John Ousterhout's 'deep modules' concept (small interface, large hidden implementation) as especially good for agents specifically because a model can act on an interface without reading or understanding what's behind it — both an advantage (efficiency) and a danger (if the implementation and interface silently diverge).</li><li><span class="dot" style="background:#3f6b2e;"></span>Notes models pay attention to code structure and consistency, and also read tests to infer what a system does — so clean structure and a meaningful test suite both function as documentation the agent actually uses.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#3f6b2e;"><div class="lbl">Pull quote</div>&#8220;Anything that is well partitioned with well-disciplined interfaces between it is something a human can grasp because we compartmentalize in our minds — well, so do the models, so do the agents.&#8221;<cite>— Robert C. Martin</cite></div>
+      
+      
+    </div>
+  </div>
+</section>
+
+<section class="theme" id="which-disciplines-transfer-to-agents">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#93711b;">Structural critique</span>
+    <span class="theme-status">REVISED PRINCIPLE FROM CLEAN CODE ERA</span>
+  </div>
+  <h2 style="border-left:4px solid #93711b;">Human process disciplines don't automatically transfer to agents — even when the underlying value does</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">Asked what he'd revise from Clean Code for the agent era, Martin draws a sharp line between values (which still apply) and disciplines/behaviors (which were designed around specifically human limitations and shouldn't be force-fit onto agents).</p>
+      <ul class="bullets"><li><span class="dot" style="background:#93711b;"></span>Strict red-green-refactor test-driven development (write one line of test, one line of code, alternating) is, in his words, a discipline built for human short-term memory limits — he no longer enforces it on agents. Left unconstrained, his agents naturally fall back to writing a whole function then its test (the style he associates with Ousterhout), and he now lets them.</li><li><span class="dot" style="background:#93711b;"></span>General framing he lands on: "it is probably a mistake to impose a human discipline on an agent — it is not a mistake to impose human values on the agent." Values like low complexity and test coverage still apply; the specific human workflow used to get there (strict TDD cadence) does not need to.</li><li><span class="dot" style="background:#93711b;"></span>He also rejects heavy upfront spec-driven development for agents, drawing a direct parallel to 1970s waterfall and the Agile movement's reaction to it: extensive upfront specs sound safe but always fall apart once the agent runs into reality, forcing a stop-rewrite-restart cycle. His own attempt at this the same week as the interview was, in his words, "always a disaster."</li><li><span class="dot" style="background:#93711b;"></span>His alternative is Agile-style iteration: run a story or two, review the resulting architecture, manually intervene if needed, run more stories, repeat — with the expectation that a manual organizing/review step at the end may never fully disappear.</li><li><span class="dot" style="background:#93711b;"></span>Cost-of-change analogy: if changing a house cost a flat $1-5 regardless of when in construction the change happened, no one would pay an architect to front-load a perfect plan — they'd iterate live with the contractor. He argues agentic coding has pushed the cost of software change close enough to zero that the same logic applies, undercutting the case for upfront planning.</li><li><span class="dot" style="background:#93711b;"></span>On "spec-driven development" as a label, Pocock pushes back that its definition is so loose it can describe anything from a one-line Slack request to a full requirements doc; Martin's distinguishing test is whether the specification is persisted and returned to — his own specs are ephemeral by design and get discarded once implemented, with the finished code (plus his open-sourced tools like the CRAP checker and mutation tester) standing in as "the" specification for others to adapt rather than copy directly.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#93711b;"><div class="lbl">Pull quote</div>&#8220;It is probably a mistake to impose a human discipline on an agent. It is not a mistake to impose human values on the agent.&#8221;<cite>— Robert C. Martin</cite></div>
+      
+      <div class="sidecard" style="--sc-accent:#93711b;"><div class="lbl">Worth noting</div><div class="txt">Martin explicitly caveats his own long-standing waterfall prediction as one he expects to eventually lose: "that's a prediction I'll probably lose, but still."</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="theme" id="learning-strategic-programming">
+  <div class="theme-badgerow">
+    <span class="badge" style="background:#93711b;">Structural critique</span>
+    <span class="theme-status">OPEN QUESTION, NO SETTLED ANSWER OFFERED</span>
+  </div>
+  <h2 style="border-left:4px solid #93711b;">AI has eaten tactical programming — Martin's tentative path for juniors to still learn strategic programming</h2>
+  <div class="theme-body">
+    <div class="theme-main">
+      <p class="lead">Using Ousterhout's tactical (ground-level, executing) vs. strategic (directing) programming framing, Pocock asks how newcomers learn strategic skill when agents now do most tactical work; Martin admits he doesn't have a confident answer but sketches a path.</p>
+      <ul class="bullets"><li><span class="dot" style="background:#93711b;"></span>Step 1: a new programmer should still spend real time (he estimates roughly a year, loosely) writing code by hand, specifically so they understand what the agents they'll later direct are actually dealing with.</li><li><span class="dot" style="background:#93711b;"></span>Step 2: when hired into an agent-heavy team, a junior should be treated by the lead engineer the same way an agent is treated — given the same tasks and subjected to the same deterministic tools/checks agents face — and should expect to spend several months "horribly unproductive" while absorbing judgment.</li><li><span class="dot" style="background:#93711b;"></span>Draws a direct parallel to his own decade-old advice that developers who only ever write high-level languages should spend a weekend writing assembly, purely to remove the feeling that lower layers are unexplainable magic; he extends this into a full stack a learner should pass through: binary, assembly, a language like C, a higher-level language like Python, then agent-directed/deterministic-tool work, and only then strategic agent direction under supervision.</li><li><span class="dot" style="background:#93711b;"></span>On how to recognize agent "struggle" (the signal that told him something was wrong back in December): he says he recognized it from having personally been through the same struggle as a programmer — the risk is a true novice won't recognize the pattern the first time they see it.</li><li><span class="dot" style="background:#93711b;"></span>His reading recommendation for developing the strategic "feel": older, now-unfashionable books, naming Tom DeMarco and Ed Yourdon's work and The Pragmatic Programmer by name, while noting some of their specific advice will be dated (many were written in the 1970s-80s) even though the underlying lessons hold.</li><li><span class="dot" style="background:#93711b;"></span>He frames the accelerated agent feedback loop as an upside for learning speed specifically: because agent cycles are so much faster than the old months-long feedback loop on a bad architectural decision, junior engineers today can, in principle, see the consequences of their own mistakes far sooner than developers historically could.</li></ul>
+    </div>
+    <div class="theme-side">
+      <div class="sidecard quote" style="--sc-accent:#93711b;"><div class="lbl">Pull quote</div>&#8220;You should spend several months in that state being horribly unproductive but learning a hell of a lot. And by the time you've gone through that gauntlet, maybe you can be trusted to run an agent of your own.&#8221;<cite>— Robert C. Martin</cite></div>
+      
+      <div class="sidecard" style="--sc-accent:#93711b;"><div class="lbl">Worth noting</div><div class="txt">Martin repeatedly flags this section as speculative ("I don't have perfect answers to it because I really don't know") rather than a settled prescription.</div></div>
+    </div>
+  </div>
+</section>
+
+
+    <section class="sec">
+      <div class="sec-eye">What to do with this</div>
+      <h2>Best Actionable Takeaways</h2>
+      <div style="margin-top:16px;"><div class="icard"><div class="ic">🛠️</div><div><div class="title">Replace long Claude.md/steering instruction documents with deterministic tools (linters, complexity scorers, mutation testing) run in an enforced fix-until-pass loop — instructions decay with context length, tool output doesn't.</div><div class="tag">Harness</div></div></div><div class="icard"><div class="ic">🧪</div><div><div class="title">If you have a coverage/complexity scorer or mutation tester that was once 'too slow to be worth it,' reconsider it for agent use now that the cost of running it repeatedly is near zero.</div><div class="tag">Testing</div></div></div><div class="icard"><div class="ic">🔗</div><div><div class="title">Split a feature build into narrow, single-purpose, short-lived agent stages (spec -&gt; implement -&gt; clean -&gt; harden -&gt; verify) rather than one broad agent or many persistent 'personality' agents — it keeps each context window small and its trajectory clean.</div><div class="tag">Pipeline design</div></div></div><div class="icard"><div class="ic">📐</div><div><div class="title">Invest in module boundaries with small, deep interfaces before leaning harder on agents — it's the highest-leverage lever for both agent and human comprehension, and worth a dependency-direction checker if you can build one.</div><div class="tag">Architecture</div></div></div><div class="icard"><div class="ic">⚖️</div><div><div class="title">Don't force human process disciplines (strict TDD cadence, heavy upfront spec-driven planning) onto an agent just because they work for you — separate the underlying value (test coverage, low complexity) from the specific human workflow used to get there.</div><div class="tag">Process</div></div></div><div class="icard"><div class="ic">🎓</div><div><div class="title">If you're new to the field, still spend real time writing code by hand before directing agents, and treat older books (DeMarco, Yourdon, The Pragmatic Programmer) as a shortcut to strategic judgment the fast agent feedback loop can't teach on its own.</div><div class="tag">Career</div></div></div></div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-eye">Where this could be wrong</div>
+      <h2>Risks &amp; Caveats on This Source</h2>
+      <div style="margin-top:16px;"><div class="riskcard"><div class="txt">Nearly every specific number in this brief (CRAP thresholds of 4 vs. 6-8, the ~4-5x productivity multiplier, the ~1hr pipeline runtime, the ~1-year junior ramp estimate) is Martin's own working figure from personal experimentation, quoted in conversation rather than published or peer-reviewed.</div></div><div class="riskcard"><div class="txt">This is a single practitioner's evolving personal workflow as of the interview date, not a documented or open-sourced framework the audience can currently install — Martin says explicitly not to try to reuse his own tools verbatim, only the approach.</div></div><div class="riskcard"><div class="txt">The 'lost in the middle' and 'trajectory' mechanisms are presented as Martin's and Pocock's working mental models of model behavior, not citations to specific published research.</div></div><div class="riskcard"><div class="txt">Long, informal live-conversation format on auto-generated captions — some phrasing (e.g., tool names, acronym pronunciations) may be imprecisely transcribed; verify exact wording against the video before quoting directly.</div></div></div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-eye">Beyond the main threads</div>
+      <h2>Other Notable News</h2>
+      <div style="margin-top:16px;"><div class="icard"><div class="ic">📚</div><div><div class="title">Sources and prior work referenced this episode: Martin's book Clean Code (2nd edition shown on camera); John Ousterhout's deep-modules concept and his recorded public debate with Martin in a Clean Code appendix; Tom DeMarco and Ed Yourdon's older software-engineering books; The Pragmatic Programmer; and a Dijkstra line that software is "the most complicated thing that humans have ever attempted."</div><div class="tag">Sources</div><div class="detail"></div></div></div></div>
+    </section>
+
+    <section class="sec" style="border-bottom:none;">
+      <div class="sec-eye">Names and terms at a glance</div>
+      <h2>Glossary &amp; Entities</h2>
+      <div style="margin-top:16px;"><div class="gloss"><div><b>CRAP score</b> &mdash; An acronym for a formula combining code coverage and cyclomatic complexity into a single 'how crappy is this function' score; Martin keeps it below 4 for human-written code and has widened the threshold to 6 (considering 8) for agent-written code.</div><div><b>Mutation testing</b> &mdash; A technique that automatically flips operators in source code (e.g., &lt; to &gt;, = to !=) and re-runs the test suite for each flip, expecting a failure; a passing 'surviving mutant' flags a gap in test coverage.</div><div><b>Lost in the middle</b> &mdash; An observed effect where content at the start and end of a model's context window retains priority/attention while content in the middle is effectively ignored as the window grows.</div><div><b>Smart zone / dumb zone</b> &mdash; Dex Horthy's term (credited by Pocock) for the portion of a context window (roughly the first ~150k tokens) where a model reasons well, versus the later portion where attention becomes diluted and quality degrades.</div><div><b>Trajectory</b> &mdash; Pocock's term for the persistent directional drift a context window develops once steered a certain way — later instructions in the same session keep bending toward that established direction, and only a fresh context clears it.</div><div><b>Tactical vs. strategic programming</b> &mdash; A distinction credited to John Ousterhout: tactical programming is ground-level task execution (what agents are currently good at); strategic programming is directing the overall shape and architecture of a system (what agents are currently weak at).</div><div><b>Deep modules</b> &mdash; John Ousterhout's concept of a module with a small, simple interface hiding a large amount of internal complexity, contrasted with 'shallow' modules that expose a wide interface with little hidden behind it.</div></div></div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

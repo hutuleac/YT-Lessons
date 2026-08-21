@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stop steering agents. Build gauntlets instead. &mdash; deck</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 30px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. SVG text scales with
+   the plate (vector, not raster), so the cap is set high to fill the wide-page plate
+   and keep labels legible rather than near-1:1 with their viewBox. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:820px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+
+html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
+body{font-family:var(--sans)}
+.slide{
+  min-height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(58px,7vh,96px) clamp(30px,5vw,86px); position:relative; overflow:hidden
+}
+.slide>*{max-width:none}
+
+/* ---- slide chrome: the same bar on every slide, the way a deck master works ---- */
+.tick{
+  position:absolute; top:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--muted)
+}
+.tick s{text-decoration:none; color:var(--signal)}
+.foot{
+  position:absolute; bottom:clamp(22px,3.4vh,40px); left:clamp(30px,5vw,86px);
+  right:clamp(30px,5vw,86px); display:flex; justify-content:space-between; gap:20px;
+  align-items:center; font:400 11px/1 var(--mono); color:var(--muted)
+}
+.foot em{font-style:normal; letter-spacing:.06em}
+.bar{position:absolute; left:0; right:0; bottom:0; height:3px; background:var(--line)}
+.bar i{display:block; height:100%; background:var(--signal)}
+
+/* ---- kinds ---- */
+.k-title, .k-section, .k-close{background:var(--surface)}
+/* The divider is the one slide with room to spare, so it splits: number left, concept right. */
+@media (min-width:1000px){
+  .k-section{display:grid; grid-template-columns:minmax(200px,22%) 1fr;
+             gap:clamp(30px,4vw,70px); align-items:center; align-content:center}
+  .k-section .idx{grid-row:1 / span 3; align-self:start; margin:0}
+  .k-section h2, .k-section .lead, .k-section .src{grid-column:2}
+}
+.k-section .idx{
+  font:600 clamp(64px,13vw,180px)/0.82 var(--mono); letter-spacing:-.05em;
+  color:var(--line); margin:0 0 clamp(14px,2vh,26px)
+}
+.slide h1{font-size:clamp(34px,6.4vw,84px); margin:0 0 clamp(18px,3vh,32px)}
+.slide h2{font-size:clamp(28px,5vw,64px); margin:0 0 clamp(16px,2.6vh,28px)}
+.k-bullets h2, .k-do h2, .k-figs h2{font-size:clamp(22px,3.2vw,40px); color:var(--muted)}
+.slide .lead{
+  font-family:var(--serif); font-size:clamp(19px,2.3vw,30px); line-height:1.42;
+  color:var(--muted); margin:0; max-width:36ch
+}
+.k-close .lead{color:var(--ink); max-width:44ch}
+.k-title .audience{margin-top:clamp(20px,3vh,36px); font-size:clamp(12px,1.2vw,15px)}
+
+/* ---- bullets ---- */
+.bul{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.6vh,30px); counter-reset:b}
+.bul li{
+  font-size:clamp(21px,2.9vw,42px); line-height:1.22; padding-left:1.5em; position:relative;
+  text-wrap:balance; counter-increment:b
+}
+.bul li::before{
+  content:counter(b); position:absolute; left:0; top:.3em;
+  font:500 .42em var(--mono); color:var(--signal); letter-spacing:.1em
+}
+
+/* ---- big numbers ---- */
+.nums{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(20px,3vw,44px)}
+.nums div{border-top:2px solid var(--line); padding-top:clamp(12px,2vh,20px)}
+.nums b{display:block; font:600 clamp(34px,5.4vw,68px)/1 var(--mono); letter-spacing:-.04em; color:var(--sand)}
+.nums i{display:block; font:400 clamp(12px,1.2vw,15px) var(--mono); font-style:normal; color:var(--muted); margin:10px 0 8px}
+.nums span{font-size:clamp(13px,1.3vw,17px); line-height:1.4; color:var(--muted)}
+
+/* ---- quote ---- */
+.k-quote q{
+  display:block; quotes:none; font-family:var(--serif); font-size:clamp(28px,4.6vw,62px);
+  line-height:1.22; border-left:3px solid var(--signal); padding-left:clamp(20px,2.6vw,40px);
+  text-wrap:balance
+}
+.k-quote p{
+  margin:clamp(18px,3vh,32px) 0 0 clamp(23px,2.9vw,43px); color:var(--muted);
+  font-size:clamp(14px,1.5vw,20px); max-width:52ch
+}
+
+/* ---- what to do ---- */
+.acts{list-style:none; margin:0; padding:0; display:grid; gap:clamp(14px,2.4vh,26px);
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.acts li{
+  font-size:clamp(16px,1.8vw,24px); line-height:1.35; padding-left:1.5em; position:relative;
+  background:var(--surface-2); border-radius:8px; padding:clamp(16px,2vh,24px) clamp(18px,2vw,26px)
+              clamp(16px,2vh,24px) clamp(38px,3.4vw,52px)
+}
+.acts li::before{
+  content:"\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
+  color:var(--interference); font-family:var(--mono)
+}
+
+/* ---- diagrams ---- */
+/* SVG text is sized in user units, so an unclamped slide plate renders 10px labels at 40px+.
+   Twice the page's cap is the ceiling that stays proportionate on a projector. These are
+   clamp()-based like everything else on the slide, so a window wider than a laptop keeps
+   growing the diagram instead of freezing at a fixed px the moment it's hit. */
+.slide figure{margin:0 auto; padding:0; max-width:clamp(1180px,74vw,1560px); width:100%}
+.slide .plate{padding:clamp(20px,3vw,42px); width:100%}
+.slide .plate svg{max-width:clamp(1040px,65vw,1400px)}
+.slide .plate.photo{padding:0; max-width:clamp(820px,51vw,1100px); margin:0 auto}
+.slide .plate.photo img{width:100%; height:auto; border-radius:9px}
+.slide figcaption{margin:clamp(16px,2.4vh,26px) auto 0; text-align:center}
+.slide figcaption b{font-size:clamp(15px,1.5vw,21px)}
+.slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
+
+.slide .src{max-width:none; margin:clamp(22px,4vh,44px) 0 0; padding:0}
+@media print{
+  html{scroll-snap-type:none}
+  .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
+  .bar{display:none}
+}
+</style>
+</head>
+<body>
+<section class="slide k-title"><div class="tick"><span>Agent-native engineering practice</span><s>1 / 32</s></div><h1>Stop steering agents. Build gauntlets instead.</h1><p class="lead">Uncle Bob spent fifty years writing the rules for humans, then spent the last year finding out which of them transfer to agents unchanged, which need new thresholds, and which were never rules at all — just habits built around a human's limits.</p><p class="audience">You run coding agents daily, you've felt the instructions-get-ignored problem firsthand, and you want a working model for verification, multi-agent pipelines, and planning that isn't just vibes.</p><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:3.1%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Where this goes</span><s>2 / 32</s></div><figure><div class="plate"><svg viewBox="-2 -2 774 202" role="img" aria-label="Concept map of the lesson: The deterministic gauntlet, One job per agent, Context trajectory, Thresholds, not disciplines, The spec-driven development trap, Tactical versus strategic programming, joined by arrows showing which concept each one builds on."><defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs><line x1="230" y1="36" x2="270" y2="36" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><line x1="230" y1="63" x2="540" y2="135" stroke="var(--interference)" stroke-width="1.6" opacity="0.7" marker-end="url(#cm-a)"/><rect x="0" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="25" class="d-num">01</text><text x="16" y="47" class="d-node"><tspan x="16" dy="0">The deterministic</tspan><tspan x="16" dy="17">gauntlet</tspan></text><rect x="270" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="25" class="d-num">02</text><text x="286" y="47" class="d-node"><tspan x="286" dy="0">One job per agent</tspan></text><rect x="540" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="25" class="d-num">03</text><text x="556" y="47" class="d-node"><tspan x="556" dy="0">Context trajectory</tspan></text><rect x="540" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="556" y="151" class="d-num">04</text><text x="556" y="173" class="d-node"><tspan x="556" dy="0">Thresholds, not</tspan><tspan x="556" dy="17">disciplines</tspan></text><rect x="270" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="286" y="151" class="d-num">05</text><text x="286" y="173" class="d-node"><tspan x="286" dy="0">The spec-driven</tspan><tspan x="286" dy="17">development trap</tspan></text><rect x="0" y="126" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="151" class="d-num">06</text><text x="16" y="173" class="d-node"><tspan x="16" dy="0">Tactical versus</tspan><tspan x="16" dy="17">strategic programming</tspan></text></svg></div><figcaption><b>The concepts, and what each one needs first</b><span>Drawn from the prerequisites the build checks, so the map cannot drift from the lesson.</span></figcaption></figure><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:6.2%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>The deterministic gauntlet</span><s>3 / 32</s></div><p class="idx">01</p><h2>The deterministic gauntlet</h2><p class="lead">A rules document decays the moment it stops fitting in the model's priority zone; a tool the agent must satisfy in a loop does not, so verification beats instruction once the rules get long.</p><div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:9.4%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>The deterministic gauntlet</span><s>4 / 32</s></div><h2>The deterministic gauntlet</h2><ol class="bul"><li>Prompted rules compete for space in a shrinking priority zone.</li><li>Long enough, and the model treats them as guidelines, not law.</li><li>A deterministic tool doesn't fade — it passes or it doesn't.</li><li>Trim the prompt to the minimum. Enforce the rest with a loop.</li></ol><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:12.5%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>The deterministic gauntlet</span><s>5 / 32</s></div><figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="Diagram contrasting a prompted rule, which fades as it is buried in a long document, with a deterministic tool loop, where the agent edits code and re-checks until the tool passes.">
+  <defs>
+    <marker id="dg-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+
+  <text x="0" y="14" class="d-label">PROMPTED RULE</text>
+  <rect x="0" y="24" width="220" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="110" y="43" class="d-label" text-anchor="middle">rule 1 (kept)</text>
+  <rect x="0" y="60" width="220" height="30" rx="4" fill="var(--interference)" opacity="0.18" stroke="var(--line)"/>
+  <text x="110" y="79" class="d-label" text-anchor="middle" opacity="0.6">rule 25 (lost in the middle)</text>
+  <rect x="0" y="96" width="220" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="110" y="115" class="d-label" text-anchor="middle">rule 50 (kept)</text>
+
+  <text x="260" y="14" class="d-label">DETERMINISTIC LOOP</text>
+  <rect x="260" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="305" y="45" class="d-node" text-anchor="middle">agent</text>
+  <rect x="380" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="425" y="41" class="d-node" text-anchor="middle">crap +</text>
+  <text x="425" y="53" class="d-node" text-anchor="middle">mutation</text>
+  <line x1="350" y1="41" x2="378" y2="41" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#dg-arrow)"/>
+  <path d="M425 60 C 425 100, 305 100, 305 60" fill="none" stroke="var(--signal)" stroke-width="1.5" marker-end="url(#dg-arrow)"/>
+  <text x="365" y="96" class="d-fix" text-anchor="middle">fail &#8594; fix &#8594; recheck</text>
+  <text x="425" y="80" class="d-label" text-anchor="middle">pass &#8594; done</text>
+
+  <text x="0" y="150" class="d-label">A tool never lives in the middle of the prompt, so it never fades.</text>
+  <text x="0" y="170" class="d-label">The agent loops on it directly until the check itself says stop.</text>
+</svg></div><figcaption><b>A rule you write versus a rule you enforce</b><span>A prompted rule fades once it's buried mid-document. A tool sits outside the context window entirely, so the agent can't lose track of it — it just loops until the tool says pass.</span></figcaption></figure><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:15.6%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>The deterministic gauntlet</span><s>6 / 32</s></div><h2>By the numbers</h2><div class="nums"><div><b>5-10</b><i>pages</i><span>length his early instruction documents grew to before he abandoned steering</span></div><div><b>2-4x</b><i>productivity</i><span>his estimated margin over doing the work himself, even slowed by the check loop</span></div></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:18.8%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>The deterministic gauntlet</span><s>7 / 32</s></div><q>They treat those rules in the Pirates of the Caribbean sense — they're more like guidelines.</q><p>Explains why prose rules decay with length: the model isn't disobeying on purpose, it has genuinely lost the instruction somewhere in the middle of its own context.</p><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:21.9%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The deterministic gauntlet</span><s>8 / 32</s></div><h2>What to do</h2><ul class="acts"><li>Keep the system prompt to the handful of sentences you actually need obeyed.</li><li>Move every other rule into a deterministic tool the agent must satisfy, not a paragraph it might read.</li><li>Run the tool in a loop — change the code until the tool passes, not until the agent says it's done.</li><li>Revive checks you once rejected for being too slow for a human. An agent doesn't mind the wait.</li></ul><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:25.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>One job per agent</span><s>9 / 32</s></div><p class="idx">02</p><h2>One job per agent</h2><p class="lead">A single agent trying to spec, implement, review and harden a feature at once drags every unrelated topic into one context; splitting the work into narrow, single-purpose agents keeps each one's context small enough to actually follow instructions.</p><div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:28.1%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>One job per agent</span><s>10 / 32</s></div><h2>One job per agent</h2><ol class="bul"><li>Give one agent one narrow job, not the whole feature.</li><li>Specifier writes tests. Coder implements. Cleaner tidies. Hardener stress-tests. QA verifies.</li><li>Each agent starts clean and dies when its job is done.</li><li>You can run several in parallel — the cost is coordination and startup time.</li></ol><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:31.2%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>One job per agent</span><s>11 / 32</s></div><figure><div class="plate"><svg viewBox="0 0 540 190" role="img"
+  aria-label="A five-stage pipeline: Specifier produces Gherkin tests, Coder produces implementation, Cleaner produces clean code, Hardener produces full mutation coverage, QA produces a verified pass or fail.">
+  <defs>
+    <marker id="sj-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+  <g>
+    <rect x="0" y="20" width="92" height="44" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="46" y="38" class="d-node" text-anchor="middle">Specifier</text>
+    <text x="46" y="54" class="d-label" text-anchor="middle">gherkin + QA doc</text>
+  </g>
+  <line x1="92" y1="42" x2="112" y2="42" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#sj-arrow)"/>
+  <g>
+    <rect x="112" y="20" width="92" height="44" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="158" y="38" class="d-node" text-anchor="middle">Coder</text>
+    <text x="158" y="54" class="d-label" text-anchor="middle">tests + code</text>
+  </g>
+  <line x1="204" y1="42" x2="224" y2="42" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#sj-arrow)"/>
+  <g>
+    <rect x="224" y="20" width="92" height="44" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="270" y="38" class="d-node" text-anchor="middle">Cleaner</text>
+    <text x="270" y="54" class="d-label" text-anchor="middle">low crap score</text>
+  </g>
+  <line x1="316" y1="42" x2="336" y2="42" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#sj-arrow)"/>
+  <g>
+    <rect x="336" y="20" width="92" height="44" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+    <text x="382" y="38" class="d-node" text-anchor="middle">Hardener</text>
+    <text x="382" y="54" class="d-label" text-anchor="middle">mutation coverage</text>
+  </g>
+  <line x1="428" y1="42" x2="448" y2="42" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#sj-arrow)"/>
+  <g>
+    <rect x="448" y="20" width="92" height="44" rx="5" fill="var(--signal)" opacity="0.16" stroke="var(--signal)"/>
+    <text x="494" y="38" class="d-node" text-anchor="middle">QA agent</text>
+    <text x="494" y="54" class="d-label" text-anchor="middle">pass / fail</text>
+  </g>
+  <text x="0" y="100" class="d-label">Each box is born, does its one job, and dies —</text>
+  <text x="0" y="118" class="d-label">the next one starts with a clean context.</text>
+  <text x="0" y="146" class="d-fix">single agent: ~5 min, questionable</text>
+  <text x="0" y="164" class="d-fix">full pipeline: ~1 hr, high quality  &#183;  human: ~half a day</text>
+</svg></div><figcaption><b>One feature, five single-job agents</b><span>Each stage does exactly one thing and hands off a concrete artifact — a test, code, a clean diff, coverage, a verified result.</span></figcaption></figure><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:34.4%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>One job per agent</span><s>12 / 32</s></div><h2>By the numbers</h2><div class="nums"><div><b>~5 min</b><i>time</i><span>a single unconstrained agent takes on a task, with questionable results</span></div><div><b>~1 hr</b><i>time</i><span>the same task through the full five-stage pipeline, much higher quality</span></div><div><b>~half a day</b><i>time</i><span>the same task done by a human by hand</span></div><div><b>10-15</b><i>seconds</i><span>startup cost per agent, before it even re-establishes context</span></div></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:37.5%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>One job per agent</span><s>13 / 32</s></div><h2>What to do</h2><ul class="acts"><li>Split a feature into stages instead of asking one agent to spec, code, review and harden it in one session.</li><li>Let a stage's agent die when it's done — start the next one with a clean context, not a carried-over one.</li><li>Run independent stages in parallel where you can; budget for per-agent startup time.</li><li>Feed a reviewer or hardener the diff, not the whole codebase, so it doesn't need to re-explore what already happened.</li></ul><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:40.6%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Context trajectory</span><s>14 / 32</s></div><p class="idx">03</p><h2>Context trajectory</h2><p class="lead">Once a session gets steered toward a topic or approach, every later turn in that same context window keeps following it, whether you asked for that or not — the only real reset is a fresh context window.</p><div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:43.8%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Context trajectory</span><s>15 / 32</s></div><h2>Context trajectory</h2><ol class="bul"><li>Steer an agent one way, and it keeps going that way.</li><li>An unrelated topic that enters the context contaminates every later turn.</li><li>The model can't tell your intent from noise that arrived by accident.</li><li>Only a fresh context window resets the trajectory.</li></ol><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:46.9%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Context trajectory</span><s>16 / 32</s></div><figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
+  aria-label="A session timeline where an early input (either an intended instruction or an unrelated aside) colors every later turn in the same context window, until a fresh window starts a new, uncolored trajectory.">
+  <text x="0" y="14" class="d-label">SAME CONTEXT WINDOW</text>
+  <rect x="0" y="24" width="60" height="30" rx="4" fill="var(--interference)" opacity="0.55"/>
+  <text x="30" y="43" class="d-label" text-anchor="middle">input</text>
+  <line x1="60" y1="39" x2="80" y2="39" stroke="var(--muted)" stroke-width="1.5"/>
+  <rect x="80" y="24" width="90" height="30" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="125" y="43" class="d-label" text-anchor="middle">turn 2</text>
+  <line x1="170" y1="39" x2="190" y2="39" stroke="var(--muted)" stroke-width="1.5"/>
+  <rect x="190" y="24" width="90" height="30" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="235" y="43" class="d-label" text-anchor="middle">turn 3</text>
+  <line x1="280" y1="39" x2="300" y2="39" stroke="var(--muted)" stroke-width="1.5"/>
+  <rect x="300" y="24" width="90" height="30" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="345" y="43" class="d-label" text-anchor="middle">turn 4</text>
+  <text x="0" y="78" class="d-fix">every later turn keeps the trajectory</text>
+  <text x="0" y="96" class="d-fix">the first input set, wanted or not</text>
+
+  <line x1="0" y1="112" x2="460" y2="112" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="0" y="136" class="d-label">FRESH CONTEXT WINDOW</text>
+  <rect x="0" y="146" width="90" height="30" rx="4" fill="var(--signal)" opacity="0.18" stroke="var(--signal)"/>
+  <text x="45" y="165" class="d-label" text-anchor="middle">turn 1</text>
+  <text x="0" y="200" class="d-fix">clearing the window is the only way to</text>
+  <text x="0" y="218" class="d-fix">drop the old trajectory</text>
+</svg></div><figcaption><b>One early input, every later turn</b><span>Whatever enters the context first keeps steering everything after it — on purpose or not. A fresh window is the only real reset.</span></figcaption></figure><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:50.0%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Context trajectory</span><s>17 / 32</s></div><q>Somebody walks by and they happen to be talking about the latest soap opera... but then from that point on all the coffee references have to do with the soap opera.</q><p>Trajectory isn't memory going wrong — it's contamination. The model treats whatever entered the window as equally load-bearing, whether you meant it to be there or not.</p><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:53.1%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Context trajectory</span><s>18 / 32</s></div><h2>What to do</h2><ul class="acts"><li>Clear the context window when you want a genuinely different approach, not just a different instruction on top of the last one.</li><li>Don't let an unrelated aside enter a working session — start a fresh one for it instead.</li><li>Design modules so an agent working inside one can't wander into a different topic's context.</li><li>If an agent keeps repeating an approach you didn't ask for, suspect trajectory before you suspect stubbornness.</li></ul><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:56.2%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Thresholds, not disciplines</span><s>19 / 32</s></div><p class="idx">04</p><h2>Thresholds, not disciplines</h2><p class="lead">Agents can safely tolerate more complexity than the numbers in a human style guide assume, but a workflow discipline built around human working memory — like strict test-driven development — doesn't transfer to them at all.</p><div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:59.4%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Thresholds, not disciplines</span><s>20 / 32</s></div><h2>Thresholds, not disciplines</h2><ol class="bul"><li>CRAP score under 4 is Uncle Bob's human ceiling; agents get 6, maybe 8.</li><li>The reason: agents carry more accurate short-term memory than people do.</li><li>He won't force strict test-driven development on an agent.</li><li>Impose your values on an agent. Don't impose your workflow.</li></ol><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:62.5%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Thresholds, not disciplines</span><s>21 / 32</s></div><figure><div class="plate"><svg viewBox="0 0 420 170" role="img"
+  aria-label="Bar chart comparing CRAP score ceilings: below 4 for human-written code, 6 for agent-written code, with 8 marked as a value Uncle Bob is considering.">
+  <line x1="40" y1="140" x2="400" y2="140" stroke="var(--line)" stroke-width="1"/>
+  <line x1="40" y1="20" x2="40" y2="140" stroke="var(--line)" stroke-width="1"/>
+
+  <rect x="90" y="92" width="70" height="48" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="125" y="86" class="d-num" text-anchor="middle">&lt;4</text>
+  <text x="125" y="158" class="d-label" text-anchor="middle">human</text>
+
+  <rect x="220" y="68" width="70" height="72" fill="var(--signal)" opacity="0.22" stroke="var(--signal)"/>
+  <text x="255" y="62" class="d-num" text-anchor="middle">6</text>
+  <text x="255" y="158" class="d-label" text-anchor="middle">agent (now)</text>
+
+  <rect x="320" y="44" width="70" height="96" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="355" y="38" class="d-num" text-anchor="middle">8?</text>
+  <text x="355" y="158" class="d-label" text-anchor="middle">agent (maybe)</text>
+
+  <text x="14" y="82" class="d-label" text-anchor="middle" transform="rotate(-90 14 82)">tolerable pathways</text>
+</svg></div><figcaption><b>Same score, different ceiling</b><span>The CRAP score doesn't change meaning between a human and an agent — the tolerable ceiling does, because the memory backing it does.</span></figcaption></figure><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:65.6%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>Thresholds, not disciplines</span><s>22 / 32</s></div><h2>By the numbers</h2><div class="nums"><div><b>&lt;4</b><i>CRAP score</i><span>his own ceiling for human-written code</span></div><div><b>6</b><i>CRAP score</i><span>his current ceiling for agent-written code — considering pushing to 8</span></div></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:68.8%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Thresholds, not disciplines</span><s>23 / 32</s></div><h2>What to do</h2><ul class="acts"><li>Don't carry your human quality thresholds over to an agent unexamined — check whether the reason for the number still applies.</li><li>Ask whether a discipline exists because of human working-memory limits before you enforce it on an agent.</li><li>If an agent keeps reverting to its own approach despite instruction, treat it as a signal worth investigating, not just disobedience to correct.</li><li>Keep the underlying value (test everything, bound complexity) even as you loosen the specific numeric threshold that enforces it.</li></ul><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:71.9%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>The spec-driven development trap</span><s>24 / 32</s></div><p class="idx">05</p><h2>The spec-driven development trap</h2><p class="lead">Handing an agent a heavy upfront plan fails the same way waterfall failed on humans, because agents love writing gorgeous, detailed plans that fall apart the moment implementation starts.</p><div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:75.0%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>The spec-driven development trap</span><s>25 / 32</s></div><h2>The spec-driven development trap</h2><ol class="bul"><li>Heavy upfront planning for agents repeats the 1970s waterfall mistake.</li><li>Agents write gorgeous plans, and the plans fall apart in implementation.</li><li>The cost of changing agent-written code is near zero — so why pay upfront for a plan?</li><li>Iterate a story at a time and review, the way agile always argued for.</li></ol><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:78.1%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>The spec-driven development trap</span><s>26 / 32</s></div><q>If it cost you a dollar to make a change to a house, including the initial laying of the foundation... would you hire an architect... or would you walk up to the contractor and say, 'Put the kitchen over here'?</q><p>The cost of change is what decides whether upfront planning pays for itself — and with agents, that cost has collapsed toward zero, so the case for paying it upfront collapses with it.</p><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:81.2%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The spec-driven development trap</span><s>27 / 32</s></div><h2>What to do</h2><ul class="acts"><li>Don't hand an agent a fully-specified plan and walk away — review after each story, not after the whole plan.</li><li>Treat an agent-written plan as a draft to interrogate, not a contract to implement verbatim.</li><li>Stop keeping specs as permanent repo artifacts if nothing actually enforces them staying in sync with the code.</li><li>To share reusable tooling, point another agent at your existing tool and have it build its own version, rather than writing a spec for someone else's agent to follow.</li></ul><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:84.4%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>Tactical versus strategic programming</span><s>28 / 32</s></div><p class="idx">06</p><h2>Tactical versus strategic programming</h2><p class="lead">Agents are strong at tactical programming — getting a specific piece of code working — and weak at strategic programming — deciding how the system should be organized — which changes what a junior actually needs to practice.</p><div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:87.5%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>Tactical versus strategic programming</span><s>29 / 32</s></div><h2>Tactical versus strategic programming</h2><ol class="bul"><li>Tactical is the sergeant fighting the battle; strategic is the general directing the war.</li><li>Agents are strong tactically, weak strategically.</li><li>A junior's fix: get treated like an agent for a while, on purpose.</li><li>Fundamentals exist to make complexity conceivable — by people and by models.</li></ol><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:90.6%"></i></div></section>
+<section class="slide k-quote"><div class="tick"><span>Tactical versus strategic programming</span><s>30 / 32</s></div><q>If you've never written assembly language, you should spend the weekend writing assembly language just so that you know what's really going on behind the scenes.</q><p>His decades-old advice for high-level-language programmers, extended one more rung: spend real time doing agent-constrained work so you understand what agents are actually dealing with, before you try to direct one.</p><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:93.8%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>Tactical versus strategic programming</span><s>31 / 32</s></div><h2>What to do</h2><ul class="acts"><li>Write code yourself for a real stretch before leaning on agents — you need the reference experience to recognize when an agent is struggling.</li><li>If you're junior on an agent-heavy team, treat months of constrained, agent-style tasks as the fastest path to strategic judgment, not as a demotion.</li><li>Read older books (Tom DeMarco, Ed Yourdon, The Pragmatic Programmer) for the judgment layer — filter the dated tech, keep the reasoning.</li><li>When an agent looks stuck, watch for thrashing — fixing one thing, breaking another — not just the quality of what it outputs.</li></ul><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:96.9%"></i></div></section>
+<section class="slide k-close"><div class="tick"><span>In one move</span><s>32 / 32</s></div><h2>The whole lesson in one move</h2><p class="lead">Every practice here replaces trust in an instruction with trust in a mechanism: a check the agent must pass, a job narrow enough to keep in context, a clean window instead of a contaminated one, a threshold re-measured instead of inherited, a story reviewed instead of a plan trusted. None of it argues fundamentals stopped mattering — it argues they now have to survive contact with something that reads perfectly and forgets selectively. The rules you throw away this year are the ones you'll be picking back up next year.</p><div class="foot"><em>Agent-native engineering practice</em><em>Stop steering agents. Build gauntlets instead.</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
+</body>
+</html>
