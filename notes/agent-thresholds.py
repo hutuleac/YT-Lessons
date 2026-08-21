@@ -1,46 +1,45 @@
 NOTE = {
     "id": "agent-thresholds",
     "concept": "Thresholds, not disciplines",
-    "one_liner": "Agents can safely tolerate more complexity than the numbers in a human style"
-                 " guide assume, but a workflow discipline built around human working memory —"
-                 " like strict test-driven development — doesn't transfer to them at all.",
+    "one_liner": "Agents can handle more complexity than the numbers in a human style guide"
+                 " allow. But a work method built for human memory, such as strict"
+                 " test-driven development, does not work the same way for an agent.",
 
     "prerequisites": ["deterministic-gauntlet"],
     "related": ["strategic-load"],
 
     "skeleton": [
-        "CRAP score under 4 is Uncle Bob's human ceiling; agents get 6, maybe 8.",
-        "The reason: agents carry more accurate short-term memory than people do.",
-        "He won't force strict test-driven development on an agent.",
-        "Impose your values on an agent. Don't impose your workflow.",
+        "A CRAP score under 4 is Uncle Bob's human limit. Agents get 6, maybe 8.",
+        "The reason: agents hold a more exact short-term memory than people do.",
+        "He will not force strict test-driven development on an agent.",
+        "Give the agent your values. Do not give it your exact work method.",
     ],
 
     "mechanism": [
-        "The CRAP score is a mix of test coverage and cyclomatic complexity — roughly, the number"
-        " of tested pathways through a function. For human-written code Uncle Bob keeps that"
-        " number below 4. For agent-written code he's deliberately widened it to 6, and is"
-        " considering pushing it to 8. His reasoning is memory, not laxity: agents carry a much"
-        " larger and more accurate short-term memory than a human does, so the complexity ceiling"
-        " that keeps a human's head straight isn't the ceiling that keeps an agent's head"
-        " straight.",
+        "The CRAP score mixes test coverage with code complexity. In simple terms, it counts the"
+        " number of tested paths through a function. For code written by a human, Uncle Bob"
+        " keeps that number below 4. For code written by an agent, he raised it to 6. He may"
+        " raise it to 8. His reason is memory, not carelessness. Agents hold a much larger and"
+        " more exact short-term memory than a human does. So the complexity limit that suits a"
+        " human does not suit an agent.",
 
-        "Test-driven development is a sharper case. He is, by his own book, a committed advocate"
-        " of strict TDD — one line of test, one line of code, repeat — for himself. He refuses to"
-        " impose that same discipline on his agents. Even when he explicitly instructs an agent"
-        " to do strict TDD, it keeps falling back to writing a whole function and then its test,"
-        " the way John Ousterhout would write it. He's stopped fighting that and lets it happen,"
-        " because the agents do it anyway regardless of the instruction.",
+        "Test-driven development is a clearer case. In his own book, Uncle Bob argues for strict"
+        " TDD: write one line of a test, then one line of code, and repeat. He follows this rule"
+        " himself. He will not force this same rule on his agents. He once told an agent to use"
+        " strict TDD. The agent still wrote a whole function first, then its test, in the style"
+        " John Ousterhout uses. Uncle Bob has stopped fighting this. The agents do it their own"
+        " way regardless of the instruction, so he lets them.",
 
-        "His own framing of the distinction: \"it's probably a mistake to impose a human"
+        "His own words state the difference plainly: \"it's probably a mistake to impose a human"
         " discipline on an agent. It is not a mistake to impose human values on the agent, but"
-        " there may be thresholds that we need to change.\" TDD-as-ritual is a discipline, built"
-        " for a working memory an agent doesn't have. Testing everything, keeping complexity"
-        " bounded, refusing to ship unverified code — those are values, and they still hold.",
+        " there may be thresholds that we need to change.\" Strict TDD is a discipline. It fits a"
+        " working memory an agent does not have. Test everything. Keep complexity within limits."
+        " Do not ship code with no checks. These are values, and they still apply.",
 
-        "He's careful to flag his own uncertainty here too: the specific numbers came partly from"
-        " debating the agents themselves about where the line should sit, and he says so plainly —"
-        " \"you can't trust any debate you have with an agent, but I still have them anyway.\" The"
-        " threshold is a live experiment, not a settled constant.",
+        "He also states his own doubt. Some of these numbers came from talks with the agents"
+        " themselves about where the limit should sit. He says so directly: \"you can't trust any"
+        " debate you have with an agent, but I still have them anyway.\" The threshold is a live"
+        " test, not a fixed rule.",
     ],
 
     "numbers": [
@@ -51,14 +50,13 @@ NOTE = {
     "analogy": None,
 
     "practice": [
-        "Don't carry your human quality thresholds over to an agent unexamined — check whether"
-        " the reason for the number still applies.",
-        "Ask whether a discipline exists because of human working-memory limits before you"
-        " enforce it on an agent.",
-        "If an agent keeps reverting to its own approach despite instruction, treat it as a"
-        " signal worth investigating, not just disobedience to correct.",
-        "Keep the underlying value (test everything, bound complexity) even as you loosen the"
-        " specific numeric threshold that enforces it.",
+        "Do not copy your human quality limits to an agent without a check. Ask if the reason"
+        " for the number still applies.",
+        "Ask if a rule exists because of human memory limits, before you force it on an agent.",
+        "If an agent keeps going back to its own method despite the instruction, treat this as a"
+        " signal to look at, not just disobedience to fix.",
+        "Keep the value behind the rule (test everything, limit complexity). You can still loosen"
+        " the exact number that enforces it.",
     ],
 
     "diagrams": [

@@ -1,43 +1,43 @@
 NOTE = {
     "id": "deterministic-gauntlet",
     "concept": "The deterministic gauntlet",
-    "one_liner": "A rules document decays the moment it stops fitting in the model's priority zone;"
-                 " a tool the agent must satisfy in a loop does not, so verification beats"
-                 " instruction once the rules get long.",
+    "one_liner": "A long list of written rules loses its power, because the model forgets rules in"
+                 " the middle of the text. A tool that checks the code does not forget. Use a tool,"
+                 " not a long list of rules.",
 
     "prerequisites": ["context-window"],
     "related": ["dumb-zone", "review-checkpoints", "tool-overload"],
 
     "skeleton": [
-        "Prompted rules compete for space in a shrinking priority zone.",
-        "Long enough, and the model treats them as guidelines, not law.",
-        "A deterministic tool doesn't fade — it passes or it doesn't.",
-        "Trim the prompt to the minimum. Enforce the rest with a loop.",
+        "Written rules compete for space in a small area of full attention.",
+        "A long list of rules becomes advice to the model, not law.",
+        "A tool that checks the code does not lose strength. It passes or it fails.",
+        "Keep the prompt short. Use a tool loop to enforce the rest.",
     ],
 
     "mechanism": [
-        "Uncle Bob's first instinct with agents was the obvious one: write down the rules. His"
-        " prompts grew into five-to-ten-page documents covering test-driven development, clean"
-        " code, style — everything he wanted respected. The agents read them and then didn't"
-        " follow them. His own line for it: they treat those rules \"in the Pirates of the"
-        " Caribbean sense — they're more like guidelines.\"",
+        "Uncle Bob's first method with agents was simple: write down the rules. His prompts grew"
+        " into documents of five to ten pages. They covered test-driven development, clean code,"
+        " and style. He wanted the agents to follow all of it. The agents read the rules. Then"
+        " they did not follow the rules. His own words for this: the agents treat the rules"
+        " \"in the Pirates of the Caribbean sense — they're more like guidelines.\"",
 
-        "The cause is the same lost-in-the-middle effect that shapes the context window generally:"
-        " content at the very start and very end of a long prompt keeps priority, and everything"
-        " else gets buried as the document grows. Rule fifty of a fifty-rule document is,"
-        " functionally, gone.",
+        "The cause is the same effect that shapes the whole context window. Text at the start and"
+        " the end of a long prompt keeps the model's attention. Text in the middle does not. A"
+        " long document buries most of its own rules. Rule fifty of a fifty-rule document has, in"
+        " practice, no effect at all.",
 
-        "So he stopped competing for that space. The fix is to trim the initial prompt to the"
-        " absolute minimum it needs to stay in the priority zone, then push everything else out"
-        " of the prompt entirely and into deterministic tools — his revived CRAP score and"
-        " mutation testing — run in a loop: the agent must keep changing the code until the tool"
-        " reports pass, not until it feels finished. A tool outside the context window can't be"
-        " lost in the middle of it.",
+        "So he stopped writing long rule documents. His fix has two parts. First, cut the prompt"
+        " down to the few words the agent must actually obey. Second, move every other rule out"
+        " of the prompt and into a tool. He uses two tools for this: the CRAP score and mutation"
+        " testing. The agent must run the tool and fix the code until the tool reports a pass. A"
+        " tool sits outside the context window. It cannot get lost in the middle of a long"
+        " document, because it is not part of the document.",
 
-        "This isn't free. Every check in the loop slows the agent down, trading raw speed for"
-        " quality, and he's honest that he hasn't found the point where that trade stops paying"
-        " off. What he has found is a floor: even heavily constrained by checks, the agent still"
-        " runs roughly two to four times faster than doing the work himself.",
+        "This method costs time. Each check in the loop slows the agent down. He trades speed for"
+        " quality, and he says he has not found the point where this trade stops paying off. But"
+        " he has found a floor. Even with many checks, the agent still works about two to four"
+        " times faster than he does by hand.",
     ],
 
     "numbers": [
@@ -48,18 +48,17 @@ NOTE = {
     "analogy": {
         "text": "They treat those rules in the Pirates of the Caribbean sense — they're more like"
                 " guidelines.",
-        "note": "Explains why prose rules decay with length: the model isn't disobeying on"
-                " purpose, it has genuinely lost the instruction somewhere in the middle of its"
-                " own context.",
+        "note": "This shows why long written rules lose strength. The model does not disobey on"
+                " purpose. It has lost the rule somewhere in the middle of its own context.",
     },
 
     "practice": [
-        "Keep the system prompt to the handful of sentences you actually need obeyed.",
-        "Move every other rule into a deterministic tool the agent must satisfy, not a paragraph"
-        " it might read.",
-        "Run the tool in a loop — change the code until the tool passes, not until the agent"
-        " says it's done.",
-        "Revive checks you once rejected for being too slow for a human. An agent doesn't mind"
+        "Keep the system prompt short. Use only the few sentences the agent must obey.",
+        "Put every other rule into a tool the agent must pass, not into a paragraph it might"
+        " read.",
+        "Run the tool in a loop. Change the code until the tool passes, not until the agent"
+        " says it is done.",
+        "Bring back checks you once rejected as too slow for a human. An agent does not mind"
         " the wait.",
     ],
 

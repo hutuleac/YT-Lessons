@@ -1,49 +1,48 @@
 NOTE = {
     "id": "spec-driven-trap",
     "concept": "The spec-driven development trap",
-    "one_liner": "Handing an agent a heavy upfront plan fails the same way waterfall failed on"
-                 " humans, because agents love writing gorgeous, detailed plans that fall apart"
-                 " the moment implementation starts.",
+    "one_liner": "A large plan written before any code fails an agent the same way it failed"
+                 " humans in the waterfall era. Agents write large, detailed plans with ease. But"
+                 " those plans break apart once real work starts.",
 
     "prerequisites": [],
     "related": ["review-checkpoints"],
 
     "skeleton": [
-        "Heavy upfront planning for agents repeats the 1970s waterfall mistake.",
-        "Agents write gorgeous plans, and the plans fall apart in implementation.",
-        "The cost of changing agent-written code is near zero — so why pay upfront for a plan?",
-        "Iterate a story at a time and review, the way agile always argued for.",
+        "A large plan written before any code repeats an old mistake: waterfall, from the 1970s.",
+        "Agents write large, clean plans. Then the plans break apart during real work.",
+        "The cost to change agent-written code is close to zero. So why pay for a plan up front?",
+        "Work one story at a time. Review as you go. This is the agile method.",
     ],
 
     "mechanism": [
-        "Uncle Bob tried heavy upfront planning with agents the same week as this conversation,"
-        " and calls the result \"always a disaster.\" The pattern repeats every time: he plans"
-        " thoroughly, hands it to the agents, and the agents run ahead on the plan until it's"
-        " clear they can't actually follow it — they didn't anticipate everything he did, and"
-        " aren't as wise as he is about the gaps — forcing him to stop, back up, rewrite the plan,"
-        " and start over.",
+        "Uncle Bob tried a large upfront plan with agents in the same week as this talk. He calls"
+        " the result \"always a disaster.\" The same pattern repeats each time. He plans in"
+        " detail. He gives the plan to the agents. The agents run ahead on the plan. At some"
+        " point it is clear the agents cannot follow the plan. They did not see every gap he did."
+        " So he must stop, go back, rewrite the plan, and start again.",
 
-        "He draws a direct line to software history: heavy upfront specification produced"
-        " waterfall in the 1970s, and the agile movement was the industry's correction to that"
-        " failure. He argues the same correction is needed now for agents, because the failure"
-        " mode is identical. \"The agents love to write plans. Oh my goodness, they love it. And"
-        " they will embellish the plans and the plans will be gorgeous and beautiful and spell out"
-        " all kinds of details\" — and then they fall apart once implementation actually starts.",
+        "He points to a clear parallel in software history. A large plan made before any code"
+        " led to waterfall in the 1970s. The agile method was the industry's fix for that"
+        " problem. He argues agents need the same fix now, because the failure looks the same."
+        " In his words: \"The agents love to write plans. Oh my goodness, they love it. And they"
+        " will embellish the plans and the plans will be gorgeous and beautiful and spell out all"
+        " kinds of details\" — and then the plans break apart once real work starts.",
 
-        "His argument for why iteration wins is economic, not just experiential. If every change"
-        " to a house — including laying the foundation — cost a flat dollar, you wouldn't pay an"
-        " architect thousands for a perfect upfront plan; you'd stand next to the contractor and"
-        " adjust the kitchen, the stairs, the traffic pattern as you went, because changing your"
-        " mind is nearly free. He argues the cost of changing code with agents has \"plummeted to"
-        " as close to zero as we're ever going to get it,\" which removes the economic case for"
-        " paying upfront for a perfect plan the same way it removed it for the house.",
+        "His case for small steps is about cost, not just his own experience. Picture a house"
+        " where every change costs one dollar, even a change to the foundation. You would not pay"
+        " an architect a large fee for a perfect plan. You would stand next to the builder and"
+        " change the kitchen, the stairs, or the layout as you go, because a change costs almost"
+        " nothing. He argues that the cost to change agent-written code has \"plummeted to as"
+        " close to zero as we're ever going to get it.\" This removes the reason to pay for a"
+        " perfect plan up front, the same way it removes that reason for the house.",
 
-        "What he does instead: a story or two, then review the architecture, intervene manually"
-        " if needed, then a few more stories, repeating — admitting \"we may never escape that"
-        " manual organizing step at the end.\" He also doesn't persist specifications in the repo"
-        " at all; they're ephemeral, fiddled with and discarded, since there's no longer a"
-        " human-authored source code to treat as the final spec that a document needs to stay"
-        " consistent with.",
+        "Here is what he does instead. He builds one or two stories. Then he checks the"
+        " structure. He steps in by hand if needed. Then he builds a few more stories, and"
+        " repeats this cycle. He admits: \"we may never escape that manual organizing step at the"
+        " end.\" He also does not keep specs as permanent files in the repo. He treats a spec as"
+        " a short-lived note. He writes it, uses it, and drops it, because there is no"
+        " human-written source code left to act as the final spec a document must match.",
     ],
 
     "numbers": [],
@@ -52,20 +51,20 @@ NOTE = {
         "text": "If it cost you a dollar to make a change to a house, including the initial laying"
                 " of the foundation... would you hire an architect... or would you walk up to the"
                 " contractor and say, 'Put the kitchen over here'?",
-        "note": "The cost of change is what decides whether upfront planning pays for itself — and"
-                " with agents, that cost has collapsed toward zero, so the case for paying it"
-                " upfront collapses with it.",
+        "note": "The cost of a change decides whether a plan made up front is worth its price."
+                " With agents, that cost has dropped toward zero. So the case for a plan made"
+                " up front drops with it.",
     },
 
     "practice": [
-        "Don't hand an agent a fully-specified plan and walk away — review after each story, not"
+        "Do not give an agent a full plan and walk away. Review the work after each story, not"
         " after the whole plan.",
-        "Treat an agent-written plan as a draft to interrogate, not a contract to implement"
-        " verbatim.",
-        "Stop keeping specs as permanent repo artifacts if nothing actually enforces them staying"
-        " in sync with the code.",
-        "To share reusable tooling, point another agent at your existing tool and have it build"
-        " its own version, rather than writing a spec for someone else's agent to follow.",
+        "Treat an agent-written plan as a draft to question, not a contract to build word for"
+        " word.",
+        "Stop keeping specs as permanent files in the repo, if nothing keeps them in sync with"
+        " the code.",
+        "To share a tool with others, point another agent at your tool and let it build its own"
+        " version. Do not write a spec for someone else's agent to follow.",
     ],
 
     "diagrams": [],

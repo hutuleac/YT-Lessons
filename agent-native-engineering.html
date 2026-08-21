@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stop steering agents. Build gauntlets instead.</title>
-<meta name="description" content="Uncle Bob spent fifty years writing the rules for humans, then spent the last year finding out which of them transfer to agents unchanged, which need new thresholds, and which were never rules at all — just habits built around a human's limits.">
+<meta name="description" content="Uncle Bob spent fifty years writing rules for humans. In the last year, he tested which rules still work for agents, which rules need new limits, and which rules were never real rules at all, just habits built around a human's limits.">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -156,20 +156,20 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <header><div class='wrap'>
 <p class="eyebrow">Agent-native engineering practice</p>
 <h1>Stop steering agents. Build gauntlets instead.</h1>
-<p class="standfirst">Uncle Bob spent fifty years writing the rules for humans, then spent the last year finding out which of them transfer to agents unchanged, which need new thresholds, and which were never rules at all — just habits built around a human's limits.</p>
-<p class="audience">You run coding agents daily, you've felt the instructions-get-ignored problem firsthand, and you want a working model for verification, multi-agent pipelines, and planning that isn't just vibes.</p>
+<p class="standfirst">Uncle Bob spent fifty years writing rules for humans. In the last year, he tested which rules still work for agents, which rules need new limits, and which rules were never real rules at all, just habits built around a human's limits.</p>
+<p class="audience">You run coding agents every day. You have seen agents ignore your instructions. You want a working method for checks, multi-agent pipelines, and planning that does not rely on guesswork.</p>
 </div></header>
 <section id="deterministic-gauntlet">
 <div class="wrap"><div class="chead">
 <span class="cnum">1 / 6 &middot; builds on <a class="out" href="context-engineering.html#context-window">context-window</a></span>
 <h2>The deterministic gauntlet</h2>
-<p class="oneline">A rules document decays the moment it stops fitting in the model's priority zone; a tool the agent must satisfy in a loop does not, so verification beats instruction once the rules get long.</p>
+<p class="oneline">A long list of written rules loses its power, because the model forgets rules in the middle of the text. A tool that checks the code does not forget. Use a tool, not a long list of rules.</p>
 </div></div>
 <div class="wrap">
-<p>Uncle Bob's first instinct with agents was the obvious one: write down the rules. His prompts grew into five-to-ten-page documents covering test-driven development, clean code, style — everything he wanted respected. The agents read them and then didn't follow them. His own line for it: they treat those rules "in the Pirates of the Caribbean sense — they're more like guidelines."</p>
-<p>The cause is the same lost-in-the-middle effect that shapes the context window generally: content at the very start and very end of a long prompt keeps priority, and everything else gets buried as the document grows. Rule fifty of a fifty-rule document is, functionally, gone.</p>
-<p>So he stopped competing for that space. The fix is to trim the initial prompt to the absolute minimum it needs to stay in the priority zone, then push everything else out of the prompt entirely and into deterministic tools — his revived CRAP score and mutation testing — run in a loop: the agent must keep changing the code until the tool reports pass, not until it feels finished. A tool outside the context window can't be lost in the middle of it.</p>
-<p>This isn't free. Every check in the loop slows the agent down, trading raw speed for quality, and he's honest that he hasn't found the point where that trade stops paying off. What he has found is a floor: even heavily constrained by checks, the agent still runs roughly two to four times faster than doing the work himself.</p>
+<p>Uncle Bob's first method with agents was simple: write down the rules. His prompts grew into documents of five to ten pages. They covered test-driven development, clean code, and style. He wanted the agents to follow all of it. The agents read the rules. Then they did not follow the rules. His own words for this: the agents treat the rules "in the Pirates of the Caribbean sense — they're more like guidelines."</p>
+<p>The cause is the same effect that shapes the whole context window. Text at the start and the end of a long prompt keeps the model's attention. Text in the middle does not. A long document buries most of its own rules. Rule fifty of a fifty-rule document has, in practice, no effect at all.</p>
+<p>So he stopped writing long rule documents. His fix has two parts. First, cut the prompt down to the few words the agent must actually obey. Second, move every other rule out of the prompt and into a tool. He uses two tools for this: the CRAP score and mutation testing. The agent must run the tool and fix the code until the tool reports a pass. A tool sits outside the context window. It cannot get lost in the middle of a long document, because it is not part of the document.</p>
+<p>This method costs time. Each check in the loop slows the agent down. He trades speed for quality, and he says he has not found the point where this trade stops paying off. But he has found a floor. Even with many checks, the agent still works about two to four times faster than he does by hand.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>5-10</b><i>pages</i><span>length his early instruction documents grew to before he abandoned steering</span></div>
@@ -205,27 +205,27 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="0" y="150" class="d-label">A tool never lives in the middle of the prompt, so it never fades.</text>
   <text x="0" y="170" class="d-label">The agent loops on it directly until the check itself says stop.</text>
 </svg></div><figcaption><b>A rule you write versus a rule you enforce</b><span>A prompted rule fades once it's buried mid-document. A tool sits outside the context window entirely, so the agent can't lose track of it — it just loops until the tool says pass.</span></figcaption></figure>
-<div class="analogy"><q>They treat those rules in the Pirates of the Caribbean sense — they're more like guidelines.</q><p>Explains why prose rules decay with length: the model isn't disobeying on purpose, it has genuinely lost the instruction somewhere in the middle of its own context.</p></div>
+<div class="analogy"><q>They treat those rules in the Pirates of the Caribbean sense — they're more like guidelines.</q><p>This shows why long written rules lose strength. The model does not disobey on purpose. It has lost the rule somewhere in the middle of its own context.</p></div>
 <div class="do"><h3>What to do</h3><ul>
-<li>Keep the system prompt to the handful of sentences you actually need obeyed.</li>
-<li>Move every other rule into a deterministic tool the agent must satisfy, not a paragraph it might read.</li>
-<li>Run the tool in a loop — change the code until the tool passes, not until the agent says it's done.</li>
-<li>Revive checks you once rejected for being too slow for a human. An agent doesn't mind the wait.</li>
+<li>Keep the system prompt short. Use only the few sentences the agent must obey.</li>
+<li>Put every other rule into a tool the agent must pass, not into a paragraph it might read.</li>
+<li>Run the tool in a loop. Change the code until the tool passes, not until the agent says it is done.</li>
+<li>Bring back checks you once rejected as too slow for a human. An agent does not mind the wait.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
 </section>
-<p class="bridge">One agent enforcing its own checks is the unit. The next question is what happens when you stop asking one agent to do everything.</p>
+<p class="bridge">One agent that checks its own work is the base case. The next question: what happens when you stop asking one agent to do everything.</p>
 <section id="single-job-agents">
 <div class="wrap"><div class="chead">
 <span class="cnum">2 / 6 &middot; builds on <s>deterministic-gauntlet</s></span>
 <h2>One job per agent</h2>
-<p class="oneline">A single agent trying to spec, implement, review and harden a feature at once drags every unrelated topic into one context; splitting the work into narrow, single-purpose agents keeps each one's context small enough to actually follow instructions.</p>
+<p class="oneline">One agent that does the spec, the code, the review, and the checks all at once must hold too many topics in one context. Split the work into small, one-job agents. Then each one keeps a context small enough to follow its own instructions.</p>
 </div></div>
 <div class="wrap">
-<p>A single agent asked to spec a feature, build it, review it and harden it in one session is holding four different jobs in one context window, and every one of them pulls the window toward the dumb zone faster than a narrowly scoped task would. Uncle Bob's answer is a pipeline: five agents, each with exactly one job, handing off to the next.</p>
-<p>The Specifier takes a human-written document and turns it into a Gherkin acceptance test (given/when/then) plus a QA procedure written from a human's point of view — "you are a human operating this system at the UI." The Coder writes unit tests and the implementation to make the story and the Gherkin test pass. The Cleaner runs CRAP analysis and general review to clean up the mess the coder inevitably leaves. The Hardener runs mutation testing, "absolutely merciless," chasing full coverage across every flipped operator. The QA agent converts the procedure into an executable script that drives the system and returns a deterministic pass or fail.</p>
-<p>The payoff is twofold. Focused context means each agent can hold more of its few rules in the priority zone and actually follow them, and several agents can run in parallel — his laptop comfortably runs three or more coders at once. Each one is also "born, does the task, and dies," so the next stage starts with a clean, uncontaminated context instead of one dragging along everything the last stage was thinking about.</p>
-<p>It isn't free: there's real coordination overhead between stages, and each agent costs 10-15 seconds just to start up and re-establish its context. But the net numbers still favor the pipeline — a single unconstrained agent finishes a task in about five minutes with questionable results; the full pipeline takes about an hour for a much higher-quality result; a human doing the same work by hand takes roughly half a day.</p>
+<p>One agent that must spec a feature, build it, review it, and check it in one session holds four jobs in one context window. Each job pulls that window toward the dumb zone faster than a small task would. Uncle Bob's answer is a pipeline. Five agents work on the task. Each agent has one job. Each agent passes its work to the next.</p>
+<p>The Specifier reads a document written by a human. It turns the document into a Gherkin test (given/when/then) and a QA procedure. The QA procedure is written from a human's point of view: "you are a human operating this system at the UI." The Coder writes unit tests and the code. This code must make the story and the Gherkin test pass. The Cleaner runs a CRAP check and a general review. This cleans up the mess the coder leaves behind. The Hardener runs mutation testing. Uncle Bob calls this stage "absolutely merciless": it aims for full coverage across every changed operator. The QA agent turns the procedure into a script. This script runs the system and returns a clear pass or fail.</p>
+<p>This method has two gains. First, each agent keeps a small context, so it can hold its few rules and follow them. Second, several agents can run at the same time. Uncle Bob's laptop runs three or more coders at once, with no trouble. Each agent starts, does its one job, and then stops. So the next stage starts with a clean context. It does not carry the last stage's problems forward.</p>
+<p>This method also costs something. Agents need real coordination between stages. Each agent takes 10 to 15 seconds just to start and load its context. But the numbers still favor the pipeline. One agent alone finishes a task in about five minutes, with weak results. The full pipeline takes about an hour, with much better results. A human doing the same work by hand takes about half a day.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>~5 min</b><i>time</i><span>a single unconstrained agent takes on a task, with questionable results</span></div>
@@ -275,24 +275,24 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="0" y="164" class="d-fix">full pipeline: ~1 hr, high quality  &#183;  human: ~half a day</text>
 </svg></div><figcaption><b>One feature, five single-job agents</b><span>Each stage does exactly one thing and hands off a concrete artifact — a test, code, a clean diff, coverage, a verified result.</span></figcaption></figure>
 <div class="do"><h3>What to do</h3><ul>
-<li>Split a feature into stages instead of asking one agent to spec, code, review and harden it in one session.</li>
-<li>Let a stage's agent die when it's done — start the next one with a clean context, not a carried-over one.</li>
-<li>Run independent stages in parallel where you can; budget for per-agent startup time.</li>
-<li>Feed a reviewer or hardener the diff, not the whole codebase, so it doesn't need to re-explore what already happened.</li>
+<li>Split a feature into stages. Do not ask one agent to spec, code, review, and check it in one session.</li>
+<li>Stop a stage's agent when its job is done. Start the next stage with a clean context.</li>
+<li>Run stages that do not depend on each other at the same time. Plan for startup time on each agent.</li>
+<li>Give a reviewer or checker the diff, not the whole codebase. It will not need to explore what already happened.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
 </section>
-<p class="bridge">Splitting agents by job protects each one's context from unrelated topics. Here's the mechanism that makes that protection necessary in the first place.</p>
+<p class="bridge">Splitting agents by job keeps each one's context free of unrelated topics. Here is the reason that protection matters at all.</p>
 <section id="context-trajectory">
 <div class="wrap"><div class="chead">
 <span class="cnum">3 / 6 &middot; builds on <a class="out" href="context-engineering.html#context-window">context-window</a></span>
 <h2>Context trajectory</h2>
-<p class="oneline">Once a session gets steered toward a topic or approach, every later turn in that same context window keeps following it, whether you asked for that or not — the only real reset is a fresh context window.</p>
+<p class="oneline">Once you steer a session toward a topic or a method, every later turn in that same context window keeps that direction. This happens even if you did not ask for it. Only a fresh context window can reset it.</p>
 </div></div>
 <div class="wrap">
-<p>Matt Pocock's term for something both speakers had separately noticed: once you steer an agent toward an approach — ask it to test through the UI once, say — every later change in that same session keeps following that direction, no matter what you actually ask for next. The only way to clear it is to clear the context window itself.</p>
-<p>Uncle Bob's example makes the mechanism concrete. You're chatting with a model about the best way to brew coffee. Someone walks by talking about a soap opera, and that conversation leaks into the context. From that point on, every coffee reference in the session somehow relates back to the soap opera — the model can't tell the difference between what you meant to say and what arrived by accident. It just keeps building on whatever is already in the window.</p>
-<p>The same logic explains why code structure matters to an agent the way it matters to a human: a well-partitioned module with a disciplined interface keeps unrelated topics out of an agent's working context the same way a clean session does, so the agent stays on one trajectory instead of one contaminated by whatever else is nearby. "It's the same argument. It's the coffee and soap opera argument."</p>
+<p>This is Matt Pocock's term for something both speakers had noticed on their own. Steer an agent toward one method. For example, ask it to test through the UI once. Every later change in that same session then follows that same direction. This happens no matter what you ask for next. The only way to clear it is to clear the context window itself.</p>
+<p>Uncle Bob's example makes this clear. You talk with a model about the best way to brew coffee. Someone walks by and talks about a soap opera. That talk leaks into the context. After this point, every coffee comment in the session somehow links back to the soap opera. The model cannot tell the difference between what you meant to say and what entered by accident. It just builds on whatever is already in the window.</p>
+<p>This same idea explains why code structure matters to an agent, the same way it matters to a human. A module with a clear, disciplined interface keeps unrelated topics out of an agent's working context. A clean session does the same job. Both keep the agent on one direction, instead of a direction spoiled by whatever else sits nearby. Uncle Bob's own words: "It's the same argument. It's the coffee and soap opera argument."</p>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
   aria-label="A session timeline where an early input (either an intended instruction or an unrelated aside) colors every later turn in the same context window, until a fresh window starts a new, uncolored trajectory.">
@@ -318,27 +318,27 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="0" y="200" class="d-fix">clearing the window is the only way to</text>
   <text x="0" y="218" class="d-fix">drop the old trajectory</text>
 </svg></div><figcaption><b>One early input, every later turn</b><span>Whatever enters the context first keeps steering everything after it — on purpose or not. A fresh window is the only real reset.</span></figcaption></figure>
-<div class="analogy"><q>Somebody walks by and they happen to be talking about the latest soap opera... but then from that point on all the coffee references have to do with the soap opera.</q><p>Trajectory isn't memory going wrong — it's contamination. The model treats whatever entered the window as equally load-bearing, whether you meant it to be there or not.</p></div>
+<div class="analogy"><q>Somebody walks by and they happen to be talking about the latest soap opera... but then from that point on all the coffee references have to do with the soap opera.</q><p>This is not a memory error. It is contamination. The model treats everything in the window as equally important, whether you meant it to be there or not.</p></div>
 <div class="do"><h3>What to do</h3><ul>
-<li>Clear the context window when you want a genuinely different approach, not just a different instruction on top of the last one.</li>
-<li>Don't let an unrelated aside enter a working session — start a fresh one for it instead.</li>
-<li>Design modules so an agent working inside one can't wander into a different topic's context.</li>
-<li>If an agent keeps repeating an approach you didn't ask for, suspect trajectory before you suspect stubbornness.</li>
+<li>Clear the context window when you want a new method. Do not just add a new instruction on top of the old one.</li>
+<li>Do not let an unrelated remark enter a working session. Start a fresh session for it instead.</li>
+<li>Design modules so an agent working inside one cannot wander into a different topic.</li>
+<li>If an agent keeps repeating a method you did not ask for, check for a trajectory problem before you blame the agent.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
 </section>
-<p class="bridge">If context contamination is the failure mode, the fix so far has been mechanical — checks and clean handoffs. But some of Bob's own numbers, the ones from his book, needed to change too.</p>
+<p class="bridge">Context problems get a mechanical fix: checks and clean handoffs. But some of Bob's own numbers, the ones from his book, also had to change.</p>
 <section id="agent-thresholds">
 <div class="wrap"><div class="chead">
 <span class="cnum">4 / 6 &middot; builds on <s>deterministic-gauntlet</s></span>
 <h2>Thresholds, not disciplines</h2>
-<p class="oneline">Agents can safely tolerate more complexity than the numbers in a human style guide assume, but a workflow discipline built around human working memory — like strict test-driven development — doesn't transfer to them at all.</p>
+<p class="oneline">Agents can handle more complexity than the numbers in a human style guide allow. But a work method built for human memory, such as strict test-driven development, does not work the same way for an agent.</p>
 </div></div>
 <div class="wrap">
-<p>The CRAP score is a mix of test coverage and cyclomatic complexity — roughly, the number of tested pathways through a function. For human-written code Uncle Bob keeps that number below 4. For agent-written code he's deliberately widened it to 6, and is considering pushing it to 8. His reasoning is memory, not laxity: agents carry a much larger and more accurate short-term memory than a human does, so the complexity ceiling that keeps a human's head straight isn't the ceiling that keeps an agent's head straight.</p>
-<p>Test-driven development is a sharper case. He is, by his own book, a committed advocate of strict TDD — one line of test, one line of code, repeat — for himself. He refuses to impose that same discipline on his agents. Even when he explicitly instructs an agent to do strict TDD, it keeps falling back to writing a whole function and then its test, the way John Ousterhout would write it. He's stopped fighting that and lets it happen, because the agents do it anyway regardless of the instruction.</p>
-<p>His own framing of the distinction: "it's probably a mistake to impose a human discipline on an agent. It is not a mistake to impose human values on the agent, but there may be thresholds that we need to change." TDD-as-ritual is a discipline, built for a working memory an agent doesn't have. Testing everything, keeping complexity bounded, refusing to ship unverified code — those are values, and they still hold.</p>
-<p>He's careful to flag his own uncertainty here too: the specific numbers came partly from debating the agents themselves about where the line should sit, and he says so plainly — "you can't trust any debate you have with an agent, but I still have them anyway." The threshold is a live experiment, not a settled constant.</p>
+<p>The CRAP score mixes test coverage with code complexity. In simple terms, it counts the number of tested paths through a function. For code written by a human, Uncle Bob keeps that number below 4. For code written by an agent, he raised it to 6. He may raise it to 8. His reason is memory, not carelessness. Agents hold a much larger and more exact short-term memory than a human does. So the complexity limit that suits a human does not suit an agent.</p>
+<p>Test-driven development is a clearer case. In his own book, Uncle Bob argues for strict TDD: write one line of a test, then one line of code, and repeat. He follows this rule himself. He will not force this same rule on his agents. He once told an agent to use strict TDD. The agent still wrote a whole function first, then its test, in the style John Ousterhout uses. Uncle Bob has stopped fighting this. The agents do it their own way regardless of the instruction, so he lets them.</p>
+<p>His own words state the difference plainly: "it's probably a mistake to impose a human discipline on an agent. It is not a mistake to impose human values on the agent, but there may be thresholds that we need to change." Strict TDD is a discipline. It fits a working memory an agent does not have. Test everything. Keep complexity within limits. Do not ship code with no checks. These are values, and they still apply.</p>
+<p>He also states his own doubt. Some of these numbers came from talks with the agents themselves about where the limit should sit. He says so directly: "you can't trust any debate you have with an agent, but I still have them anyway." The threshold is a live test, not a fixed rule.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>&lt;4</b><i>CRAP score</i><span>his own ceiling for human-written code</span></div>
@@ -364,58 +364,58 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   <text x="14" y="82" class="d-label" text-anchor="middle" transform="rotate(-90 14 82)">tolerable pathways</text>
 </svg></div><figcaption><b>Same score, different ceiling</b><span>The CRAP score doesn't change meaning between a human and an agent — the tolerable ceiling does, because the memory backing it does.</span></figcaption></figure>
 <div class="do"><h3>What to do</h3><ul>
-<li>Don't carry your human quality thresholds over to an agent unexamined — check whether the reason for the number still applies.</li>
-<li>Ask whether a discipline exists because of human working-memory limits before you enforce it on an agent.</li>
-<li>If an agent keeps reverting to its own approach despite instruction, treat it as a signal worth investigating, not just disobedience to correct.</li>
-<li>Keep the underlying value (test everything, bound complexity) even as you loosen the specific numeric threshold that enforces it.</li>
+<li>Do not copy your human quality limits to an agent without a check. Ask if the reason for the number still applies.</li>
+<li>Ask if a rule exists because of human memory limits, before you force it on an agent.</li>
+<li>If an agent keeps going back to its own method despite the instruction, treat this as a signal to look at, not just disobedience to fix.</li>
+<li>Keep the value behind the rule (test everything, limit complexity). You can still loosen the exact number that enforces it.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
 </section>
-<p class="bridge">Thresholds are one kind of rule Bob revised. Whether to plan a feature in detail before touching code is another — and here his answer breaks with a decade of habit.</p>
+<p class="bridge">Thresholds are one rule Bob changed. Planning a feature in full before writing any code is another. Here, his answer breaks with years of habit.</p>
 <section id="spec-driven-trap">
 <div class="wrap"><div class="chead">
 <span class="cnum">5 / 6 &middot; start here</span>
 <h2>The spec-driven development trap</h2>
-<p class="oneline">Handing an agent a heavy upfront plan fails the same way waterfall failed on humans, because agents love writing gorgeous, detailed plans that fall apart the moment implementation starts.</p>
+<p class="oneline">A large plan written before any code fails an agent the same way it failed humans in the waterfall era. Agents write large, detailed plans with ease. But those plans break apart once real work starts.</p>
 </div></div>
 <div class="wrap">
-<p>Uncle Bob tried heavy upfront planning with agents the same week as this conversation, and calls the result "always a disaster." The pattern repeats every time: he plans thoroughly, hands it to the agents, and the agents run ahead on the plan until it's clear they can't actually follow it — they didn't anticipate everything he did, and aren't as wise as he is about the gaps — forcing him to stop, back up, rewrite the plan, and start over.</p>
-<p>He draws a direct line to software history: heavy upfront specification produced waterfall in the 1970s, and the agile movement was the industry's correction to that failure. He argues the same correction is needed now for agents, because the failure mode is identical. "The agents love to write plans. Oh my goodness, they love it. And they will embellish the plans and the plans will be gorgeous and beautiful and spell out all kinds of details" — and then they fall apart once implementation actually starts.</p>
-<p>His argument for why iteration wins is economic, not just experiential. If every change to a house — including laying the foundation — cost a flat dollar, you wouldn't pay an architect thousands for a perfect upfront plan; you'd stand next to the contractor and adjust the kitchen, the stairs, the traffic pattern as you went, because changing your mind is nearly free. He argues the cost of changing code with agents has "plummeted to as close to zero as we're ever going to get it," which removes the economic case for paying upfront for a perfect plan the same way it removed it for the house.</p>
-<p>What he does instead: a story or two, then review the architecture, intervene manually if needed, then a few more stories, repeating — admitting "we may never escape that manual organizing step at the end." He also doesn't persist specifications in the repo at all; they're ephemeral, fiddled with and discarded, since there's no longer a human-authored source code to treat as the final spec that a document needs to stay consistent with.</p>
+<p>Uncle Bob tried a large upfront plan with agents in the same week as this talk. He calls the result "always a disaster." The same pattern repeats each time. He plans in detail. He gives the plan to the agents. The agents run ahead on the plan. At some point it is clear the agents cannot follow the plan. They did not see every gap he did. So he must stop, go back, rewrite the plan, and start again.</p>
+<p>He points to a clear parallel in software history. A large plan made before any code led to waterfall in the 1970s. The agile method was the industry's fix for that problem. He argues agents need the same fix now, because the failure looks the same. In his words: "The agents love to write plans. Oh my goodness, they love it. And they will embellish the plans and the plans will be gorgeous and beautiful and spell out all kinds of details" — and then the plans break apart once real work starts.</p>
+<p>His case for small steps is about cost, not just his own experience. Picture a house where every change costs one dollar, even a change to the foundation. You would not pay an architect a large fee for a perfect plan. You would stand next to the builder and change the kitchen, the stairs, or the layout as you go, because a change costs almost nothing. He argues that the cost to change agent-written code has "plummeted to as close to zero as we're ever going to get it." This removes the reason to pay for a perfect plan up front, the same way it removes that reason for the house.</p>
+<p>Here is what he does instead. He builds one or two stories. Then he checks the structure. He steps in by hand if needed. Then he builds a few more stories, and repeats this cycle. He admits: "we may never escape that manual organizing step at the end." He also does not keep specs as permanent files in the repo. He treats a spec as a short-lived note. He writes it, uses it, and drops it, because there is no human-written source code left to act as the final spec a document must match.</p>
 </div>
-<div class="analogy"><q>If it cost you a dollar to make a change to a house, including the initial laying of the foundation... would you hire an architect... or would you walk up to the contractor and say, 'Put the kitchen over here'?</q><p>The cost of change is what decides whether upfront planning pays for itself — and with agents, that cost has collapsed toward zero, so the case for paying it upfront collapses with it.</p></div>
+<div class="analogy"><q>If it cost you a dollar to make a change to a house, including the initial laying of the foundation... would you hire an architect... or would you walk up to the contractor and say, 'Put the kitchen over here'?</q><p>The cost of a change decides whether a plan made up front is worth its price. With agents, that cost has dropped toward zero. So the case for a plan made up front drops with it.</p></div>
 <div class="do"><h3>What to do</h3><ul>
-<li>Don't hand an agent a fully-specified plan and walk away — review after each story, not after the whole plan.</li>
-<li>Treat an agent-written plan as a draft to interrogate, not a contract to implement verbatim.</li>
-<li>Stop keeping specs as permanent repo artifacts if nothing actually enforces them staying in sync with the code.</li>
-<li>To share reusable tooling, point another agent at your existing tool and have it build its own version, rather than writing a spec for someone else's agent to follow.</li>
+<li>Do not give an agent a full plan and walk away. Review the work after each story, not after the whole plan.</li>
+<li>Treat an agent-written plan as a draft to question, not a contract to build word for word.</li>
+<li>Stop keeping specs as permanent files in the repo, if nothing keeps them in sync with the code.</li>
+<li>To share a tool with others, point another agent at your tool and let it build its own version. Do not write a spec for someone else's agent to follow.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
 </section>
-<p class="bridge">Everything so far has been about how Bob runs agents. The last question is what a junior developer does when the tactical work agents are good at is exactly the work they used to learn on.</p>
+<p class="bridge">So far, this has all been about how Bob runs agents. The last question is different: what should a junior developer do when agents already do the tactical work junior developers used to learn on.</p>
 <section id="tactical-vs-strategic">
 <div class="wrap"><div class="chead">
 <span class="cnum">6 / 6 &middot; start here</span>
 <h2>Tactical versus strategic programming</h2>
-<p class="oneline">Agents are strong at tactical programming — getting a specific piece of code working — and weak at strategic programming — deciding how the system should be organized — which changes what a junior actually needs to practice.</p>
+<p class="oneline">Agents work well at tactical programming, which means writing one piece of code that works. Agents work poorly at strategic programming, which means deciding how a whole system should be built. This changes what a junior developer should practice.</p>
 </div></div>
 <div class="wrap">
-<p>Uncle Bob borrows John Ousterhout's split between tactical and strategic programming: tactical is "the sergeant on the ground, the person kind of fighting the battle," strategic is "the general kind of the person directing the course of the war." Both speakers agree agents land firmly on the tactical side — fast, capable in the moment — and are weak on the strategic side, the decisions about how a whole system should be shaped.</p>
-<p>That split reframes how a junior developer should spend their time. His recommended path: write code yourself for roughly a year first, so you know what the agents are actually dealing with. Then, once hired somewhere agent-heavy, expect to be treated like one of the agents — given the same deterministic-tool-constrained tasks — and spend months "horribly unproductive but learning a hell of a lot" before anyone trusts you to direct an agent yourself. It echoes advice he's given for decades: if you've never written assembly language, spend a weekend doing it, so you understand what's really happening beneath a high-level language. The same ladder logic now extends one more rung — binary, assembly, a higher-level language, agent work under deterministic tools, and only then strategic supervision of an agent.</p>
-<p>The recognition skill underneath this is the one he says actually matters. Back in December, what told him his agents were struggling wasn't the messy output on its own — it was watching them thrash: fixing one thing while inadvertently breaking another, going in circles, one agent effectively giving up. He recognized the struggle because he'd lived through the same struggle himself, doing it by hand. A novice who's never done the tactical work has nothing to recognize it against.</p>
-<p>His closing argument for why the fundamentals still matter, attributed — with some hedging on the exact source — to Dijkstra: software is the most complicated thing humans have ever attempted, so the fundamentals are how that complexity gets organized into something conceivable, by humans and by models alike, since the models are themselves modeled after humans. He frames "agents make fundamentals obsolete" as the same complaint every abstraction layer has triggered — assembly over binary, compilers over assembly, and now models above the compiler — always accompanied by predictions that the underlying skill would stop mattering. "The rules you throw away are the ones you're going to pick up off the floor in a year and dust off and remember why you need them."</p>
+<p>Uncle Bob uses John Ousterhout's split between tactical and strategic programming. Tactical work is "the sergeant on the ground, the person kind of fighting the battle." Strategic work is "the general kind of the person directing the course of the war." Both speakers agree that agents are strong at tactical work. Agents move fast and get one task done well. But agents are weak at strategic work, the decisions about how a whole system should be shaped.</p>
+<p>This split changes how a junior developer should spend their time. Uncle Bob's advice: write code by hand for about a year first. This shows you what the agents actually deal with. Next, once you join a team that uses agents a lot, expect to be treated like one of the agents. You will get the same small tasks, checked by the same tools. Spend months "horribly unproductive but learning a hell of a lot," before anyone trusts you to direct an agent yourself. This matches advice he has given for decades: if you have never written assembly language, spend a weekend writing it, so you understand what runs beneath a high-level language. The same idea now adds one more step. Learn binary, then assembly, then a high-level language, then agent work under strict tools, and only then direct an agent yourself at the strategic level.</p>
+<p>The real skill underneath all of this, he says, is recognition. Back in December, what told him his agents were struggling was not just messy output. It was watching them thrash: fixing one thing while breaking another, going in circles, one agent almost giving up. He recognized the struggle because he had lived through the same struggle himself, by hand. A new developer who has never done the tactical work has nothing to compare it against.</p>
+<p>His closing point on why fundamentals still matter comes from a claim he credits to Dijkstra, though he is not fully sure of the source: software is the most complex thing humans have ever tried to build. So the fundamentals exist to organize that complexity into something people can grasp, and models can grasp it too, since models are built on human patterns. He treats the claim "agents make fundamentals useless" as the same complaint every past change has caused. Assembly replaced binary. Compilers replaced assembly. Now models sit above the compiler. Each time, people predicted the old skill would stop mattering. In his words: "The rules you throw away are the ones you're going to pick up off the floor in a year and dust off and remember why you need them."</p>
 </div>
-<div class="analogy"><q>If you've never written assembly language, you should spend the weekend writing assembly language just so that you know what's really going on behind the scenes.</q><p>His decades-old advice for high-level-language programmers, extended one more rung: spend real time doing agent-constrained work so you understand what agents are actually dealing with, before you try to direct one.</p></div>
+<div class="analogy"><q>If you've never written assembly language, you should spend the weekend writing assembly language just so that you know what's really going on behind the scenes.</q><p>This is his old advice for programmers who use high-level languages, with one more step added: spend real time doing agent-style work, so you understand what agents deal with, before you try to direct one.</p></div>
 <div class="do"><h3>What to do</h3><ul>
-<li>Write code yourself for a real stretch before leaning on agents — you need the reference experience to recognize when an agent is struggling.</li>
-<li>If you're junior on an agent-heavy team, treat months of constrained, agent-style tasks as the fastest path to strategic judgment, not as a demotion.</li>
-<li>Read older books (Tom DeMarco, Ed Yourdon, The Pragmatic Programmer) for the judgment layer — filter the dated tech, keep the reasoning.</li>
-<li>When an agent looks stuck, watch for thrashing — fixing one thing, breaking another — not just the quality of what it outputs.</li>
+<li>Write code yourself for a real stretch of time before you lean on agents. This gives you the experience to see when an agent is struggling.</li>
+<li>If you are junior on a team that uses agents a lot, treat months of small, checked tasks as the fastest path to strategic skill, not as a step down.</li>
+<li>Read older books (Tom DeMarco, Ed Yourdon, The Pragmatic Programmer) for judgment. Skip the old tech details. Keep the reasoning.</li>
+<li>When an agent looks stuck, watch for thrashing: fixing one thing while breaking another. Do not just judge the output.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
 </section>
-<div class="close"><div class="wrap"><h2>The whole lesson in one move</h2><p>Every practice here replaces trust in an instruction with trust in a mechanism: a check the agent must pass, a job narrow enough to keep in context, a clean window instead of a contaminated one, a threshold re-measured instead of inherited, a story reviewed instead of a plan trusted. None of it argues fundamentals stopped mattering — it argues they now have to survive contact with something that reads perfectly and forgets selectively. The rules you throw away this year are the ones you'll be picking back up next year.</p></div></div>
+<div class="close"><div class="wrap"><h2>The whole lesson in one move</h2><p>Every practice here swaps trust in an instruction for trust in a mechanism: a check the agent must pass, a job small enough to fit in one context, a clean window instead of a spoiled one, a threshold checked again instead of copied, a story reviewed instead of a plan trusted on faith. None of this means fundamentals stopped mattering. It means fundamentals now have to survive contact with something that reads every word and still forgets on its own terms. The rules you drop this year are the ones you will pick back up next year.</p></div></div>
 <footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
 <script>
 (function(){

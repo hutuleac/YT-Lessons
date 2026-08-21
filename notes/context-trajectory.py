@@ -1,9 +1,9 @@
 NOTE = {
     "id": "context-trajectory",
     "concept": "Context trajectory",
-    "one_liner": "Once a session gets steered toward a topic or approach, every later turn in that"
-                 " same context window keeps following it, whether you asked for that or not — the"
-                 " only real reset is a fresh context window.",
+    "one_liner": "Once you steer a session toward a topic or a method, every later turn in that"
+                 " same context window keeps that direction. This happens even if you did not ask"
+                 " for it. Only a fresh context window can reset it.",
 
     "prerequisites": ["context-window"],
     "related": ["dumb-zone", "codebase-as-environment"],
@@ -16,23 +16,23 @@ NOTE = {
     ],
 
     "mechanism": [
-        "Matt Pocock's term for something both speakers had separately noticed: once you steer an"
-        " agent toward an approach — ask it to test through the UI once, say — every later change"
-        " in that same session keeps following that direction, no matter what you actually ask"
-        " for next. The only way to clear it is to clear the context window itself.",
+        "This is Matt Pocock's term for something both speakers had noticed on their own. Steer"
+        " an agent toward one method. For example, ask it to test through the UI once. Every"
+        " later change in that same session then follows that same direction. This happens no"
+        " matter what you ask for next. The only way to clear it is to clear the context window"
+        " itself.",
 
-        "Uncle Bob's example makes the mechanism concrete. You're chatting with a model about the"
-        " best way to brew coffee. Someone walks by talking about a soap opera, and that"
-        " conversation leaks into the context. From that point on, every coffee reference in the"
-        " session somehow relates back to the soap opera — the model can't tell the difference"
-        " between what you meant to say and what arrived by accident. It just keeps building on"
-        " whatever is already in the window.",
+        "Uncle Bob's example makes this clear. You talk with a model about the best way to brew"
+        " coffee. Someone walks by and talks about a soap opera. That talk leaks into the"
+        " context. After this point, every coffee comment in the session somehow links back to"
+        " the soap opera. The model cannot tell the difference between what you meant to say and"
+        " what entered by accident. It just builds on whatever is already in the window.",
 
-        "The same logic explains why code structure matters to an agent the way it matters to a"
-        " human: a well-partitioned module with a disciplined interface keeps unrelated topics out"
-        " of an agent's working context the same way a clean session does, so the agent stays on"
-        " one trajectory instead of one contaminated by whatever else is nearby. \"It's the same"
-        " argument. It's the coffee and soap opera argument.\"",
+        "This same idea explains why code structure matters to an agent, the same way it matters"
+        " to a human. A module with a clear, disciplined interface keeps unrelated topics out of"
+        " an agent's working context. A clean session does the same job. Both keep the agent on"
+        " one direction, instead of a direction spoiled by whatever else sits nearby. Uncle Bob's"
+        " own words: \"It's the same argument. It's the coffee and soap opera argument.\"",
     ],
 
     "numbers": [],
@@ -41,19 +41,18 @@ NOTE = {
         "text": "Somebody walks by and they happen to be talking about the latest soap opera... but"
                 " then from that point on all the coffee references have to do with the soap"
                 " opera.",
-        "note": "Trajectory isn't memory going wrong — it's contamination. The model treats"
-                " whatever entered the window as equally load-bearing, whether you meant it to be"
-                " there or not.",
+        "note": "This is not a memory error. It is contamination. The model treats everything in"
+                " the window as equally important, whether you meant it to be there or not.",
     },
 
     "practice": [
-        "Clear the context window when you want a genuinely different approach, not just a"
-        " different instruction on top of the last one.",
-        "Don't let an unrelated aside enter a working session — start a fresh one for it instead.",
-        "Design modules so an agent working inside one can't wander into a different topic's"
-        " context.",
-        "If an agent keeps repeating an approach you didn't ask for, suspect trajectory before you"
-        " suspect stubbornness.",
+        "Clear the context window when you want a new method. Do not just add a new"
+        " instruction on top of the old one.",
+        "Do not let an unrelated remark enter a working session. Start a fresh session for it"
+        " instead.",
+        "Design modules so an agent working inside one cannot wander into a different topic.",
+        "If an agent keeps repeating a method you did not ask for, check for a trajectory"
+        " problem before you blame the agent.",
     ],
 
     "diagrams": [

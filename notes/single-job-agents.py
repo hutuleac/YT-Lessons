@@ -1,9 +1,9 @@
 NOTE = {
     "id": "single-job-agents",
     "concept": "One job per agent",
-    "one_liner": "A single agent trying to spec, implement, review and harden a feature at once"
-                 " drags every unrelated topic into one context; splitting the work into narrow,"
-                 " single-purpose agents keeps each one's context small enough to actually follow"
+    "one_liner": "One agent that does the spec, the code, the review, and the checks all at once"
+                 " must hold too many topics in one context. Split the work into small, one-job"
+                 " agents. Then each one keeps a context small enough to follow its own"
                  " instructions.",
 
     "prerequisites": ["deterministic-gauntlet"],
@@ -17,32 +17,32 @@ NOTE = {
     ],
 
     "mechanism": [
-        "A single agent asked to spec a feature, build it, review it and harden it in one session"
-        " is holding four different jobs in one context window, and every one of them pulls the"
-        " window toward the dumb zone faster than a narrowly scoped task would. Uncle Bob's"
-        " answer is a pipeline: five agents, each with exactly one job, handing off to the next.",
+        "One agent that must spec a feature, build it, review it, and check it in one session"
+        " holds four jobs in one context window. Each job pulls that window toward the dumb"
+        " zone faster than a small task would. Uncle Bob's answer is a pipeline. Five agents"
+        " work on the task. Each agent has one job. Each agent passes its work to the next.",
 
-        "The Specifier takes a human-written document and turns it into a Gherkin acceptance test"
-        " (given/when/then) plus a QA procedure written from a human's point of view — \"you are a"
-        " human operating this system at the UI.\" The Coder writes unit tests and the"
-        " implementation to make the story and the Gherkin test pass. The Cleaner runs CRAP"
-        " analysis and general review to clean up the mess the coder inevitably leaves. The"
-        " Hardener runs"
-        " mutation testing, \"absolutely merciless,\" chasing full coverage across every flipped"
-        " operator. The QA agent converts the procedure into an executable script that drives the"
-        " system and returns a deterministic pass or fail.",
+        "The Specifier reads a document written by a human. It turns the document into a Gherkin"
+        " test (given/when/then) and a QA procedure. The QA procedure is written from a human's"
+        " point of view: \"you are a human operating this system at the UI.\" The Coder writes"
+        " unit tests and the code. This code must make the story and the Gherkin test pass. The"
+        " Cleaner runs a CRAP check and a general review. This cleans up the mess the coder"
+        " leaves behind. The Hardener runs mutation testing. Uncle Bob calls this stage"
+        " \"absolutely merciless\": it aims for full coverage across every changed operator. The"
+        " QA agent turns the procedure into a script. This script runs the system and returns a"
+        " clear pass or fail.",
 
-        "The payoff is twofold. Focused context means each agent can hold more of its few rules"
-        " in the priority zone and actually follow them, and several agents can run in parallel —"
-        " his laptop comfortably runs three or more coders at once. Each one is also \"born, does"
-        " the task, and dies,\" so the next stage starts with a clean, uncontaminated context"
-        " instead of one dragging along everything the last stage was thinking about.",
+        "This method has two gains. First, each agent keeps a small context, so it can hold its"
+        " few rules and follow them. Second, several agents can run at the same time. Uncle Bob's"
+        " laptop runs three or more coders at once, with no trouble. Each agent starts, does its"
+        " one job, and then stops. So the next stage starts with a clean context. It does not"
+        " carry the last stage's problems forward.",
 
-        "It isn't free: there's real coordination overhead between stages, and each agent costs"
-        " 10-15 seconds just to start up and re-establish its context. But the net numbers still"
-        " favor the pipeline — a single unconstrained agent finishes a task in about five minutes"
-        " with questionable results; the full pipeline takes about an hour for a much"
-        " higher-quality result; a human doing the same work by hand takes roughly half a day.",
+        "This method also costs something. Agents need real coordination between stages. Each"
+        " agent takes 10 to 15 seconds just to start and load its context. But the numbers still"
+        " favor the pipeline. One agent alone finishes a task in about five minutes, with weak"
+        " results. The full pipeline takes about an hour, with much better results. A human doing"
+        " the same work by hand takes about half a day.",
     ],
 
     "numbers": [
@@ -55,13 +55,13 @@ NOTE = {
     "analogy": None,
 
     "practice": [
-        "Split a feature into stages instead of asking one agent to spec, code, review and harden"
-        " it in one session.",
-        "Let a stage's agent die when it's done — start the next one with a clean context, not a"
-        " carried-over one.",
-        "Run independent stages in parallel where you can; budget for per-agent startup time.",
-        "Feed a reviewer or hardener the diff, not the whole codebase, so it doesn't need to"
-        " re-explore what already happened.",
+        "Split a feature into stages. Do not ask one agent to spec, code, review, and check it"
+        " in one session.",
+        "Stop a stage's agent when its job is done. Start the next stage with a clean context.",
+        "Run stages that do not depend on each other at the same time. Plan for startup time on"
+        " each agent.",
+        "Give a reviewer or checker the diff, not the whole codebase. It will not need to explore"
+        " what already happened.",
     ],
 
     "diagrams": [
