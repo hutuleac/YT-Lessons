@@ -35,6 +35,17 @@ NOTE = {
         " user picks, and each pick stacks onto the last until the tree runs out of branches. That"
         " is also why it pairs with a spec — see [[spec-driven-trap]] and the sibling note on"
         " writing the result down before the conversation is lost.",
+
+        "You don't need a packaged skill to get this behaviour — Claude Code's plan mode ships"
+        " with a built-in tool for exactly this, called the ask user question tool, and naming it"
+        " directly in a prompt (\"interview me in detail using the ask user question tool about"
+        " technical implementation, UI/UX concerns, and tradeoffs\") gets a plan mode that would"
+        " otherwise ask two generic questions to instead run several rounds of increasingly"
+        " specific ones — workflow shape, cost handling, storage approach, visual style. Ross"
+        " Mike's framing for why this is worth the extra friction: a vague plan lets the agent"
+        " make the assumptions instead of you, and every wrong assumption costs a redo once the"
+        " feature is already built — so the tokens spent being interviewed are cheaper than the"
+        " tokens spent unwinding a wrong build.",
     ],
 
     "numbers": [],
@@ -46,6 +57,8 @@ NOTE = {
         "Answer one branch fully before letting the conversation jump to the next.",
         "Take the recommended default when you have no strong opinion; it keeps the interview moving.",
         "Don't let the agent act on an answer you haven't actually confirmed.",
+        "No custom skill installed? Just name the tool: ask plan mode to interview you with the"
+        " ask user question tool before it writes the plan.",
     ],
 
     "diagrams": [

@@ -33,9 +33,18 @@ NOTE = {
         "So a big advertised window is not the win it looks like. A model that supports an"
         " enormous context still has lost-in-the-middle problems inside it, and you will get"
         " better results from using fewer tokens regardless of what the limit allows.",
+
+        "Ross Mike's practical version of the same effect: watch the context-used percentage"
+        " Claude Code shows you, and start a fresh session around 40-50% rather than riding a"
+        " single session to its ceiling. His number for Opus 4.5's 200k-token window is a rough"
+        " rule of thumb from his own use, not a measured threshold — but it matches the mechanism"
+        " above, since that's the point past which lost-in-the-middle has more of the window to"
+        " work with.",
     ],
 
-    "numbers": [],
+    "numbers": [
+        {"value": "40-50%", "unit": "context used", "label": "Ross Mike's rule of thumb for when to start a fresh session, on Opus 4.5's 200k-token window"},
+    ],
 
     "analogy": {
         "text": "The context window is not any part of this — it's the whole thing.",

@@ -11,6 +11,7 @@ LESSON = {
         "grooming-skill",
         "spec-without-code",
         "slice-by-feature",
+        "ralph-loop",
         "code-smell-vocabulary",
         "one-door",
         "deletion-test",
@@ -22,6 +23,9 @@ LESSON = {
         "slice-by-feature": "A spec is only useful once it's broken into tickets an agent can pick"
                              " up one at a time — how you slice them decides what's testable after"
                              " the first one ships.",
+        "ralph-loop": "Slicing gives you tickets small enough to hand off unattended — but"
+                       " unattended only works once each ticket is gated on its own test, and only"
+                       " once you've done enough tickets by hand to trust the gate.",
         "code-smell-vocabulary": "Once code exists, it needs review — and a review checklist is"
                                   " just another set of instructions with the same bloat risk as"
                                   " a spec or a skill.",

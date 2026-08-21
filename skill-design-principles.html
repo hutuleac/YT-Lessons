@@ -173,7 +173,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </div></header>
 <section id="grooming-skill">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 6 &middot; start here</span>
+<span class="cnum">1 / 7 &middot; start here</span>
 <h2>The grooming skill</h2>
 <p class="oneline">A skill that turns a vague request into a shared understanding by interviewing you one branch, one question at a time — never acting until you confirm.</p>
 </div></div>
@@ -181,6 +181,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>The problem it answers is that an agent given everything at once — colours, copy, functionality — has no way to build any of it with real accuracy, and asking the user to dump all of that context up front does not work because the user does not know what context the agent needs. The grooming skill inverts the direction: the agent interviews the user instead of the user briefing the agent.</p>
 <p>The five rules are what make the interview usable rather than exhausting. One branch at a time keeps the questions from jumping between the checkout page and the about page mid-thought — a decision tree is walked one path to its end before the next path opens. One question at a time means the agent waits for an answer instead of stacking three questions the user has to hold in their head. Recommend one means every question ships with a default the user can just accept, so the interview does not stall on questions the user has no opinion about. Do not act is the backstop: nothing gets built until the user has confirmed, so a misunderstanding costs a correction, not a rewrite.</p>
 <p>The result is closer to a decision machine than a chat: the model supplies options, the user picks, and each pick stacks onto the last until the tree runs out of branches. That is also why it pairs with a spec — see [[spec-driven-trap]] and the sibling note on writing the result down before the conversation is lost.</p>
+<p>You don't need a packaged skill to get this behaviour — Claude Code's plan mode ships with a built-in tool for exactly this, called the ask user question tool, and naming it directly in a prompt ("interview me in detail using the ask user question tool about technical implementation, UI/UX concerns, and tradeoffs") gets a plan mode that would otherwise ask two generic questions to instead run several rounds of increasingly specific ones — workflow shape, cost handling, storage approach, visual style. Ross Mike's framing for why this is worth the extra friction: a vague plan lets the agent make the assumptions instead of you, and every wrong assumption costs a redo once the feature is already built — so the tokens spent being interviewed are cheaper than the tokens spent unwinding a wrong build.</p>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
   aria-label="A decision tree with two branches, checkout page and about page. The checkout branch is fully walked through three questions before the about page branch begins, shown greyed out and untouched until the checkout branch completes.">
@@ -210,13 +211,14 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <li>Answer one branch fully before letting the conversation jump to the next.</li>
 <li>Take the recommended default when you have no strong opinion; it keeps the interview moving.</li>
 <li>Don't let the agent act on an answer you haven't actually confirmed.</li>
+<li>No custom skill installed? Just name the tool: ask plan mode to interview you with the ask user question tool before it writes the plan.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
 </section>
 <p class="bridge">The grooming interview ends in a shared understanding that lives only in the conversation — the spec is what makes it survive.</p>
 <section id="spec-without-code">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 6 &middot; start here</span>
+<span class="cnum">2 / 7 &middot; start here</span>
 <h2>No code blocks in the spec</h2>
 <p class="oneline">A spec should point at the code, not paste it — a pasted snippet goes stale the moment implementation starts, and an agent will follow stale code over the live codebase in front of it.</p>
 </div></div>
@@ -235,7 +237,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">A spec is only useful once it's broken into tickets an agent can pick up one at a time — how you slice them decides what's testable after the first one ships.</p>
 <section id="slice-by-feature">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 6 &middot; start here</span>
+<span class="cnum">3 / 7 &middot; start here</span>
 <h2>Slice tickets by feature, not by layer</h2>
 <p class="oneline">Group tickets by feature — login, checkout — instead of by layer — database, API, UI — so each ticket lands as something you can actually test end to end.</p>
 </div></div>
@@ -271,10 +273,60 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div>
 </section>
+<p class="bridge">Slicing gives you tickets small enough to hand off unattended — but unattended only works once each ticket is gated on its own test, and only once you've done enough tickets by hand to trust the gate.</p>
+<section id="ralph-loop">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 7 &middot; builds on <s>grooming-skill</s></span>
+<h2>The Ralph loop</h2>
+<p class="oneline">An unattended loop that works a plan feature by feature, testing each one before moving to the next — but it only amplifies the plan you feed it, so running it before you can build a feature by hand just burns tokens faster.</p>
+</div></div>
+<div class="wrap">
+<p>A Ralph loop takes a PRD or task list and works through it without a human in the middle of each step: the agent picks up the next task, builds it, writes and runs a test for it, records progress to a file, and moves to the next task — repeating until the list is empty. Left running, it can finish a small plan in minutes while you do something else. The name comes from the community's own joke about how unsophisticated the technique actually is — a dumb loop, not a clever agent.</p>
+<p>The gate is the test, not the agent's own judgement of done. If the test for a feature fails, the loop does not move on to the next feature — it goes back and keeps working the one that's broken. This is what makes the loop trustworthy enough to leave unattended: it cannot silently build feature three on top of a broken feature two, because feature two has to pass before three starts. See [[deterministic-gauntlet]] for why a check outside the prompt holds up where a written rule doesn't.</p>
+<p>But the loop has no opinion of its own — it only executes what the plan says, faster and without supervision. A great plan run through the loop produces a working product in minutes. A vague plan run through the same loop produces vague software just as fast, because every gap in the plan becomes an assumption the agent fills in without asking. Ross Mike's summary: if your plan is bad, running Ralph is just donating tokens.</p>
+<p>The stronger claim in the source is about sequencing, not the loop itself: don't reach for it until you've built features by hand first. Doing the plan-build-test cycle yourself, one feature at a time, is what builds the judgement to tell whether an agent's output is actually right — what he calls developing a sense for 'vibe QA.' Turning on full automation before you have that sense means you can't evaluate what the loop hands back, so mistakes compound for however long you left it running instead of getting caught on the first feature.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 200" role="img"
+  aria-label="A loop diagram: build feature, run test, on pass advance to the next feature, on fail return to building the same feature.">
+  <defs>
+    <marker id="rl-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="20" width="110" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="55" y="41" class="d-node" text-anchor="middle">build feature</text>
+
+  <line x1="110" y1="37" x2="150" y2="37" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#rl-arrow)"/>
+
+  <rect x="150" y="20" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="195" y="41" class="d-node" text-anchor="middle">run test</text>
+
+  <line x1="240" y1="37" x2="280" y2="37" stroke="var(--signal)" stroke-width="1.5" marker-end="url(#rl-arrow)"/>
+  <text x="260" y="27" class="d-label" text-anchor="middle">pass</text>
+
+  <rect x="280" y="20" width="110" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="335" y="41" class="d-node" text-anchor="middle">next feature</text>
+
+  <path d="M195 54 C 195 100, 55 100, 55 54" fill="none" stroke="var(--interference)" stroke-width="1.5" marker-end="url(#rl-arrow)"/>
+  <text x="125" y="90" class="d-fix" text-anchor="middle">fail — back to this feature</text>
+
+  <text x="0" y="140" class="d-label">no test failure passes silently forward</text>
+  <text x="0" y="160" class="d-label">the loop repeats one feature until its own test says stop</text>
+</svg></div><figcaption><b>Gated on the test, not on the agent's word</b><span>Each feature must pass its own test before the loop advances — a failure sends it back to the same feature instead of compounding forward.</span></figcaption></figure>
+<div class="analogy"><q>Imagine not knowing how to drive, but then buying a Tesla for the self-driving stuff.</q><p>Full automation before you've done the manual version means you can't tell when it's steering you wrong.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Build and test features one at a time by hand before turning on an autonomous loop.</li>
+<li>Only automate once you have something built and deployed you can actually point to.</li>
+<li>Feed the loop a plan that's been interviewed out — see [[grooming-skill]] — since the loop cannot fix a bad plan, only execute it faster.</li>
+<li>Have every feature write and pass its own test before the loop is allowed to move on.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=zxMjOqM7DFs" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code Clearly Explained (and how to use it) &middot; 31:28 &#8599;</a></div>
+</section>
 <p class="bridge">Once code exists, it needs review — and a review checklist is just another set of instructions with the same bloat risk as a spec or a skill.</p>
 <section id="code-smell-vocabulary">
 <div class="wrap"><div class="chead">
-<span class="cnum">4 / 6 &middot; start here</span>
+<span class="cnum">5 / 7 &middot; start here</span>
 <h2>Named vocabulary instead of instructions</h2>
 <p class="oneline">A code review checklist built from named smells — shotgun surgery, feature envy, data clumps — packs a whole diagnostic step into one word the model already knows, instead of a paragraph explaining what to look for.</p>
 </div></div>
@@ -313,7 +365,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The same instinct that shrinks a review checklist to twelve words applies to the codebase itself: fewer things to read is fewer things to get wrong.</p>
 <section id="one-door">
 <div class="wrap"><div class="chead">
-<span class="cnum">5 / 6 &middot; builds on <a class="out" href="context-engineering.html#tool-overload">tool-overload</a></span>
+<span class="cnum">6 / 7 &middot; builds on <a class="out" href="context-engineering.html#tool-overload">tool-overload</a></span>
 <h2>One door instead of many</h2>
 <p class="oneline">Encapsulate a function's fan-out behind a single entry point so an agent learns what it does by reading one function instead of jumping through every function it calls.</p>
 </div></div>
@@ -367,7 +419,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Encapsulating behind one door only helps if what's behind it still earns its place — the deletion test is how you find out.</p>
 <section id="deletion-test">
 <div class="wrap"><div class="chead">
-<span class="cnum">6 / 6 &middot; start here</span>
+<span class="cnum">7 / 7 &middot; start here</span>
 <h2>The deletion test</h2>
 <p class="oneline">To find out if a function still earns its place, delete it and run the tests — if nothing breaks, it wasn't load-bearing.</p>
 </div></div>

@@ -182,6 +182,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>It grows as the conversation grows, and it cannot grow forever. Each model has a hard-coded limit on how many tokens it can see at once, and querying past that limit returns an error from the API. You can also hit it part-way through a generation — the reply starts fine and runs into the ceiling — because the model is not smart enough to work around its own limit.</p>
 <p>The subtler failure matters more. In a long conversation the messages at the start carry weight and so do the ones at the end, but the material in the middle gets attended to least. This is the lost-in-the-middle effect, and it is more pronounced the larger the window gets — a model may struggle to retrieve information from its own context.</p>
 <p>So a big advertised window is not the win it looks like. A model that supports an enormous context still has lost-in-the-middle problems inside it, and you will get better results from using fewer tokens regardless of what the limit allows.</p>
+<p>Ross Mike's practical version of the same effect: watch the context-used percentage Claude Code shows you, and start a fresh session around 40-50% rather than riding a single session to its ceiling. His number for Opus 4.5's 200k-token window is a rough rule of thumb from his own use, not a measured threshold — but it matches the mechanism above, since that's the point past which lost-in-the-middle has more of the window to work with.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>40-50%</b><i>context used</i><span>Ross Mike's rule of thumb for when to start a fresh session, on Opus 4.5's 200k-token window</span></div>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 460 200" role="img"
   aria-label="A curve showing attention high at the beginning of a conversation, dipping through the middle, and rising again at the end, over a row of message markers.">
