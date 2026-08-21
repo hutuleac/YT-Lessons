@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Set up a coding agent like you'd onboard a new hire</title>
+<meta name="description" content="The same eight things a new employee needs — a workspace, a clear ticket, a way to check their own work, review standards, recurring duties, and boundaries — turn a coding agent from a chat window into something closer to staff.">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 30px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. SVG text scales with
+   the plate (vector, not raster), so the cap is set high to fill the wide-page plate
+   and keep labels legible rather than near-1:1 with their viewBox. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:820px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">Agent operations</p>
+<h1>Set up a coding agent like you'd onboard a new hire</h1>
+<p class="standfirst">The same eight things a new employee needs — a workspace, a clear ticket, a way to check their own work, review standards, recurring duties, and boundaries — turn a coding agent from a chat window into something closer to staff.</p>
+<p class="audience">You run a coding agent on a real product and want it doing more than one-off edits: recurring work, parallel tasks, and changes you can actually trust without reading every line.</p>
+</div></header>
+<section id="repo-as-onboarding-packet">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 8 &middot; start here</span>
+<h2>The repo as an onboarding packet</h2>
+<p class="oneline">Give an agent the same things you'd give a new hire — a workspace, and written context about the business — instead of re-explaining the project in every prompt.</p>
+</div></div>
+<div class="wrap">
+<p>An agent that only sees code has no way to know who the product is for, what's already been tried, or what counts as done. The fix demonstrated here is structural, not conversational: a folder layout that separates product code (/app) from business context (/context), sales input (/customers), and recurring work (/routines), plus three root files that carry the parts a codebase alone can't — claude.md for working style, roadmap.md for the current goal and what's explicitly out of scope, and review.md for the standard changes get judged against.</p>
+<p>The payoff is that this context persists across sessions without being retyped. A prompt like 'improve the landing page hero' can point at claude.md, roadmap.md, review.md and the latest customer notes instead of re-explaining the buyer, the pain, and the quality bar from scratch — the files carry that weight instead of the prompt.</p>
+<p>The scaffolding itself is meant to be set up by the agent, not typed out by hand: describe the product, the buyer, the pain, the promise, and the current goal in one message, and let it draft the files and ask clarifying questions for anything that would materially change the setup.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
+  aria-label="A repo tree with five folders — app, context, customers, demos, routines — and three root files — claude.md for working style, roadmap.md for current goal, review.md for quality standard.">
+  <text x="0" y="14" class="d-label">/repo</text>
+
+  <rect x="20" y="24" width="120" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="80" y="41" class="d-node" text-anchor="middle">/app</text>
+  <text x="150" y="41" class="d-label">the product code</text>
+
+  <rect x="20" y="56" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="80" y="73" class="d-node" text-anchor="middle">/context</text>
+  <text x="150" y="73" class="d-label">the business brain</text>
+
+  <rect x="20" y="88" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="80" y="105" class="d-node" text-anchor="middle">/customers</text>
+  <text x="150" y="105" class="d-label">calls, notes, objections</text>
+
+  <rect x="20" y="120" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="80" y="137" class="d-node" text-anchor="middle">/demos</text>
+  <text x="150" y="137" class="d-label">loom scripts, screenshots</text>
+
+  <rect x="20" y="152" width="120" height="26" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="80" y="169" class="d-node" text-anchor="middle">/routines</text>
+  <text x="150" y="169" class="d-label">recurring prompts</text>
+
+  <text x="20" y="196" class="d-fix">claude.md &#8594; how to work</text>
+  <text x="20" y="212" class="d-fix">roadmap.md &#8594; what matters now</text>
+  <text x="20" y="228" class="d-fix">review.md &#8594; what good looks like</text>
+</svg></div><figcaption><b>The workspace an agent actually needs</b><span>Product code is one folder among several — the rest is what a new hire would otherwise have to ask you for.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before asking an agent to build anything, give it a claude.md, roadmap.md, and review.md — even a rough first draft beats none.</li>
+<li>Put customer language, objections, and notes in a dedicated folder the agent can read, not just in your head.</li>
+<li>State what's explicitly out of scope in roadmap.md — it keeps the agent from padding a small task with unrequested features.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">The repo tells the agent who the business is — the ticket tells it what to actually do today, and how small a job has to be to stay reviewable.</p>
+<section id="ticket-scoping">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 8 &middot; start here</span>
+<h2>The ticket needs a visible finish line</h2>
+<p class="oneline">A vague prompt makes the agent guess what matters, and once it's guessing you're no longer managing the work, you're cleaning it up — a real ticket names the scope and the finish line.</p>
+</div></div>
+<div class="wrap">
+<p>The failure mode isn't the agent's competence, it's the size and shape of what it was given. 'Make this pop' has no finish line, so the agent supplies one — its own guess at what matters — and a guess you didn't make is a guess you now have to check line by line. A ticket like 'add a waitlist form with name, email, company, and a success state, matching the current brand' has a scope an agent can actually finish and a reviewer can actually check against.</p>
+<p>Plan mode is the step before the ticket gets built: ask the agent to inspect the repo and its own context files first, then hand back the files it would touch, the smallest implementation, the user-facing risk, and what it's deliberately leaving out — before touching anything. This isn't a full upfront project plan (see [[spec-driven-trap]] for why that fails); it's sized to one ticket, and it exists so you have something concrete to react to instead of a blank diff.</p>
+<p>Ticket size is also what makes review possible. A tightly scoped ticket produces a diff you can actually read; a vague one produces a pile of changes that might look impressive but is hard to trust, because nothing bounded what got touched.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 170" role="img"
+  aria-label="Two prompts. Vague prompt: make this pop, leads to the agent guessing what matters, producing a large unreviewable diff. Specific ticket: add a waitlist form with name, email, company and a success state, leads directly to a small reviewable diff.">
+  <text x="0" y="14" class="d-label">VAGUE</text>
+  <rect x="0" y="24" width="150" height="30" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="75" y="43" class="d-label" text-anchor="middle">"make this pop"</text>
+  <path d="M75 54 V70" stroke="var(--interference)" stroke-width="1.4"/>
+  <text x="75" y="86" class="d-fix" text-anchor="middle">agent guesses</text>
+  <rect x="0" y="94" width="150" height="30" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="75" y="113" class="d-label" text-anchor="middle">big, unreviewable diff</text>
+
+  <text x="250" y="14" class="d-label">SPECIFIC TICKET</text>
+  <rect x="250" y="24" width="200" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="260" y="40" class="d-label">"waitlist form: name,</text>
+  <text x="260" y="54" class="d-label">email, company, success</text>
+  <text x="260" y="66" class="d-label">state, match brand"</text>
+  <path d="M350 70 V86" stroke="var(--signal)" stroke-width="1.4"/>
+  <text x="350" y="102" class="d-fix" text-anchor="middle">agent builds to spec</text>
+  <rect x="270" y="110" width="160" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="350" y="129" class="d-label" text-anchor="middle">small, reviewable diff</text>
+</svg></div><figcaption><b>What the agent does with the gap</b><span>A vague prompt leaves a gap the agent has to fill on its own — with its guess, not yours.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write the ticket the way you'd brief a new hire: job, scope, expected experience, and what's off-limits — not "make it better."</li>
+<li>Run plan mode before implementation on anything that isn't trivial — the ask is inspect first, propose second, wait for approval third.</li>
+<li>If a ticket is big enough that you can't review the diff in one sitting, it's not one ticket.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">A ticket can be implemented correctly and still miss the point — the only way to catch that is to have the agent use the thing, not just build it.</p>
+<section id="agent-eyes">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 8 &middot; start here</span>
+<h2>Give the agent eyes</h2>
+<p class="oneline">An agent that only edits files can't tell you a form is awkward or a headline misses the buyer's pain — having it open, click through, and judge its own work closes a loop that reading code alone can't.</p>
+</div></div>
+<div class="wrap">
+<p>Most of what makes a product page bad is invisible to a diff: a form that submits but feels awkward, a button that's present but easy to miss, a headline that's accurate but misses the buyer's actual pain. None of that shows up by reading changed lines — it only shows up by using the thing the way a customer would.</p>
+<p>The fix is to have the agent run its own QA pass after it builds: open the page in preview, test the empty-submit case, check what happens after a real submission, inspect console and network for errors, and — this is the part reading code can't do — evaluate the experience from a named perspective, like 'a med spa owner seeing this for the first time.' That framing is what surfaces something like a form asking for an email with no reassurance about spam, which is a trust problem, not a bug.</p>
+<p>The instruction that keeps this useful rather than open-ended is to end with one focused fix on the single highest-impact issue found, not a general cleanup pass — the same discipline that makes a ticket reviewable applies to the fix that comes out of testing it.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 150" role="img"
+  aria-label="A code diff shows the form code is correctly added, marked as passing. Only opening the app and testing as a first-time visitor surfaces the actual issue: no reassurance about spam next to the email field, the real friction point.">
+  <text x="0" y="14" class="d-label">CODE DIFF</text>
+  <rect x="0" y="24" width="200" height="40" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="10" y="42" class="d-label">+ &lt;form&gt; email field</text>
+  <text x="10" y="56" class="d-label">+ &lt;button&gt; join waitlist</text>
+  <text x="0" y="82" class="d-fix">reads clean &#8212; nothing wrong here</text>
+
+  <text x="260" y="14" class="d-label">USING THE PAGE</text>
+  <rect x="260" y="24" width="200" height="40" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="270" y="42" class="d-label">email field, no context</text>
+  <text x="270" y="56" class="d-label">"will I get spam?"</text>
+  <text x="260" y="82" class="d-fix">the actual friction point</text>
+
+  <text x="0" y="118" class="d-label">Same commit &#8212; only one of these catches the real problem.</text>
+</svg></div><figcaption><b>What a diff can't see</b><span>The code is correct on both sides — only using the product surfaces the real problem.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>After a build, have the agent open the app and use it — not just check that it compiles.</li>
+<li>Frame the check as a specific persona's first experience, not a generic "does this work."</li>
+<li>Ask it to check console and network errors alongside the visual walkthrough.</li>
+<li>Limit the follow-up fix to the single highest-impact issue it surfaces.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">Once the agent is both building and checking its own work, you need a second layer: judging that work against a standard, not just a vibe.</p>
+<section id="review-triage">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 8 &middot; builds on <a class="out" href="lead-developer.html#review-checkpoints">review-checkpoints</a></span>
+<h2>Must-fix, should-fix, okay-to-ship</h2>
+<p class="oneline">Reviewing an agent's work against a written standard and sorting findings into three buckets turns review from a binary judgment call into a checklist you can actually act on.</p>
+</div></div>
+<div class="wrap">
+<p>Once an agent can produce changes quickly, the constraint stops being speed and becomes judgment: did it solve the right problem, touch the right files, avoid a weird edge case. That judgment happens in two layers. The first is a human skim of the diff itself — the same before/after view used for [[review-checkpoints]] — checking whether anything changed that the ticket didn't ask for. A scoped ticket that suddenly touches auth or the database is the signal to stop and look closer, before reading a single line in detail.</p>
+<p>The second layer hands the same diff back to the agent with an explicit standard: review it against review.md for production issues, broken edge cases, and confusing user flows, and separate the findings into three buckets — must fix, should fix, and okay to ship — rather than a single yes or no. That three-way split is the mechanism: a binary pass/fail either blocks on cosmetic issues or waves through real ones, while a triage lets you ship the okay-to-ship items now and schedule the rest.</p>
+<p>For higher-stakes changes — authentication, payments — the same review can run deeper, as a dedicated review pass in a fresh context rather than the session that wrote the code, for the same reason a same-session self-check misses its own blind spots.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 150" role="img"
+  aria-label="A diff feeds into review against review.md, which sorts findings into three buckets: must fix, should fix, and okay to ship.">
+  <rect x="0" y="52" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="45" y="73" class="d-node" text-anchor="middle">diff</text>
+  <path d="M94 69 H136" stroke="var(--line)" stroke-width="1.4"/>
+  <rect x="140" y="52" width="110" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="195" y="73" class="d-label" text-anchor="middle">review.md</text>
+  <path d="M250 69 H270" stroke="var(--line)" stroke-width="1.2"/>
+
+  <rect x="290" y="6" width="150" height="30" rx="4" fill="var(--interference)" opacity="0.45"/>
+  <text x="365" y="26" class="d-label" text-anchor="middle">must fix</text>
+  <rect x="290" y="54" width="150" height="30" rx="4" fill="var(--sand)" opacity="0.5"/>
+  <text x="365" y="74" class="d-label" text-anchor="middle">should fix</text>
+  <rect x="290" y="102" width="150" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="365" y="122" class="d-label" text-anchor="middle">okay to ship</text>
+
+  <path d="M270 69 H280 V21 H290" fill="none" stroke="var(--line)" stroke-width="1"/>
+  <path d="M270 69 H290" fill="none" stroke="var(--line)" stroke-width="1"/>
+  <path d="M270 69 H280 V117 H290" fill="none" stroke="var(--line)" stroke-width="1"/>
+</svg></div><figcaption><b>One diff, three buckets</b><span>Sorting findings by urgency instead of a single pass/fail lets you ship what's ready and schedule the rest.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write review.md once, as the explicit standard changes get judged against — not a one-off instruction typed into each review prompt.</li>
+<li>Sort every review pass into must-fix / should-fix / okay-to-ship rather than a single verdict.</li>
+<li>Treat an unexpected file in the diff as the review's first question, before reading anything else.</li>
+<li>Run a deeper, fresh-context review pass on high-stakes changes — auth, payments, data.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">All of this so far happens while you're present. A routine is the same discipline running without you in the room.</p>
+<section id="scheduled-routines">
+<div class="wrap"><div class="chead">
+<span class="cnum">5 / 8 &middot; start here</span>
+<h2>Scheduled routines</h2>
+<p class="oneline">Give an agent recurring, low-stakes responsibilities on a schedule — a morning brief, a weekly review — before ever letting it ship unsupervised, so the boring-but-essential work happens without you remembering to ask for it.</p>
+</div></div>
+<div class="wrap">
+<p>The instinct once an agent can run on a schedule is to reach for the most dramatic version — shipping code while you sleep. The safer and more useful starting point is the opposite: hand it the kind of recurring work that's low-stakes precisely because it doesn't touch production, but that a business quietly depends on someone doing — reading customer notes, noticing which issues keep coming up, deciding what's worth working on next.</p>
+<p>A routine is that task, scoped and scheduled: read the customer and context folders, check open issues, write a summary to a specific file, with an explicit word cap and an explicit 'don't edit code, don't open a pull request.' The constraints are as load- bearing as the task — they're what makes a recurring agent safe to leave running unattended before you've built up trust in its judgment.</p>
+<p>The payoff compounds because the routine's output feeds the rest of the system: a morning brief surfaces the day's highest-priority item before you've opened the repo, and a weekly review can catch a pattern — the same onboarding complaint from three different customers — that no single note would have surfaced on its own.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>7:00am weekdays</b><i></i><span>morning brief schedule</span></div>
+<div class="fig"><b>500</b><i>words</i><span>morning brief length cap</span></div>
+<div class="fig"><b>Fridays 3:00pm</b><i></i><span>weekly ops review schedule</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 160" role="img"
+  aria-label="Two scheduled routines. Morning brief, every weekday 7am, reads customer notes and issues, writes context slash morning-brief.md, under 500 words, no code edits. Weekly ops review, every Friday 3pm, groups issues and notes, writes context slash weekly-ops.md, no code edits.">
+  <text x="0" y="14" class="d-label">MON&#8211;FRI 7AM</text>
+  <rect x="0" y="22" width="200" height="80" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="10" y="40" class="d-label">read /customers, /context,</text>
+  <text x="10" y="54" class="d-label">open issues</text>
+  <text x="10" y="72" class="d-node">&#8594; morning-brief.md</text>
+  <text x="10" y="90" class="d-fix">under 500 words, no code</text>
+
+  <text x="250" y="14" class="d-label">FRI 3PM</text>
+  <rect x="250" y="22" width="200" height="80" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="260" y="40" class="d-label">group issues, find</text>
+  <text x="260" y="54" class="d-label">duplicates, notes</text>
+  <text x="260" y="72" class="d-node">&#8594; weekly-ops.md</text>
+  <text x="260" y="90" class="d-fix">no code, no PR</text>
+
+  <text x="0" y="134" class="d-label">Both write to a file. Neither touches production.</text>
+</svg></div><figcaption><b>Two routines, same shape</b><span>Read, summarize, write to a file — never touch code. The safety is in what the routine is *not* allowed to do.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Start scheduled work with a read-only routine — no code edits, no pull requests — before trusting an agent with anything that ships.</li>
+<li>Give every routine an explicit word or scope cap so it stays a brief, not a report.</li>
+<li>Point routines at the same context folders the rest of the system already reads and writes to, so their output compounds instead of living in isolation.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">One routine running unattended is a start — the next step is several scoped sessions running unattended at once.</p>
+<section id="parallel-worktree-agents">
+<div class="wrap"><div class="chead">
+<span class="cnum">6 / 8 &middot; start here</span>
+<h2>One session, one assignment</h2>
+<p class="oneline">Worktree-isolated sessions let several agents work at once without their changes mixing — but only if each session gets one clear job, or you end up with a pile of tangled work to sort out at the end of the day.</p>
+</div></div>
+<div class="wrap">
+<p>Running several agent sessions at once is only useful if the isolation is real: with worktree isolation, each session gets its own context and its own set of changes, so a debugging session and a copy-editing session don't collide on the same files. That mechanical guarantee is what makes parallel work safe to attempt at all.</p>
+<p>What makes it actually productive is scoping each session like a separate hire: the bug session gets the root cause, the files touched, and what to check in the diff; the copy session gets a before/after and why the new version is clearer; the sales session gets the objection it was solving for and what to review before recording. Different job, same project context, one specific handoff shape per session.</p>
+<p>The failure mode this avoids is spraying work across a repo and ending the day with a single giant, tangled set of changes nobody wants to review. Isolation plus a scoped handoff turns 'several things happened' into several small packets you can inspect, accept, revise, or reject independently.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 180" role="img"
+  aria-label="Three parallel agent sessions, each in its own worktree, working on different jobs: a bug fix, a landing page hero rewrite, and a sales demo script. Each returns a separate reviewable packet.">
+  <rect x="150" y="4" width="160" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="230" y="21" class="d-label" text-anchor="middle">same project context</text>
+  <path d="M230 30 V44" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M230 44 H70 M230 44 H390" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M70 44 V58 M230 44 V58 M390 44 V58" stroke="var(--line)" stroke-width="1.2"/>
+
+  <rect x="10" y="58" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="70" y="77" class="d-label" text-anchor="middle">bug fix</text>
+  <rect x="170" y="58" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="230" y="77" class="d-label" text-anchor="middle">hero rewrite</text>
+  <rect x="330" y="58" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="390" y="77" class="d-label" text-anchor="middle">demo script</text>
+
+  <path d="M70 88 V102 M230 88 V102 M390 88 V102" stroke="var(--line)" stroke-width="1"/>
+  <rect x="15" y="102" width="110" height="52" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="70" y="120" class="d-fix" text-anchor="middle">root cause,</text>
+  <text x="70" y="134" class="d-fix" text-anchor="middle">files, checks</text>
+
+  <rect x="175" y="102" width="110" height="52" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="230" y="120" class="d-fix" text-anchor="middle">before/after,</text>
+  <text x="230" y="134" class="d-fix" text-anchor="middle">why clearer</text>
+
+  <rect x="335" y="102" width="110" height="52" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="390" y="120" class="d-fix" text-anchor="middle">objection,</text>
+  <text x="390" y="134" class="d-fix" text-anchor="middle">script draft</text>
+
+  <text x="0" y="176" class="d-label">three separate packets &#8212; reviewed and merged independently</text>
+</svg></div><figcaption><b>Three jobs, three isolated sessions</b><span>Same project context, separate worktrees — each comes back as one reviewable packet instead of one tangled pile.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before starting parallel sessions, write one specific handoff format per session — what it should come back with, not just what it should do.</li>
+<li>Mix job types across sessions (bug fix, copy, sales asset) rather than three variations on the same task — that's what actually benefits from isolation.</li>
+<li>Review and merge each session's output separately; don't let three sessions' changes pile up before you look at any of them.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">More sessions running with less supervision is only safe if what they're allowed to do is bounded ahead of time, not decided live.</p>
+<section id="permission-tiers">
+<div class="wrap"><div class="chead">
+<span class="cnum">7 / 8 &middot; start here</span>
+<h2>Three tiers of permission</h2>
+<p class="oneline">Split what an agent can do into safe, ask-first, and human-owned — the same delegation model you'd use for a new hire, so autonomy grows with trust instead of being all-or-nothing.</p>
+</div></div>
+<div class="wrap">
+<p>Treating agent permissions as a single on/off switch forces a bad trade: either the agent can do nothing without approval, which defeats the point, or it can do everything, which is how a small task turns into an unreviewed production incident. Splitting actions into three tiers by blast radius avoids both — most work stays fully autonomous, risky work pauses for a yes, and a defined set of decisions never leaves the human's hands regardless of how much trust has been built up.</p>
+<p>The tiers track consequence, not difficulty: reading code and running local tests are safe because they're reversible and contained to the agent's own branch. Installing a dependency or touching a migration is ask-first because it's the kind of change whose damage doesn't stay local. Production deploys, customer data, and billing stay human-owned permanently — not because the agent can't do them, but because some decisions are supposed to require a person even after everything else has been automated.</p>
+<p>This is a strategy that scales rather than a fixed setting: as [[repo-as-onboarding-packet]]'s review checklist and task scoping get stronger, more work can move from ask-first toward safe. The alternative — starting at full autonomy — just moves the same review burden from before the change to after the incident.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 190" role="img"
+  aria-label="Three concentric tiers of agent permission. Innermost, safe: read files, run local tests, edit a small branch, no approval needed. Middle, ask first: install dependencies, touch migrations, auth, or payments. Outer, human-owned: production deploys, customer data, billing.">
+  <circle cx="230" cy="95" r="86" fill="var(--interference)" opacity="0.18"/>
+  <circle cx="230" cy="95" r="58" fill="var(--sand)" opacity="0.35"/>
+  <circle cx="230" cy="95" r="30" fill="var(--signal)" opacity="0.4"/>
+
+  <text x="230" y="90" class="d-node" text-anchor="middle">safe</text>
+  <text x="230" y="104" class="d-fix" text-anchor="middle">read, test, branch</text>
+
+  <text x="230" y="46" class="d-label" text-anchor="middle">ask first</text>
+  <text x="230" y="14" class="d-label" text-anchor="middle">human-owned</text>
+
+  <text x="0" y="180" class="d-label">deploys, customer data, billing &#8212; stay human no matter what</text>
+</svg></div><figcaption><b>Autonomy by blast radius</b><span>The tier tracks how far a mistake reaches, not how hard the task is.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write down which actions fall in each tier before turning an agent loose on a repo — don't decide it live, mid-task.</li>
+<li>Keep production deploys, customer data, and billing decisions human-owned no matter how much autonomy the agent has earned elsewhere.</li>
+<li>Start conservative and use plan mode plus manual review for anything new, then loosen as trust and tooling (routines, review checklist) mature.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<p class="bridge">The last layer isn't a new capability, it's naming which of the three you actually need instead of writing another instruction into every prompt.</p>
+<section id="skills-connectors-hooks">
+<div class="wrap"><div class="chead">
+<span class="cnum">8 / 8 &middot; start here</span>
+<h2>Skills, connectors, and hooks</h2>
+<p class="oneline">Three different jobs get confused under "make the agent smarter" — a skill makes a prompt repeatable, a connector gives it access to a tool, a hook enforces a rule automatically. Naming which one you need keeps the setup from turning into one big pile of instructions.</p>
+</div></div>
+<div class="wrap">
+<p>These three solve different problems and get reached for interchangeably, which is how setups turn into an unstructured pile of instructions. A skill is a saved, repeatable way of doing a specific task — a landing-page teardown that checks five-second clarity and trust signals, a customer-notes pass that pulls out the exact language customers use. The signal that something should become a skill is noticing you've typed a version of the same prompt more than once.</p>
+<p>A connector is not a prompt at all — it's access. It's what lets the agent read GitHub issues, pull from Linear, or check a Google Drive doc instead of you copy-pasting content into the conversation. Where a skill encodes *how* to do something, a connector just gives the agent somewhere new *to look*.</p>
+<p>A hook is neither a prompt nor a source of context — it's an automatic rule that runs at a fixed point in the workflow regardless of what was asked: run formatting after an edit, run tests before a PR summary, run checks before anything ships. This is the enforcement layer [[skill-hell]] warns against skipping: a hook doesn't rely on the agent remembering to do the safe thing, it makes the safe thing happen structurally.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 170" role="img"
+  aria-label="Three separate layers. Skills: repeatable prompts, e.g. landing page teardown. Connectors: access to tools, e.g. GitHub, Linear, Drive. Hooks: automatic rules, e.g. run tests before a PR.">
+  <rect x="0" y="10" width="140" height="60" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="70" y="34" class="d-node" text-anchor="middle">skills</text>
+  <text x="70" y="52" class="d-fix" text-anchor="middle">repeatable prompt</text>
+
+  <rect x="160" y="10" width="140" height="60" rx="4" fill="var(--sand)" opacity="0.45"/>
+  <text x="230" y="34" class="d-node" text-anchor="middle">connectors</text>
+  <text x="230" y="52" class="d-fix" text-anchor="middle">access to a tool</text>
+
+  <rect x="320" y="10" width="140" height="60" rx="4" fill="var(--interference)" opacity="0.35"/>
+  <text x="390" y="34" class="d-node" text-anchor="middle">hooks</text>
+  <text x="390" y="52" class="d-fix" text-anchor="middle">rule that always fires</text>
+
+  <text x="70" y="96" class="d-label" text-anchor="middle">"tear down this</text>
+  <text x="70" y="110" class="d-label" text-anchor="middle">landing page"</text>
+
+  <text x="230" y="96" class="d-label" text-anchor="middle">read GitHub</text>
+  <text x="230" y="110" class="d-label" text-anchor="middle">issues</text>
+
+  <text x="390" y="96" class="d-label" text-anchor="middle">run tests</text>
+  <text x="390" y="110" class="d-label" text-anchor="middle">before every PR</text>
+
+  <text x="0" y="150" class="d-label">a request you asked for, access you granted, a rule that needs no asking</text>
+</svg></div><figcaption><b>Three layers, three jobs</b><span>Confusing these is how a setup turns into one long, unstructured instruction dump.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before writing a new instruction, ask which of the three it actually is — a repeatable task (skill), a data source (connector), or a rule that must always fire (hook).</li>
+<li>Turn a prompt into a skill the second time you type a version of it, not the fifth.</li>
+<li>Put anything that must always happen — formatting, tests before a PR — in a hook, not in a prompt you might forget to add.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>The whole loop</h2><p>Customer feedback goes into /customers. Direction goes into roadmap.md. Working style goes into claude.md. Standards go into review.md. Small tasks go through plan mode. Changes go through preview and review. Recurring work becomes a scheduled routine. None of these pieces is impressive alone — the leverage is in running them as one loop instead of reaching for whichever one you remember that day.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
+</body>
+</html>
