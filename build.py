@@ -76,6 +76,18 @@ CSS = """
     --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
   }
 }
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--ink);
@@ -316,6 +328,76 @@ body{font-family:var(--sans)}
   .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
   .bar{display:none}
 }
+
+/* ---- overview: O shrinks every slide into a clickable grid, click jumps and exits ---- */
+html.overview{scroll-snap-type:none; overflow:hidden}
+html.overview body{
+  height:100dvh; overflow-y:auto; display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); grid-auto-rows:135px;
+  gap:14px; padding:14px; align-content:start
+}
+/* No content re-flow trick here (clamp() ignores font-size, and percentage sizing on a grid
+   item fights the track). A cropped top-left corner of each slide is enough to recognize
+   and click it — that's all an overview picker needs to do. */
+html.overview{counter-reset:ov}
+html.overview .slide{
+  min-height:0; cursor:pointer; scroll-snap-align:none; overflow:hidden;
+  border:1px solid var(--line); border-radius:6px; padding:10px 12px;
+  counter-increment:ov
+}
+html.overview .slide::after{
+  content:counter(ov); position:absolute; top:6px; right:8px;
+  font:400 10px var(--mono); color:var(--muted)
+}
+html.overview .slide:hover{border-color:var(--signal)}
+html.overview .tick, html.overview .foot, html.overview .bar{display:none}
+"""
+
+# F fullscreen, D theme, O overview grid, Left/Right previous/next slide. Native scroll-snap
+# already does the scrolling; this just points it at the right slide and toggles two classes.
+DECK_JS = """
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  function current(){
+    var y=scrollY+innerHeight/2;
+    for(var i=slides.length-1;i>=0;i--) if(slides[i].offsetTop<=y) return i;
+    return 0;
+  }
+  function go(i){ slides[Math.max(0,Math.min(slides.length-1,i))].scrollIntoView({behavior:'smooth'}) }
+  var theme='dark';
+  function setTheme(t){
+    theme=t;
+    document.documentElement.setAttribute('data-theme',t);
+    try{ localStorage.setItem('deck-theme',t) }catch(e){}
+  }
+  try{
+    var saved=localStorage.getItem('deck-theme');
+    if(saved) setTheme(saved);
+    else if(matchMedia('(prefers-color-scheme:light)').matches) theme='light';
+  }catch(e){}
+  slides.forEach(function(s){ s.addEventListener('click',function(){
+    if(document.documentElement.classList.contains('overview')){
+      document.documentElement.classList.remove('overview');
+      s.scrollIntoView();
+    }
+  }) });
+  addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var k=e.key.toLowerCase();
+    if(k==='arrowright'){ e.preventDefault(); go(current()+1) }
+    else if(k==='arrowleft'){ e.preventDefault(); go(current()-1) }
+    else if(k==='f'){
+      if(document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen()
+    }
+    else if(k==='d'){ setTheme(theme==='dark'?'light':'dark') }
+    else if(k==='o'){
+      var i=current();
+      document.documentElement.classList.toggle('overview');
+      if(!document.documentElement.classList.contains('overview')) slides[i].scrollIntoView();
+    }
+  });
+})();
 """
 
 RAIL_JS = """
@@ -590,7 +672,7 @@ def build_deck(L, notes):
         f"<title>{e(L['title'])} &mdash; deck</title>\n"
         f"<style>{CSS}{DECK_CSS}</style>\n</head>\n<body>\n"
         + "\n".join(body)
-        + "\n</body>\n</html>\n"
+        + f"\n<script>{DECK_JS}</script>\n</body>\n</html>\n"
     )
     out = ROOT / f"{L['id']}-deck.html"
     out.write_text(doc, encoding="utf-8")

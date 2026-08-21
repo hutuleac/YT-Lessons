@@ -25,6 +25,18 @@
     --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
   }
 }
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--ink);
