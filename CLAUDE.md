@@ -83,10 +83,29 @@ same argument out of the same notes.
   laptop. A regression here only shows up at 1920px+ — checking 390px and 1440px won't catch it.
 - **The deck (`<id>-deck.html`) has F/D/O/←→ controls, built once in `DECK_JS`/`DECK_CSS` in
   `build.py` — never per-lesson.** F toggles fullscreen, D toggles `data-theme` (persisted in
-  `localStorage`), O toggles a keyboard-only overview grid (click a thumbnail to jump), ←/→ step
-  one slide. If a feature request wants any of this changed, it's a `build.py` edit, not a note
-  edit — same rule as `sys.dont_write_bytecode`, rebuild `--all` and re-verify with `/browse`
-  before trusting it.
+  `localStorage`), O toggles a keyboard-only overview grid (click a thumbnail to jump), ←/→ (and
+  space) step through the slide's reveal before moving on. If a feature request wants any of this
+  changed, it's a `build.py` edit, not a note edit — same rule as `sys.dont_write_bytecode`,
+  rebuild `--all` and re-verify with `/browse` before trusting it.
+- **→ steps, it doesn't page.** Every `.bul li`, `.acts li` and `.nums div` is a `.step`: the
+  arrow reveals them one at a time, marking the newest `.now` (full ink + teal rule) and letting
+  the rest recede to muted, and only advances the slide once they're spent. Two rules keep a
+  slide from ever showing up blank: arriving *backward* reveals everything, and a slide reached
+  by scrolling or by an overview click reveals everything — only the arrows present. All of it is
+  gated on `html.reveal`, added by `DECK_JS` at load, so a deck whose script never runs shows
+  every step instead of a stack of empty slides. Step dots in the top bar are built by the same
+  script, so the renderer never has to know they exist.
+- **Arrival animations are keyed to `.seen`, added by an IntersectionObserver at 55% visibility.**
+  Rise, connector path-draw and number pop are adapted from `lewislulu/html-ppt-skill`'s
+  `animations.css`; the heading signal-sweep and the quote resolve are this repo's own, built on
+  the signal/interference axis. Three things this cost an hour to learn: the draw effect must
+  hit only `path`/`line`/`polyline` (running it over `rect`/`circle` dismantles every box into
+  corner stubs for a second, which reads as a broken render); the heading sweep paints text with
+  `background-clip`, so **overview and print must reset `background`, `color` *and*
+  `-webkit-text-fill-color` with `!important`** or headings render teal-tinted, or invisible if
+  only the fill is reset; and `html.overview *{animation:none}` freezes a gradient mid-sweep
+  rather than removing it. Verify a deck-motion change in the overview grid too, not just on a
+  slide.
 - **`.k-section`'s two-column layout (`grid-column`/`grid-row`, ≥1000px media query) corrupts
   flex siblings in overview mode — a real Chromium bug, not a spec violation.** Overview forces
   `display:flex` on `.slide` (via `html.overview .slide`) to override `.k-section`'s
@@ -97,6 +116,13 @@ same argument out of the same notes.
   `.k-section` in overview (`html.overview .k-section{display:block}`) did. If overview ever
   looks broken again (blank/overlapping cards) for section-divider slides specifically, this is
   the first thing to check — don't assume the new CSS is wrong before checking whether it's this.
+- **A multi-segment `<path>` fills solid black unless you set `fill="none"`.** SVG fills an open
+  path by implicitly closing it, so any hand-drawn connector with a bend (`M... H... V... H...`,
+  e.g. a fan-out from one box to three) renders as a filled wedge, not a line — a straight
+  one-segment path (`M... H...` or `M... V...`) has zero area and looks fine, which is why this
+  only shows up on the more interesting diagrams. Caught by actually screenshotting each `<figure>`
+  per the verify step below, not by reading the SVG source. Any path meant to be a line, not a
+  shape, needs `fill="none"` explicitly.
 
 ## Design
 Dark-first, light is a media-query override. Monospace display / serif body — the machine speaks
