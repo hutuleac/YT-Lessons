@@ -17,7 +17,7 @@ NOTE = {
     ],
 
     "mechanism": [
-        "Boris Cherny, who built Claude Code, gives this as his first recommendation in his"
+        "Boris, who built Claude Code, gives this as his first recommendation in his"
         " Claude Code talk at Anthropic's Code w/ Claude (the video is a re-upload of that"
         " conference session). A free-form agent opens on an empty prompt bar and it is not"
         " obvious what to type. Questions are the answer, because a question is the one request"
@@ -27,7 +27,7 @@ NOTE = {
         " by searching for the string. Asked how a class is used, it goes looking for real"
         " instantiations. Asked why a function has fifteen arguments, it reads git history, finds"
         " which commits introduced each one, and follows the issues those commits link to. That"
-        " is a chain a wiki page cannot give you and Command-F cannot reconstruct. Cherny notes"
+        " is a chain a wiki page cannot give you and Command-F cannot reconstruct. He notes"
         " none of this is prompted for — there is nothing in the system prompt about git; the"
         " model simply knows how to use it when told to.",
 
@@ -35,7 +35,9 @@ NOTE = {
         " to three weeks to get productive, mostly by taxing other engineers with questions;"
         " with codebase Q&A that dropped to two or three days. Nothing is indexed, no remote"
         " database holds your code, and the code is not used to train models — which also means"
-        " there is no indexing wait before the first question.",
+        " there is no indexing wait before the first question. He puts the internal"
+        " adoption at roughly 80% of technical staff using it daily, so this is how the whole"
+        " company reads its own code, not an onboarding-only trick.",
 
         "The second payoff is calibration. Asking questions teaches a new user where the"
         " boundary sits: what gets one-shotted, what takes two or three attempts, what needs"
@@ -52,12 +54,7 @@ NOTE = {
                                                       " only git log can explain"},
     ],
 
-    "analogy": {
-        "text": "You have to ask other engineers on the team questions. You have to look around"
-                " the code... this takes a long time.",
-        "note": "Q&A is the new hire's first week, moved off your colleagues and onto a tool"
-                " that has read the whole repo and never gets tired of the question.",
-    },
+    "analogy": None,
 
     "practice": [
         "Make the first session on any unfamiliar repo a question session — edit nothing.",

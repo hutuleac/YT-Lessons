@@ -17,7 +17,7 @@ NOTE = {
     ],
 
     "mechanism": [
-        "Boris Cherny, who built Claude Code, describes this as the workflow that separates a"
+        "Boris, who built Claude Code, describes this as the workflow that separates a"
         " good result from a nearly correct one. Give the agent a mock and ask for the web UI and"
         " it gets close on the first attempt. The gap between close and right is not more"
         " instruction — it is more attempts, and attempts are only worth anything if something"
@@ -28,7 +28,7 @@ NOTE = {
         " the next turn and compare against the target. Without one, the agent has already"
         " emitted its best single guess, and asking it to try again just resamples the same"
         " guess. With one, it has a gradient — this failed, that passed, the layout is off by"
-        " this much — and it can walk it without you in the loop. Cherny's number is two or"
+        " this much — and it can walk it without you in the loop. His number is two or"
         " three iterations to go from good to almost perfect.",
 
         "The practical consequence is that setting up the check is the work. Whatever the domain"

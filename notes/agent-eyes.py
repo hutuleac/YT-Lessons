@@ -7,7 +7,7 @@ NOTE = {
                  ,
 
     "prerequisites": [],
-    "related": ["review-triage"],
+    "related": ["review-triage", "checkable-oracle"],
 
     "skeleton": [
         "A landing page can load fine and still feel confusing. Code review won't catch that.",

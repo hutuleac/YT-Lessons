@@ -19,7 +19,7 @@ NOTE = {
     ],
 
     "mechanism": [
-        "Boris Cherny's framing in his Claude Code talk is that the more context the agent has,"
+        "Boris's framing in his Claude Code talk is that the more context the agent has,"
         " the better its decisions, because an engineer working in a codebase carries a large"
         " amount of unwritten history that the agent starts without. But context is not free and"
         " not uniform, so the design question is placement: which scope owns this fact, and does"
@@ -40,7 +40,7 @@ NOTE = {
         " team uses, instead of each one wiring up their own.",
 
         "The counterweight is cost. Everything in the always-loaded file is spent on every"
-        " request, so Cherny's advice is to keep it as short as possible — common commands, the"
+        " request, so his advice is to keep it as short as possible — common commands, the"
         " style guide, a few core files, architectural decisions — and to accept that a long one"
         " is usually not useful. When the matrix of options gets overwhelming, his recommended"
         " starting point is the shared project scope, because it is written once and everyone on"

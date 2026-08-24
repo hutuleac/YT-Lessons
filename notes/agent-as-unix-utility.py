@@ -19,7 +19,7 @@ NOTE = {
     "mechanism": [
         "The interactive terminal session is the visible half of the product. The other half is"
         " the same engine with no interface: a prompt goes in as an argument, the answer comes"
-        " back on stdout. Boris Cherny points out this is not a lesser mode — it is exactly what"
+        " back on stdout. Boris, who built Claude Code, points out this is not a lesser mode — it is exactly what"
         " the interactive tool is built on, exposed for you to build on too.",
 
         "Two properties turn that into composability. It reads standard input, so the output of"
@@ -30,7 +30,7 @@ NOTE = {
 
         "That is the whole Unix argument applied to a model: a program that reads a stream and"
         " writes a stream can be inserted anywhere in a chain without the chain knowing what it"
-        " is. Cherny's examples are the ones you would expect from that framing — running it in"
+        " is. His examples are the ones you would expect from that framing — running it in"
         " CI, using it in incident response, handing it a giant log and asking what is"
         " interesting about it — and he is explicit that this is unexplored ground rather than a"
         " settled pattern.",
