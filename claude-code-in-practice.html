@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Questions, then checks, then context, then pipelines</title>
+<meta name="description" content="The person who built Claude Code teaches it as a ladder, not a feature list: start by asking the codebase questions, give the agent a way to grade its own work, place your context where it belongs, and only then wire it into everything else.">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 30px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. SVG text scales with
+   the plate (vector, not raster), so the cap is set high to fill the wide-page plate
+   and keep labels legible rather than near-1:1 with their viewBox. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:820px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+/* ---- source ---- */
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">Working with a coding agent</p>
+<h1>Questions, then checks, then context, then pipelines</h1>
+<p class="standfirst">The person who built Claude Code teaches it as a ladder, not a feature list: start by asking the codebase questions, give the agent a way to grade its own work, place your context where it belongs, and only then wire it into everything else.</p>
+<p class="audience">You have a coding agent installed, you're getting mixed results out of it, and you want the progression its own author recommends rather than a pile of tips.</p>
+</div></header>
+<section id="codebase-qa-first">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 5 &middot; start here</span>
+<h2>Start with codebase Q&amp;A</h2>
+<p class="oneline">Before letting an agent edit anything, use it to ask questions about the codebase — it answers by exploring the repo the way an engineer would, and asking teaches you where its competence ends.</p>
+</div></div>
+<div class="wrap">
+<p>Boris Cherny, who built Claude Code, gives this as his first recommendation in his Claude Code talk at Anthropic's Code w/ Claude (the video is a re-upload of that conference session). A free-form agent opens on an empty prompt bar and it is not obvious what to type. Questions are the answer, because a question is the one request where a wrong answer costs nothing — no diff to review, no state changed.</p>
+<p>The reason the answers are worth having is that the agent does not resolve a question by searching for the string. Asked how a class is used, it goes looking for real instantiations. Asked why a function has fifteen arguments, it reads git history, finds which commits introduced each one, and follows the issues those commits link to. That is a chain a wiki page cannot give you and Command-F cannot reconstruct. Cherny notes none of this is prompted for — there is nothing in the system prompt about git; the model simply knows how to use it when told to.</p>
+<p>The organisational payoff is onboarding. At Anthropic, technical hires used to take two to three weeks to get productive, mostly by taxing other engineers with questions; with codebase Q&amp;A that dropped to two or three days. Nothing is indexed, no remote database holds your code, and the code is not used to train models — which also means there is no indexing wait before the first question.</p>
+<p>The second payoff is calibration. Asking questions teaches a new user where the boundary sits: what gets one-shotted, what takes two or three attempts, what needs an interactive session with you steering. You cannot prompt well for editing until you have a feel for that boundary, and questions are the cheap way to acquire it.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>2-3</b><i>weeks</i><span>technical onboarding at Anthropic, before</span></div>
+<div class="fig"><b>2-3</b><i>days</i><span>technical onboarding at Anthropic, after</span></div>
+<div class="fig"><b>~80</b><i>%</i><span>technical staff at Anthropic using Claude Code daily, as of the talk</span></div>
+<div class="fig"><b>15</b><i>arguments</i><span>his example of a function whose history only git log can explain</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 500 210" role="img"
+  aria-label="A question, why does this function have fifteen arguments, sent two ways. Text search returns only the line where the function is defined. The agent instead runs grep for call sites, reads git blame and log for the commits that added each argument, and fetches the issues those commits link to, then returns a synthesized history.">
+  <text x="0" y="14" class="d-label">&#8220;why does this function have 15 arguments?&#8221;</text>
+
+  <text x="0" y="46" class="d-label">TEXT SEARCH</text>
+  <rect x="0" y="56" width="170" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="10" y="77" class="d-node">1 match: the def line</text>
+  <text x="0" y="108" class="d-fix">tells you what, never why</text>
+
+  <text x="230" y="46" class="d-label">AGENT</text>
+  <rect x="230" y="56" width="120" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="240" y="73" class="d-node">grep call sites</text>
+  <rect x="230" y="88" width="120" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="240" y="105" class="d-node">git log / blame</text>
+  <rect x="230" y="120" width="120" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="240" y="137" class="d-node">linked issues</text>
+  <path d="M350 69 H375 V133 H350" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+  <path d="M350 101 H375" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+  <path d="M375 101 H395" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+  <rect x="395" y="84" width="105" height="34" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="405" y="105" class="d-node">the history</text>
+
+  <text x="230" y="170" class="d-fix">nothing prompts it to use git &#8212; it knows</text>
+  <text x="0" y="196" class="d-label">Onboarding at Anthropic: 2&#8211;3 weeks &#8594; 2&#8211;3 days.</text>
+</svg></div><figcaption><b>How a question gets answered</b><span>A search returns matches. The agent returns the chain that explains them.</span></figcaption></figure>
+<div class="analogy"><q>You have to ask other engineers on the team questions. You have to look around the code... this takes a long time.</q><p>Q&amp;A is the new hire's first week, moved off your colleagues and onto a tool that has read the whole repo and never gets tired of the question.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Make the first session on any unfamiliar repo a question session — edit nothing.</li>
+<li>Ask about usage, not just definitions: how is this instantiated, where is this called.</li>
+<li>Ask about history — why an argument exists, who added it, what issue it links to.</li>
+<li>When onboarding a teammate, have them start here rather than with tools or edits.</li>
+<li>Track which questions get one-shotted; that boundary is what tells you how to prompt.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a></div>
+</section>
+<p class="bridge">Questions calibrate you on what the agent can do unaided. The moment you move from asking to building, the limit stops being its knowledge and starts being whether it can tell how the last attempt went.</p>
+<section id="checkable-oracle">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 5 &middot; start here</span>
+<h2>Give it a way to check its work</h2>
+<p class="oneline">Hand the agent something that can objectively score its own output — a test suite, a screenshot, a simulator — and it stops needing you between attempts, because it can tell for itself whether the last one was closer.</p>
+</div></div>
+<div class="wrap">
+<p>Boris Cherny, who built Claude Code, describes this as the workflow that separates a good result from a nearly correct one. Give the agent a mock and ask for the web UI and it gets close on the first attempt. The gap between close and right is not more instruction — it is more attempts, and attempts are only worth anything if something tells the agent which direction it moved in.</p>
+<p>That something has to be objective. A unit test run, a Puppeteer screenshot of the page, a screenshot from the iOS simulator: each produces evidence the model can read back on the next turn and compare against the target. Without one, the agent has already emitted its best single guess, and asking it to try again just resamples the same guess. With one, it has a gradient — this failed, that passed, the layout is off by this much — and it can walk it without you in the loop. Cherny's number is two or three iterations to go from good to almost perfect.</p>
+<p>The practical consequence is that setting up the check is the work. Whatever the domain is — unit tests, integration tests, browser screenshots, native app screenshots — the job is to hand the agent a way to see its own result, and then let it iterate. This is why a Puppeteer MCP server checked into a repo is worth more than any prompt written about the UI: it converts a single-shot request into a loop.</p>
+<p>It is a narrower thing than having the agent judge a product as a user would. Taste questions — is this headline persuasive, is this flow confusing — are not oracles, because there is no pass/fail to read back. Those still need a human, or an explicit persona framing.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>2-3</b><i>iterations</i><span>from "pretty good" to "almost perfect", given a check</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
+  aria-label="A chart with attempts on the horizontal axis (1, 2, 3) and closeness to the target on the vertical axis. Without a check, the curve rises to pretty good on the first attempt and stays flat across attempts two and three. With a check, it starts at the same point and climbs on each attempt, reaching almost perfect by the third.">
+  <line x1="46" y1="26" x2="46" y2="170" stroke="var(--line)" stroke-width="1.5"/>
+  <line x1="46" y1="170" x2="420" y2="170" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="0" y="34" class="d-label">target</text>
+  <text x="0" y="174" class="d-label">rough</text>
+  <text x="120" y="190" class="d-label">attempt 1</text>
+  <text x="230" y="190" class="d-label">attempt 2</text>
+  <text x="340" y="190" class="d-label">attempt 3</text>
+
+  <path d="M46 158 L140 92 L250 88 L360 86" fill="none" stroke="var(--interference)" stroke-width="2"/>
+  <circle cx="140" cy="92" r="4" fill="var(--interference)"/>
+  <circle cx="250" cy="88" r="4" fill="var(--interference)"/>
+  <circle cx="360" cy="86" r="4" fill="var(--interference)"/>
+  <text x="250" y="112" class="d-label">no check &#8212; flat</text>
+
+  <path d="M46 158 L140 92 L250 62 L360 42" fill="none" stroke="var(--signal)" stroke-width="2"/>
+  <circle cx="140" cy="92" r="4" fill="var(--signal)"/>
+  <circle cx="250" cy="62" r="4" fill="var(--signal)"/>
+  <circle cx="360" cy="42" r="4" fill="var(--signal)"/>
+  <text x="250" y="34" class="d-num">tests / screenshots</text>
+
+  <text x="46" y="216" class="d-fix">the check is what turns a second attempt into progress</text>
+</svg></div><figcaption><b>Why one shot plateaus</b><span>Without a check, every extra attempt is another sample of the same guess. With one, each attempt starts from evidence about the last.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before prompting, ask what would tell the agent it got this wrong — then wire it up.</li>
+<li>Give UI work a screenshot tool (browser or simulator), not a written description.</li>
+<li>Give logic work a test command it can run itself, not a request to be careful.</li>
+<li>Say explicitly to iterate until the check passes, not to make one attempt.</li>
+<li>Check in the tooling — an MCP server or script in the repo — so the loop is shared.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a></div>
+</section>
+<p class="bridge">A check tells the agent whether it hit the target. It says nothing about which target — that comes from the context you give it, and where you put that context decides who gets it and what it costs.</p>
+<section id="context-hierarchy">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 5 &middot; start here</span>
+<h2>The context hierarchy</h2>
+<p class="oneline">Agent context is not one file but a stack of scopes — enterprise, user, project, directory — and the useful question about any piece of context is which scope owns it and whether it loads every session or only on demand.</p>
+</div></div>
+<div class="wrap">
+<p>Boris Cherny's framing in his Claude Code talk is that the more context the agent has, the better its decisions, because an engineer working in a codebase carries a large amount of unwritten history that the agent starts without. But context is not free and not uniform, so the design question is placement: which scope owns this fact, and does it need to be present always or only sometimes.</p>
+<p>Two axes describe the whole system. The first is scope, running from enterprise policy through a user's global config, down to a project file checked into source control, a local project file kept out of it, and files in nested directories. The second is when it loads: a project-root CLAUDE.md is read automatically into the first user turn of every session, while a nested one is pulled in only when the agent works in that directory, and a slash command or an @-mentioned file is pulled in only when invoked.</p>
+<p>The same hierarchy governs more than memory. Permissions follow it, which is what makes enterprise scope interesting: a test command every employee runs can be pre-approved once for everyone, and a URL that should never be fetched can be blocked in a way an individual cannot override. MCP server configuration follows it too — an .mcp.json checked into the repo prompts every engineer who opens it to install the servers the team uses, instead of each one wiring up their own.</p>
+<p>The counterweight is cost. Everything in the always-loaded file is spent on every request, so Cherny's advice is to keep it as short as possible — common commands, the style guide, a few core files, architectural decisions — and to accept that a long one is usually not useful. When the matrix of options gets overwhelming, his recommended starting point is the shared project scope, because it is written once and everyone on the team gets the benefit. (Scope names and file locations are as of the talk; the shape of the hierarchy has been more stable than the specific paths.)</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 250" role="img"
+  aria-label="A grid with two columns, loaded every session and loaded on demand, and rows for scope from enterprise down to directory. Enterprise policy, user global config and project CLAUDE.md sit in the always-loaded column. Nested directory CLAUDE.md files, slash commands and at-mentioned files sit in the on-demand column. A note marks the always-loaded column as paid on every request.">
+  <text x="120" y="16" class="d-label">EVERY SESSION</text>
+  <text x="330" y="16" class="d-label">ON DEMAND</text>
+
+  <text x="0" y="48" class="d-label">enterprise</text>
+  <rect x="110" y="30" width="180" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="120" y="48" class="d-node">policy: allow / block</text>
+
+  <text x="0" y="86" class="d-label">user</text>
+  <rect x="110" y="68" width="180" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="120" y="86" class="d-node">global config</text>
+  <rect x="320" y="68" width="190" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="330" y="86" class="d-node">personal slash commands</text>
+
+  <text x="0" y="124" class="d-label">project</text>
+  <rect x="110" y="106" width="180" height="26" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="120" y="124" class="d-node">CLAUDE.md (checked in)</text>
+  <rect x="320" y="106" width="190" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="330" y="124" class="d-node">commands, .mcp.json</text>
+
+  <text x="0" y="162" class="d-label">directory</text>
+  <rect x="320" y="144" width="190" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="330" y="162" class="d-node">nested CLAUDE.md</text>
+
+  <text x="0" y="200" class="d-label">ad hoc</text>
+  <rect x="320" y="182" width="190" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="330" y="200" class="d-node">@-mentioned file</text>
+
+  <path d="M110 220 H290" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
+  <text x="110" y="240" class="d-fix">this column is paid for on every request &#8212; keep it short</text>
+</svg></div><figcaption><b>Scope against load time</b><span>Both axes matter. Broad scope decides who gets it; load time decides what it costs.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Put team-wide facts in the project file and check it in; keep personal ones local.</li>
+<li>Move anything only relevant to one subtree into a CLAUDE.md inside that subtree.</li>
+<li>Turn a repeated multi-step prompt into a slash command instead of always-loaded prose.</li>
+<li>Use enterprise scope for pre-approved commands and hard blocks, not for advice.</li>
+<li>Check in the MCP config so a teammate's first session already has the team's tools.</li>
+<li>Re-read the always-loaded file periodically and cut anything not earning its tokens.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a></div>
+</section>
+<p class="bridge">Once the context and the checks live in the repo rather than in your head, a run no longer needs you sitting in front of it — which is the precondition for running it somewhere other than your terminal.</p>
+<section id="agent-as-unix-utility">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 5 &middot; start here</span>
+<h2>A super intelligent Unix utility</h2>
+<p class="oneline">Run the agent headless with a prompt in and structured data out, and it stops being an app you sit in front of — it becomes a filter you can put in the middle of any pipeline.</p>
+</div></div>
+<div class="wrap">
+<p>The interactive terminal session is the visible half of the product. The other half is the same engine with no interface: a prompt goes in as an argument, the answer comes back on stdout. Boris Cherny points out this is not a lesser mode — it is exactly what the interactive tool is built on, exposed for you to build on too.</p>
+<p>Two properties turn that into composability. It reads standard input, so the output of any command — git status, a log pulled from a bucket, the output of a Sentry CLI — can be piped in as material. And it can emit structured output rather than prose, so whatever runs next can parse it instead of scraping it. Prose out would make the agent a terminus; JSON out makes it a stage.</p>
+<p>That is the whole Unix argument applied to a model: a program that reads a stream and writes a stream can be inserted anywhere in a chain without the chain knowing what it is. Cherny's examples are the ones you would expect from that framing — running it in CI, using it in incident response, handing it a giant log and asking what is interesting about it — and he is explicit that this is unexplored ground rather than a settled pattern.</p>
+<p>The constraint that makes it usable unattended is the allowed tool list. A headless run has nobody to approve anything, so what it is permitted to do has to be decided up front and passed in with the prompt. (The flags and the SDK's packaging have changed since the talk; the prompt-in, structured-data-out shape is the durable part.)</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 520 210" role="img"
+  aria-label="Two pipelines. In the first, a command feeds an interactive agent session which produces prose that a human reads, ending the chain. In the second, a command pipes into a headless agent run with an allowed tool list, which emits JSON that flows into jq and then into a downstream job such as CI or an alert.">
+  <text x="0" y="14" class="d-label">INTERACTIVE</text>
+  <rect x="0" y="24" width="90" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="8" y="44" class="d-node">a command</text>
+  <path d="M90 39 H120" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+  <rect x="120" y="24" width="75" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="128" y="44" class="d-node">session</text>
+  <path d="M195 39 H225" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+  <rect x="225" y="24" width="130" height="30" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="233" y="44" class="d-node">prose &#8594; a human</text>
+  <text x="370" y="44" class="d-fix">chain ends</text>
+
+  <text x="0" y="104" class="d-label">HEADLESS</text>
+  <rect x="0" y="114" width="110" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="8" y="134" class="d-node">stdin: a log</text>
+  <path d="M110 129 H140" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+  <rect x="140" y="114" width="125" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="148" y="134" class="d-node">prompt + tools</text>
+  <path d="M265 129 H295" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+  <rect x="295" y="114" width="65" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="303" y="134" class="d-node">JSON</text>
+  <path d="M360 129 H390" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+  <rect x="390" y="114" width="115" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="398" y="134" class="d-node">CI, next job</text>
+
+  <text x="0" y="180" class="d-fix">same engine &#8212; the difference is who reads the output</text>
+</svg></div><figcaption><b>Terminus versus stage</b><span>Prose output ends the chain. Structured output puts the agent in the middle of one.</span></figcaption></figure>
+<div class="analogy"><q>It's sort of this new idea. It's like a super intelligent Unix utility. You give it a prompt, it gives you JSON.</q><p>It sets the expectation correctly: not an assistant you converse with, but a filter with a contract — and filters are things you compose, schedule, and put in CI without watching them.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Run the agent headless with a prompt argument the next time you would have opened a REPL for a one-shot question.</li>
+<li>Ask for structured output whenever something downstream will read the result.</li>
+<li>Pipe the input in rather than describing it — a log, a diff, a status output.</li>
+<li>Pass an explicit allowed-tools list for anything running unattended.</li>
+<li>Look at your existing scripts for a step that fails because it needs judgment; that step is the candidate.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a></div>
+</section>
+<p class="bridge">And once a run is something you launch rather than something you attend, the obvious next question is how many you can have going at once — which is where the ceiling turns out to be isolation, not the tool.</p>
+<section id="parallel-worktree-agents">
+<div class="wrap"><div class="chead">
+<span class="cnum">5 / 5 &middot; start here</span>
+<h2>One session, one assignment</h2>
+<p class="oneline">Worktree-isolated sessions let several agents work at once without their changes mixing — but only if each session gets one clear job, or you end up with a pile of tangled work to sort out at the end of the day.</p>
+</div></div>
+<div class="wrap">
+<p>Running several agent sessions at once is only useful if the isolation is real: with worktree isolation, each session gets its own context and its own set of changes, so a debugging session and a copy-editing session don't collide on the same files. That mechanical guarantee is what makes parallel work safe to attempt at all.</p>
+<p>What makes it actually productive is scoping each session like a separate hire: the bug session gets the root cause, the files touched, and what to check in the diff; the copy session gets a before/after and why the new version is clearer; the sales session gets the objection it was solving for and what to review before recording. Different job, same project context, one specific handoff shape per session.</p>
+<p>The failure mode this avoids is spraying work across a repo and ending the day with a single giant, tangled set of changes nobody wants to review. Isolation plus a scoped handoff turns 'several things happened' into several small packets you can inspect, accept, revise, or reject independently.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 180" role="img"
+  aria-label="Three parallel agent sessions, each in its own worktree, working on different jobs: a bug fix, a landing page hero rewrite, and a sales demo script. Each returns a separate reviewable packet.">
+  <rect x="150" y="4" width="160" height="26" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="230" y="21" class="d-label" text-anchor="middle">same project context</text>
+  <path d="M230 30 V44" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M230 44 H70 M230 44 H390" stroke="var(--line)" stroke-width="1.2"/>
+  <path d="M70 44 V58 M230 44 V58 M390 44 V58" stroke="var(--line)" stroke-width="1.2"/>
+
+  <rect x="10" y="58" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="70" y="77" class="d-label" text-anchor="middle">bug fix</text>
+  <rect x="170" y="58" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="230" y="77" class="d-label" text-anchor="middle">hero rewrite</text>
+  <rect x="330" y="58" width="120" height="30" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="390" y="77" class="d-label" text-anchor="middle">demo script</text>
+
+  <path d="M70 88 V102 M230 88 V102 M390 88 V102" stroke="var(--line)" stroke-width="1"/>
+  <rect x="15" y="102" width="110" height="52" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="70" y="120" class="d-fix" text-anchor="middle">root cause,</text>
+  <text x="70" y="134" class="d-fix" text-anchor="middle">files, checks</text>
+
+  <rect x="175" y="102" width="110" height="52" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="230" y="120" class="d-fix" text-anchor="middle">before/after,</text>
+  <text x="230" y="134" class="d-fix" text-anchor="middle">why clearer</text>
+
+  <rect x="335" y="102" width="110" height="52" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="390" y="120" class="d-fix" text-anchor="middle">objection,</text>
+  <text x="390" y="134" class="d-fix" text-anchor="middle">script draft</text>
+
+  <text x="0" y="176" class="d-label">three separate packets &#8212; reviewed and merged independently</text>
+</svg></div><figcaption><b>Three jobs, three isolated sessions</b><span>Same project context, separate worktrees — each comes back as one reviewable packet instead of one tangled pile.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before starting parallel sessions, write one specific handoff format per session — what it should come back with, not just what it should do.</li>
+<li>Mix job types across sessions (bug fix, copy, sales asset) rather than three variations on the same task — that's what actually benefits from isolation.</li>
+<li>Review and merge each session's output separately; don't let three sessions' changes pile up before you look at any of them.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>The ladder is the point</h2><p>Every rung buys the next one. Questions teach you where the agent's competence ends, so you know what to delegate. A checkable target lets it close that gap itself, two or three iterations at a time. Context placed at the right scope makes the target correct without being re-explained every session. And an agent that needs neither your explanation nor your approval is one you can pipe, schedule, and run several of at once. Skipping to the last rung is how people end up with an expensive autocomplete.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
+</body>
+</html>
