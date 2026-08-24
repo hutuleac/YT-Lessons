@@ -323,8 +323,19 @@ body{font-family:var(--sans)}
 .slide figcaption span{font-size:clamp(13px,1.2vw,17px)}
 
 .slide .src{max-width:none; margin:clamp(22px,4vh,44px) 0 0; padding:0}
+
+/* ---- progressive reveal: the arrow keys walk a list item at a time, then move on ----
+   Gated on html.reveal, which the deck script adds at load: if the script never runs, every
+   step stays visible instead of the deck rendering as a set of empty slides. Steps fade and
+   rise rather than un-hide, because display:none would reflow the list under the reader on
+   every keypress — the item holds its box from the start and only its ink arrives. */
+html.reveal .step{opacity:0; transform:translateY(7px); transition:opacity .3s ease, transform .3s ease}
+html.reveal .step.on{opacity:1; transform:none}
+html.reveal.overview .step{opacity:1; transform:none}
+@media (prefers-reduced-motion:reduce){html.reveal .step{transition-duration:.01ms; transform:none}}
 @media print{
   html{scroll-snap-type:none}
+  .step{opacity:1 !important; transform:none !important}
   .slide{min-height:auto; height:auto; page-break-after:always; break-after:page}
   .bar{display:none}
 }
@@ -371,8 +382,13 @@ html.overview .slide figcaption{margin:0}
 html.overview .slide figcaption b{font-size:11px; line-height:1.3}
 """
 
-# F fullscreen, D theme, O overview grid, Left/Right previous/next slide. Native scroll-snap
-# already does the scrolling; this just points it at the right slide and toggles two classes.
+# F fullscreen, D theme, O overview grid, Left/Right step or move. Native scroll-snap already
+# does the scrolling; this just points it at the right slide and toggles two classes.
+#
+# Right steps through the `.step` items on the current slide before advancing, so a list arrives
+# a line at a time. Two rules keep that from ever showing a blank slide: arriving forward starts
+# a slide at zero steps, arriving backward starts it fully revealed, and any slide reached by
+# scrolling or by clicking an overview card reveals everything (only the arrows present).
 DECK_JS = """
 (function(){
   var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
@@ -381,7 +397,25 @@ DECK_JS = """
     for(var i=slides.length-1;i>=0;i--) if(slides[i].offsetTop<=y) return i;
     return 0;
   }
-  function go(i){ slides[Math.max(0,Math.min(slides.length-1,i))].scrollIntoView({behavior:'smooth'}) }
+  function steps(s){ return Array.prototype.slice.call(s.querySelectorAll('.step')) }
+  function reveal(s,n){ steps(s).forEach(function(el,i){ el.classList.toggle('on', i<n) }) }
+  function shown(s){ var c=0; steps(s).forEach(function(el){ if(el.classList.contains('on')) c++ }); return c }
+  var target=-1;  // slide an arrow key is scrolling toward, so the scroll handler leaves it alone
+  function go(i,full){
+    i=Math.max(0,Math.min(slides.length-1,i));
+    target=i;
+    reveal(slides[i], full?steps(slides[i]).length:0);
+    slides[i].scrollIntoView({behavior:'smooth'});
+  }
+  function next(){
+    var s=slides[current()], k=shown(s);
+    if(k<steps(s).length) reveal(s,k+1); else go(current()+1,false);
+  }
+  function prev(){
+    var s=slides[current()], k=shown(s);
+    if(k>0) reveal(s,k-1); else go(current()-1,true);
+  }
+  document.documentElement.classList.add('reveal');
   var theme='dark';
   function setTheme(t){
     theme=t;
@@ -396,14 +430,23 @@ DECK_JS = """
   slides.forEach(function(s){ s.addEventListener('click',function(){
     if(document.documentElement.classList.contains('overview')){
       document.documentElement.classList.remove('overview');
+      reveal(s, steps(s).length);
       s.scrollIntoView();
     }
   }) });
+  var settled=current(), tid;
+  addEventListener('scroll',function(){
+    clearTimeout(tid);
+    tid=setTimeout(function(){
+      var i=current();
+      if(i!==settled){ if(i!==target) reveal(slides[i], steps(slides[i]).length); settled=i }
+    },140);
+  },{passive:true});
   addEventListener('keydown',function(e){
     if(e.metaKey||e.ctrlKey||e.altKey) return;
     var k=e.key.toLowerCase();
-    if(k==='arrowright'){ e.preventDefault(); go(current()+1) }
-    else if(k==='arrowleft'){ e.preventDefault(); go(current()-1) }
+    if(k==='arrowright'||k===' '){ e.preventDefault(); next() }
+    else if(k==='arrowleft'){ e.preventDefault(); prev() }
     else if(k==='f'){
       if(document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen()
@@ -633,7 +676,7 @@ def build_deck(L, notes):
         slides.append((
             label, "bullets",
             f'<h2>{e(n["concept"])}</h2><ol class="bul">'
-            + "".join(f"<li>{e(x)}</li>" for x in n["skeleton"])
+            + "".join(f'<li class="step">{e(x)}</li>' for x in n["skeleton"])
             + "</ol>",
         ))
         for d in n.get("diagrams") or []:
@@ -649,7 +692,7 @@ def build_deck(L, notes):
                 label, "nums",
                 '<h2>By the numbers</h2><div class="nums">'
                 + "".join(
-                    f'<div><b>{e(f["value"])}</b><i>{e(f.get("unit",""))}</i>'
+                    f'<div class="step"><b>{e(f["value"])}</b><i>{e(f.get("unit",""))}</i>'
                     f'<span>{e(f["label"])}</span></div>'
                     for f in n["numbers"]
                 )
@@ -662,7 +705,7 @@ def build_deck(L, notes):
             slides.append((
                 label, "do",
                 '<h2>What to do</h2><ul class="acts">'
-                + "".join(f"<li>{e(x)}</li>" for x in n["practice"])
+                + "".join(f'<li class="step">{e(x)}</li>' for x in n["practice"])
                 + "</ul>",
             ))
 
