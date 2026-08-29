@@ -34,6 +34,16 @@ NOTE = {
         " on disk instead of the new chat's message list. Point the next chat at that file and"
         " it reads itself in. This suits a document you update across many sessions, not just a"
         " one-time summary for the next chat alone.",
+
+        "What goes in that file matters as much as where it lives. A blogger named Paul (Paul's"
+        " Programming Notes) makes the distinction: 'summarize our progress' produces a"
+        " human-readable report — issues remaining, what the refactor did — which reads fine"
+        " once and is useless the next morning, because it describes what happened instead of"
+        " telling the next session what to do. Asking instead for a prompt for the next session,"
+        " not a document for a human, changes the shape of the output: it points at exact files"
+        " and folders instead of describing them, names what was already tried and didn't work,"
+        " and opens with an instruction rather than a summary. Paste that straight into a fresh"
+        " session and it reads as a task brief, not a report to file away.",
     ],
 
     "numbers": [
@@ -46,6 +56,8 @@ NOTE = {
         "Use /clear by default when you work inside a real codebase.",
         "Run /compact before the auto-compact limit, not after.",
         "Use a handoff file when the summary needs to persist and update across sessions.",
+        "Write the handoff as a prompt for the next session, not a summary for a human —"
+        " point at files, name what didn't work, open with an instruction.",
     ],
 
     "diagrams": [

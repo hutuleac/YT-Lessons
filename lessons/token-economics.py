@@ -12,15 +12,19 @@ LESSON = {
     "notes": [
         "prompt-caching",
         "cache-loss-recovery",
+        "rewind-not-forward",
         "advisor-mode",
     ],
 
     "bridges": {
         "cache-loss-recovery": "The cache has a 1-hour fuse. What do you send once it burns out"
                                " — or before it does?",
-        "advisor-mode": "Those three moves all deal with a cache after the fact. The other lever"
-                        " stops expensive history from building up in the first place: send"
-                        " fewer turns through the expensive model to begin with.",
+        "rewind-not-forward": "Those three moves are for when the cache is already gone. A"
+                              " broken output is a different problem, and it has the same"
+                              " answer: go back, don't build forward on top of the mistake.",
+        "advisor-mode": "Those moves all deal with a cache or a bad turn after the fact. The"
+                        " other lever stops expensive history from building up in the first"
+                        " place: send fewer turns through the expensive model to begin with.",
     },
 
     "closing": {

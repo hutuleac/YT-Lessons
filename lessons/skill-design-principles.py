@@ -2,12 +2,13 @@ LESSON = {
     "id": "skill-design-principles",
     "title": "How to design a skill an agent actually follows",
     "subject": "Skill design",
-    "standfirst": "Six small techniques for turning a fuzzy request into working code, and for"
+    "standfirst": "Seven small techniques for turning a fuzzy request into working code, and for"
                   " keeping the skills and codebase that get you there lean instead of bloated.",
     "audience": "You write skills or specs for a coding agent, or maintain a codebase agents work"
                 " in, and want fewer rewrites and less wasted context per request.",
 
     "notes": [
+        "skill-description-routing",
         "grooming-skill",
         "spec-without-code",
         "slice-by-feature",
@@ -18,6 +19,8 @@ LESSON = {
     ],
 
     "bridges": {
+        "grooming-skill": "None of that works if the skill never activates in the first place —"
+                           " the interview only starts once the router picks it.",
         "spec-without-code": "The grooming interview ends in a shared understanding that lives"
                               " only in the conversation — the spec is what makes it survive.",
         "slice-by-feature": "A spec is only useful once it's broken into tickets an agent can pick"

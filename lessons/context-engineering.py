@@ -15,6 +15,7 @@ LESSON = {
     # duplicated here.
     "notes": [
         "context-window",
+        "plan-exploration-discard",
         "dumb-zone",
         "tool-overload",
         "harness-bloat",
@@ -26,8 +27,13 @@ LESSON = {
 
     # Connective tissue: shown before the named note, to carry the argument between concepts.
     "bridges": {
-        "dumb-zone": "The hard limit is the boring failure — it errors, so you see it. The"
-                     " interesting one starts long before the limit and never announces itself.",
+        "plan-exploration-discard": "Not everything that fills the window is useless once it's"
+                                    " served its purpose — sometimes the fix is knowing which"
+                                    " part to keep and which part was only scaffolding.",
+        "dumb-zone": "That was a case where you could tell the two apart. Most of the time the"
+                     " budget just fills, and the hard limit is the boring failure — it errors,"
+                     " so you see it. The interesting one starts long before the limit and never"
+                     " announces itself.",
         "tool-overload": "So the window is a budget that degrades as it fills. The first thing"
                          " spending it is the one you added on purpose, believing it made the"
                          " agent more capable.",

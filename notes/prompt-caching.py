@@ -42,6 +42,12 @@ NOTE = {
         " denying a tool call, compacting, or upgrading the CLI all end the cache immediately."
         " Walk away for over an hour on a 500,000-token conversation, and the next message jumps"
         " from about 50 cents (cache read) to about $10 (cache write) for the same history.",
+
+        "Switching to a cheaper model is not the only way to save tokens on a simple question,"
+        " and it's the one that costs you the cache. Asking the same model to 'give me a quick"
+        " answer' tells it to skip deep reasoning for that turn without touching the model,"
+        " effort level, or anything else on the list above that resets the cache — so the answer"
+        " comes back fast and the expensive history stays warm for the next real turn.",
     ],
 
     "numbers": [
@@ -62,6 +68,8 @@ NOTE = {
     "practice": [
         "Send your next message within the hour to keep the cache warm.",
         "Avoid changing model, effort, or MCPs mid-task if the cache matters to you.",
+        "Need a fast, cheap answer mid-session? Say \"give me a quick answer\" instead of"
+        " switching model — it skips deep reasoning without resetting the cache.",
         "Use 5-minute caching on the API for quick, one-off calls; use 1-hour for longer work.",
         "Plan your break before it happens: /clear, /compact, or hand off — not after.",
     ],

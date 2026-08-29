@@ -46,6 +46,15 @@ NOTE = {
         " starting point is the shared project scope, because it is written once and everyone on"
         " the team gets the benefit. (Scope names and file locations are as of the talk; the"
         " shape of the hierarchy has been more stable than the specific paths.)",
+
+        "Anthropic's docs describe a way to get on-demand loading inside a single CLAUDE.md"
+        " rather than only between files: giving a rule a path glob means it stays unread until"
+        " the agent actually touches a matching file, the same progressive-disclosure idea as a"
+        " nested directory CLAUDE.md, just scoped finer. The rules folder this points at also"
+        " follows symlinks, so one real folder can be shared into many repos instead of copied"
+        " into each. And CLAUDE.md content wrapped in an HTML comment is never read into"
+        " context at all — a place to leave yourself a note that costs nothing, as long as it's"
+        " for you and not something the agent needs to act on.",
     ],
 
     "numbers": [],
@@ -55,6 +64,12 @@ NOTE = {
     "practice": [
         "Put team-wide facts in the project file and check it in; keep personal ones local.",
         "Move anything only relevant to one subtree into a CLAUDE.md inside that subtree.",
+        "Scope a rules file to a path glob (e.g. source/api/**) so it only unwraps when the"
+        " agent actually works in that path, instead of always-loaded prose.",
+        "Symlink one shared rules folder into every repo instead of copying it — one source of"
+        " truth, still scoped per project.",
+        "Leave notes to yourself in HTML comments inside CLAUDE.md — Claude spends zero tokens"
+        " reading them, so they don't compete with the always-loaded budget.",
         "Turn a repeated multi-step prompt into a slash command instead of always-loaded prose.",
         "Use enterprise scope for pre-approved commands and hard blocks, not for advice.",
         "Check in the MCP config so a teammate's first session already has the team's tools.",

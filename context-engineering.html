@@ -173,7 +173,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </div></header>
 <section id="context-window">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 8 &middot; builds on <a class="out" href="llm-fundamentals.html#tokens">tokens</a></span>
+<span class="cnum">1 / 9 &middot; builds on <a class="out" href="llm-fundamentals.html#tokens">tokens</a></span>
 <h2>The context window</h2>
 <p class="oneline">The context window is the whole conversation — input and output tokens together — capped by a hard per-model limit, and the fuller it gets the less attention the middle of it receives.</p>
 </div></div>
@@ -213,10 +213,62 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/shorts/9P36wMntNSI" target="_blank" rel="noopener">Matt Pocock &middot; Stop stuffing your context window (here's why) &middot; 2:09 &#8599;</a></div>
 </section>
-<p class="bridge">The hard limit is the boring failure — it errors, so you see it. The interesting one starts long before the limit and never announces itself.</p>
+<p class="bridge">Not everything that fills the window is useless once it's served its purpose — sometimes the fix is knowing which part to keep and which part was only scaffolding.</p>
+<section id="plan-exploration-discard">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 9 &middot; builds on <s>context-window</s></span>
+<h2>The plan survives, the exploration doesn't have to</h2>
+<p class="oneline">Planning burns context reading files to figure out what to do, but once a plan is accepted only the plan itself is worth keeping — the reads that produced it can be dropped from the window.</p>
+</div></div>
+<div class="wrap">
+<p>Plan mode has to do real work before it can propose anything: reading files, checking how things connect, ruling out approaches. All of that reasoning and every file it read lands in the conversation as normal turns, because that's how the model produced the plan in the first place. Once the plan is accepted, though, none of that discovery process is still doing anything for you — only the conclusion is.</p>
+<p>The two are separable because the plan doesn't actually live in the chat transcript. Accepting a plan writes it to its own file, so the conclusion persists independently of the conversation that produced it. That's what makes the setting safe: clearing the context afterward looks like it should throw away the plan along with the exploration, but the plan was never only in the chat to begin with — the exploration was.</p>
+<p>The practical effect is that a feature that costs a large planning conversation to design doesn't have to cost a large context budget to build. Turn the setting on (`show clear context on plan accept` set to true in settings.json), and accepting a plan offers to bin the file reads and side-exploration while carrying the plan forward into the next turn — you get the answer without paying rent on how it was found.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="Plan mode produces two things: exploration, made of many file reads, which stays only in the chat window; and a plan, written to its own file. After accepting the plan, the exploration can be cleared from context while the plan file persists independently."
+       >
+  <rect x="175" y="0" width="130" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-width="2"/>
+  <text x="240" y="22" class="d-node" text-anchor="middle">plan mode</text>
+
+  <path d="M240 34 V 50 M240 50 H 80 M240 50 H 400" stroke="var(--line)" fill="none"/>
+
+  <rect x="10" y="56" width="140" height="52" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="80" y="76" class="d-label" text-anchor="middle">exploration</text>
+  <text x="80" y="92" class="d-label" text-anchor="middle">(file reads, reasoning)</text>
+
+  <path d="M80 108 V 128" stroke="var(--interference)" stroke-width="2" fill="none" marker-end="url(#ped-a)"/>
+  <text x="90" y="122" class="d-fix">clearable</text>
+
+  <rect x="10" y="134" width="140" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)" stroke-dasharray="3 3"/>
+  <text x="80" y="156" class="d-label" text-anchor="middle">gone from context</text>
+
+  <rect x="330" y="56" width="140" height="34" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="400" y="78" class="d-node" text-anchor="middle">own file</text>
+
+  <path d="M400 90 V 128" stroke="var(--signal)" stroke-width="2" fill="none" marker-end="url(#ped-b)"/>
+
+  <rect x="330" y="134" width="140" height="34" rx="4" fill="var(--surface-2)" stroke="var(--signal)" stroke-width="2"/>
+  <text x="400" y="156" class="d-node" text-anchor="middle">survives clear</text>
+
+  <text x="0" y="196" class="d-fix">only what only lived in the chat needs clearing from the chat</text>
+
+  <defs>
+    <marker id="ped-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker>
+    <marker id="ped-b" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--signal)"/></marker>
+  </defs>
+</svg></div><figcaption><b>One output, two different lifespans</b><span>The plan is written to its own file. The exploration that produced it only ever lived in the chat, so only it needs clearing.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Set `show clear context on plan accept: true` in settings.json.</li>
+<li>Take the offer to clear when a plan is accepted — the plan file survives it.</li>
+<li>Don't hand-copy plan-mode findings into notes before accepting; the plan file already keeps them.</li>
+</ul></div>
+<div class="src"><a href="https://youtu.be/RDeofKimDxo" target="_blank" rel="noopener">Simon Scrapes &middot; 37 Cheat Codes to Level Up In Claude Code in 19 Minutes &middot; 20:06 &#8599;</a></div>
+</section>
+<p class="bridge">That was a case where you could tell the two apart. Most of the time the budget just fills, and the hard limit is the boring failure — it errors, so you see it. The interesting one starts long before the limit and never announces itself.</p>
 <section id="dumb-zone">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 8 &middot; start here</span>
+<span class="cnum">3 / 9 &middot; start here</span>
 <h2>The dumb zone</h2>
 <p class="oneline">Every model degrades as its context window fills, so a large window has a usable region and a wasteful one — the dumb zone is where you stop getting your tokens' worth.</p>
 </div></div>
@@ -275,7 +327,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">So the window is a budget that degrades as it fills. The first thing spending it is the one you added on purpose, believing it made the agent more capable.</p>
 <section id="tool-overload">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 8 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">4 / 9 &middot; builds on <s>dumb-zone</s></span>
 <h2>Tool definitions are context</h2>
 <p class="oneline">Every tool you hand an agent is text pinned to the top of its system prompt, so more tools means less room and worse tool choice — the opposite of what adding a tool is meant to do.</p>
 </div></div>
@@ -314,7 +366,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">You did not add most of what is in there. The tool you code in shipped with its own tools, and they are re-sent on every request.</p>
 <section id="harness-bloat">
 <div class="wrap"><div class="chead">
-<span class="cnum">4 / 8 &middot; builds on <s>tool-overload</s></span>
+<span class="cnum">5 / 9 &middot; builds on <s>tool-overload</s></span>
 <h2>Harness bloat</h2>
 <p class="oneline">The tool you code in ships thousands of tokens of features you never use, all of it in the system prompt on every request — and most of it can be switched off in settings.</p>
 </div></div>
@@ -356,7 +408,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Tools are not the only thing that arrives in bulk. The same overload comes through process, and it now has a name.</p>
 <section id="skill-hell">
 <div class="wrap"><div class="chead">
-<span class="cnum">5 / 8 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">6 / 9 &middot; builds on <s>dumb-zone</s></span>
 <h2>Skill hell</h2>
 <p class="oneline">Stacking every agent framework you can find into one context window at once — the same overload as tool bloat, arriving through process instead of tools.</p>
 </div></div>
@@ -434,7 +486,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Tool definitions and skills at least do something you asked for. The next occupant is material the agent chose to keep on your behalf.</p>
 <section id="agent-memory">
 <div class="wrap"><div class="chead">
-<span class="cnum">6 / 8 &middot; builds on <s>context-window</s></span>
+<span class="cnum">7 / 9 &middot; builds on <s>context-window</s></span>
 <h2>Kill the auto-memory</h2>
 <p class="oneline">Letting an agent save its own memories trades predictability for convenience — a stateless agent starts from the same base every time, and anything worth keeping belongs in a file you wrote.</p>
 </div></div>
@@ -498,7 +550,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The last one you wrote yourself, with the best intentions — and it is the only one that can also be wrong.</p>
 <section id="docs-drift">
 <div class="wrap"><div class="chead">
-<span class="cnum">7 / 8 &middot; builds on <s>context-window</s></span>
+<span class="cnum">8 / 9 &middot; builds on <s>context-window</s></span>
 <h2>Docs as a second source of truth</h2>
 <p class="oneline">A layer of markdown written to explain your code becomes a second source of truth that nothing tests, and when it drifts the agent cannot tell which one is real.</p>
 </div></div>
@@ -539,7 +591,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">That is the audit. The mechanism also turns a vague complaint into a diagnosis: not all hallucinations are the same failure, and one question separates them.</p>
 <section id="hallucination-types">
 <div class="wrap"><div class="chead">
-<span class="cnum">8 / 8 &middot; builds on <s>dumb-zone</s></span>
+<span class="cnum">9 / 9 &middot; builds on <s>dumb-zone</s></span>
 <h2>Factuality vs faithfulness</h2>
 <p class="oneline">One question splits every hallucination into two kinds with two different fixes: was the information in the context window at all?</p>
 </div></div>

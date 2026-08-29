@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>How to design a skill an agent actually follows</title>
-<meta name="description" content="Six small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.">
+<meta name="description" content="Seven small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -168,12 +168,59 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <header><div class='wrap'>
 <p class="eyebrow">Skill design</p>
 <h1>How to design a skill an agent actually follows</h1>
-<p class="standfirst">Six small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.</p>
+<p class="standfirst">Seven small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.</p>
 <p class="audience">You write skills or specs for a coding agent, or maintain a codebase agents work in, and want fewer rewrites and less wasted context per request.</p>
 </div></header>
+<section id="skill-description-routing">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 8 &middot; start here</span>
+<h2>The skill description is the router</h2>
+<p class="oneline">Claude picks which skill to load off the description field alone, before reading the skill itself — so two similar descriptions mean the wrong one fires, or none does.</p>
+</div></div>
+<div class="wrap">
+<p>Claude never reads a skill's full body to decide whether to use it — it matches the request against the short description every skill exposes, and loads the body only after that match picks a winner. That makes the description the entire routing layer: a skill with a vague or overlapping description can be perfectly built and still never fire, or fire when it shouldn't, because the router never gets far enough to see the good part.</p>
+<p>The fix is a three-part description instead of a one-line label. State what the skill does in a single sentence — 'extracts or builds a brand voice, so every skill writes in their style.' State the triggers — the phrases and situations that should activate it, like 'writing style,' 'make this sound like me,' 'tone of voice.' Then state the anti-triggers explicitly: what this skill is not for, even though it sounds adjacent — 'does not trigger for positioning, audience research, or keyword work.'</p>
+<p>The anti-trigger line is the part people skip, and it's the one doing the disambiguation. Without it, two skills that both mention 'brand' or 'voice' compete for the same requests, and the router either guesses wrong or, worse, declines to activate either one because neither description stands out as the clear match.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 500 210" role="img"
+  aria-label="A request is matched against three skill descriptions. Skill A has a vague description that overlaps skill B, so the router picks the wrong one or neither. Skill C has a three-part description (does, triggers, anti-triggers) and wins cleanly, only then loading its full body.">
+  <rect x="0" y="10" width="130" height="36" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="65" y="33" class="d-node" text-anchor="middle">request</text>
+
+  <path d="M130 28 H180" stroke="var(--line)" fill="none"/>
+
+  <rect x="184" y="0" width="150" height="30" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="259" y="19" class="d-label" text-anchor="middle">skill A: "brand stuff"</text>
+
+  <rect x="184" y="34" width="150" height="30" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="259" y="53" class="d-label" text-anchor="middle">skill B: "brand voice"</text>
+
+  <text x="184" y="82" class="d-fix">overlap &#8594; wrong pick or no pick</text>
+
+  <rect x="184" y="104" width="150" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="259" y="123" class="d-fix" text-anchor="middle" style="font-size:9px">does / triggers / not</text>
+
+  <path d="M334 119 H400" stroke="var(--signal)" stroke-width="2" fill="none" marker-end="url(#sdr-a)"/>
+  <rect x="404" y="98" width="90" height="42" rx="4" fill="var(--surface-2)" stroke="var(--signal)" stroke-width="2"/>
+  <text x="449" y="123" class="d-node" text-anchor="middle">body loads</text>
+
+  <text x="0" y="180" class="d-fix">the body is never a tiebreaker &#8212; the description already decided</text>
+
+  <defs>
+    <marker id="sdr-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--signal)"/></marker>
+  </defs>
+</svg></div><figcaption><b>Routing happens before the body is ever read</b><span>Only the description is matched against the request. The skill's own content never gets a vote unless the description already won.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write the description as three lines: what it does, when it fires, when it doesn't.</li>
+<li>Before adding a new skill, check its description against existing ones for overlap.</li>
+<li>If two skills keep firing on the same requests, fix the anti-triggers first — not the body.</li>
+</ul></div>
+<div class="src"><a href="https://youtu.be/RDeofKimDxo" target="_blank" rel="noopener">Simon Scrapes &middot; 37 Cheat Codes to Level Up In Claude Code in 19 Minutes &middot; 20:06 &#8599;</a></div>
+</section>
+<p class="bridge">None of that works if the skill never activates in the first place — the interview only starts once the router picks it.</p>
 <section id="grooming-skill">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 7 &middot; start here</span>
+<span class="cnum">2 / 8 &middot; start here</span>
 <h2>The grooming skill</h2>
 <p class="oneline">A skill that turns a vague request into a shared understanding by interviewing you one branch, one question at a time — never acting until you confirm.</p>
 </div></div>
@@ -218,7 +265,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The grooming interview ends in a shared understanding that lives only in the conversation — the spec is what makes it survive.</p>
 <section id="spec-without-code">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 7 &middot; start here</span>
+<span class="cnum">3 / 8 &middot; start here</span>
 <h2>No code blocks in the spec</h2>
 <p class="oneline">A spec should point at the code, not paste it — a pasted snippet goes stale the moment implementation starts, and an agent will follow stale code over the live codebase in front of it.</p>
 </div></div>
@@ -237,7 +284,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">A spec is only useful once it's broken into tickets an agent can pick up one at a time — how you slice them decides what's testable after the first one ships.</p>
 <section id="slice-by-feature">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 7 &middot; start here</span>
+<span class="cnum">4 / 8 &middot; start here</span>
 <h2>Slice tickets by feature, not by layer</h2>
 <p class="oneline">Group tickets by feature — login, checkout — instead of by layer — database, API, UI — so each ticket lands as something you can actually test end to end.</p>
 </div></div>
@@ -276,7 +323,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Slicing gives you tickets small enough to hand off unattended — but unattended only works once each ticket is gated on its own test, and only once you've done enough tickets by hand to trust the gate.</p>
 <section id="ralph-loop">
 <div class="wrap"><div class="chead">
-<span class="cnum">4 / 7 &middot; builds on <s>grooming-skill</s></span>
+<span class="cnum">5 / 8 &middot; builds on <s>grooming-skill</s></span>
 <h2>The Ralph loop</h2>
 <p class="oneline">An unattended loop that works a plan feature by feature, testing each one before moving to the next — but it only amplifies the plan you feed it, so running it before you can build a feature by hand just burns tokens faster.</p>
 </div></div>
@@ -326,7 +373,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Once code exists, it needs review — and a review checklist is just another set of instructions with the same bloat risk as a spec or a skill.</p>
 <section id="code-smell-vocabulary">
 <div class="wrap"><div class="chead">
-<span class="cnum">5 / 7 &middot; start here</span>
+<span class="cnum">6 / 8 &middot; start here</span>
 <h2>Named vocabulary instead of instructions</h2>
 <p class="oneline">A code review checklist built from named smells — shotgun surgery, feature envy, data clumps — packs a whole diagnostic step into one word the model already knows, instead of a paragraph explaining what to look for.</p>
 </div></div>
@@ -365,7 +412,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The same instinct that shrinks a review checklist to twelve words applies to the codebase itself: fewer things to read is fewer things to get wrong.</p>
 <section id="one-door">
 <div class="wrap"><div class="chead">
-<span class="cnum">6 / 7 &middot; builds on <a class="out" href="context-engineering.html#tool-overload">tool-overload</a></span>
+<span class="cnum">7 / 8 &middot; builds on <a class="out" href="context-engineering.html#tool-overload">tool-overload</a></span>
 <h2>One door instead of many</h2>
 <p class="oneline">Encapsulate a function's fan-out behind a single entry point so an agent learns what it does by reading one function instead of jumping through every function it calls.</p>
 </div></div>
@@ -419,7 +466,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">Encapsulating behind one door only helps if what's behind it still earns its place — the deletion test is how you find out.</p>
 <section id="deletion-test">
 <div class="wrap"><div class="chead">
-<span class="cnum">7 / 7 &middot; start here</span>
+<span class="cnum">8 / 8 &middot; start here</span>
 <h2>The deletion test</h2>
 <p class="oneline">To find out if a function still earns its place, delete it and run the tests — if nothing breaks, it wasn't load-bearing.</p>
 </div></div>

@@ -173,7 +173,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </div></header>
 <section id="prompt-caching">
 <div class="wrap"><div class="chead">
-<span class="cnum">1 / 3 &middot; builds on <a class="out" href="context-engineering.html#context-window">context-window</a></span>
+<span class="cnum">1 / 4 &middot; builds on <a class="out" href="context-engineering.html#context-window">context-window</a></span>
 <h2>Prompt caching</h2>
 <p class="oneline">A cache stores your growing conversation, so Claude reads it cheaply on each new message instead of paying full price to process it again.</p>
 </div></div>
@@ -182,6 +182,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>Caching exists so that history is not reprocessed at full cost each time. The first time a stretch of conversation is sent, Claude's infrastructure does real work: it computes how each token relates to the ones before it, then stores that result. That stored result is the cache. A cache write pays for this extra compute and storage, which is why it costs more than a normal input token. A cache read skips the computation — Claude reuses the stored result — so it costs a fraction of the price.</p>
 <p>A subscription plan, which is what Claude Code runs on, writes every cache at a 1-hour hold. The Anthropic API also offers a 5-minute cache, priced lower at write time for callers who send requests close together and don't need the longer hold: 1.25x the base rate, against 2x for the 1-hour option. Once written, a hit on either cache costs about a tenth of the base input price — the read saving is the same either way, only the write price and the hold time differ.</p>
 <p>None of this holds forever. The cache expires after 1 hour of no activity, and the clock resets on every message sent, so an active back-and-forth stays cheap indefinitely. Per Anthropic's documentation, switching model, changing effort level, toggling fast mode, connecting or disconnecting an MCP server, enabling a plugin, denying a tool call, compacting, or upgrading the CLI all end the cache immediately. Walk away for over an hour on a 500,000-token conversation, and the next message jumps from about 50 cents (cache read) to about $10 (cache write) for the same history.</p>
+<p>Switching to a cheaper model is not the only way to save tokens on a simple question, and it's the one that costs you the cache. Asking the same model to 'give me a quick answer' tells it to skip deep reasoning for that turn without touching the model, effort level, or anything else on the list above that resets the cache — so the answer comes back fast and the expensive history stays warm for the next real turn.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>$10</b><i>per million tokens</i><span>base input price (Claude Fable 5)</span></div>
@@ -266,6 +267,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="do"><h3>What to do</h3><ul>
 <li>Send your next message within the hour to keep the cache warm.</li>
 <li>Avoid changing model, effort, or MCPs mid-task if the cache matters to you.</li>
+<li>Need a fast, cheap answer mid-session? Say "give me a quick answer" instead of switching model — it skips deep reasoning without resetting the cache.</li>
 <li>Use 5-minute caching on the API for quick, one-off calls; use 1-hour for longer work.</li>
 <li>Plan your break before it happens: /clear, /compact, or hand off — not after.</li>
 </ul></div>
@@ -274,7 +276,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p class="bridge">The cache has a 1-hour fuse. What do you send once it burns out — or before it does?</p>
 <section id="cache-loss-recovery">
 <div class="wrap"><div class="chead">
-<span class="cnum">2 / 3 &middot; builds on <s>prompt-caching</s></span>
+<span class="cnum">2 / 4 &middot; builds on <s>prompt-caching</s></span>
 <h2>Clear, compact, or handoff</h2>
 <p class="oneline">When the cache is gone, pick one of three moves: keep nothing and let the project carry the context, summarise into the next chat, or write the summary to a file on disk.</p>
 </div></div>
@@ -283,6 +285,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>/clear wipes the chat outright, and that is often the right move. Working inside a real codebase means the evidence of what happened sits in the files themselves. A fresh chat can read those files and pick up the work without needing the old transcript at all.</p>
 <p>/compact is for conversations that hold things the project cannot reconstruct on its own. It writes a summary of the chat, then starts a new chat with that summary already loaded in. Run it well before the automatic threshold — a chat in the 600,000 to 800,000 token range is already showing context rot, no matter how strong the model is.</p>
 <p>A handoff runs the same summary step, but saves the result to an actual markdown file on disk instead of the new chat's message list. Point the next chat at that file and it reads itself in. This suits a document you update across many sessions, not just a one-time summary for the next chat alone.</p>
+<p>What goes in that file matters as much as where it lives. A blogger named Paul (Paul's Programming Notes) makes the distinction: 'summarize our progress' produces a human-readable report — issues remaining, what the refactor did — which reads fine once and is useless the next morning, because it describes what happened instead of telling the next session what to do. Asking instead for a prompt for the next session, not a document for a human, changes the shape of the output: it points at exact files and folders instead of describing them, names what was already tried and didn't work, and opens with an instruction rather than a summary. Paste that straight into a fresh session and it reads as a task brief, not a report to file away.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>600k-800k</b><i>tokens</i><span>range where context rot sets in, regardless of model</span></div>
@@ -318,13 +321,58 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <li>Use /clear by default when you work inside a real codebase.</li>
 <li>Run /compact before the auto-compact limit, not after.</li>
 <li>Use a handoff file when the summary needs to persist and update across sessions.</li>
+<li>Write the handoff as a prompt for the next session, not a summary for a human — point at files, name what didn't work, open with an instruction.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=V0XbuApxlhg" target="_blank" rel="noopener">Chase AI &middot; You're Paying Anthropic 20x MORE Than You Need To &middot; 18:59 &#8599;</a></div>
 </section>
-<p class="bridge">Those three moves all deal with a cache after the fact. The other lever stops expensive history from building up in the first place: send fewer turns through the expensive model to begin with.</p>
+<p class="bridge">Those three moves are for when the cache is already gone. A broken output is a different problem, and it has the same answer: go back, don't build forward on top of the mistake.</p>
+<section id="rewind-not-forward">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 4 &middot; start here</span>
+<h2>Rewind, don't patch forward</h2>
+<p class="oneline">A broken output is cheaper to undo than to fix — rewind to before it happened and regenerate, instead of asking the agent to correct its own mistake.</p>
+</div></div>
+<div class="wrap">
+<p>Asking an agent to fix a broken output means it now has to reason about two things at once: the original task, and its own wrong attempt still sitting in the conversation as context. That wrong attempt doesn't just sit there neutrally — it's now part of the history the model conditions on, so the correction is built on top of the mistake rather than starting clean. Rewinding to the point before the bad turn removes that contamination instead of asking the model to reason around it.</p>
+<p>This works because a session's context isn't actually destroyed by moving backward through it — the turns are still there, they're just not the active point anymore. That's also true of a context you thought you cleared: going back to a previous session point can recover history that felt gone, because clearing the active window doesn't erase the session's own record of what happened in it.</p>
+<p>The one thing rewind cannot touch is anything done through bash. If a turn ran a shell command that deleted a file, rewinding the conversation back past that turn does not bring the file back — the session's history and the filesystem are two different things, and only one of them has an undo. Git is the recovery path for the other one.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 500 190" role="img"
+  aria-label="A session timeline with a bad turn. Patching forward keeps the bad turn in history and adds a correction on top, so both remain in context. Rewinding moves the active point back to before the bad turn and regenerates from there, so the bad turn is no longer part of what the model conditions on.">
+  <text x="0" y="14" class="d-label">PATCH FORWARD</text>
+  <rect x="0" y="24" width="80" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="40" y="43" class="d-label" text-anchor="middle">good</text>
+  <rect x="88" y="24" width="80" height="30" rx="4" fill="var(--interference)" opacity="0.5"/>
+  <text x="128" y="43" class="d-label" text-anchor="middle">bad turn</text>
+  <rect x="176" y="24" width="80" height="30" rx="4" fill="var(--sand)" opacity="0.6"/>
+  <text x="216" y="43" class="d-label" text-anchor="middle">"fix it"</text>
+  <text x="0" y="76" class="d-fix">bad turn stays in context &#8212; correction reasons around it</text>
+
+  <text x="0" y="112" class="d-label">REWIND</text>
+  <rect x="0" y="122" width="80" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="40" y="141" class="d-label" text-anchor="middle">good</text>
+  <rect x="88" y="122" width="80" height="30" rx="4" fill="var(--muted)" opacity="0.3" stroke-dasharray="3 3" stroke="var(--line)"/>
+  <text x="128" y="141" class="d-label" text-anchor="middle">bad turn</text>
+  <path d="M128 156 C 128 176, 40 176, 40 156" stroke="var(--signal)" stroke-width="2" fill="none" marker-end="url(#rnf-a)"/>
+  <rect x="176" y="122" width="80" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="216" y="141" class="d-label" text-anchor="middle">regenerate</text>
+  <text x="0" y="188" class="d-fix">active point moves back &#8212; bad turn no longer conditions the model</text>
+
+  <defs>
+    <marker id="rnf-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--signal)"/></marker>
+  </defs>
+</svg></div><figcaption><b>Two ways to leave a bad turn</b><span>Patching forward carries the mistake as context. Rewinding removes it from the history entirely.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Broken output? Rewind to before it and regenerate — don't ask for a patch.</li>
+<li>Don't assume /clear destroyed anything permanently; check rewind before re-deriving context by hand.</li>
+<li>Before any turn that runs a destructive shell command, remember rewind won't save you from it — commit first.</li>
+</ul></div>
+<div class="src"><a href="https://youtu.be/RDeofKimDxo" target="_blank" rel="noopener">Simon Scrapes &middot; 37 Cheat Codes to Level Up In Claude Code in 19 Minutes &middot; 20:06 &#8599;</a></div>
+</section>
+<p class="bridge">Those moves all deal with a cache or a bad turn after the fact. The other lever stops expensive history from building up in the first place: send fewer turns through the expensive model to begin with.</p>
 <section id="advisor-mode">
 <div class="wrap"><div class="chead">
-<span class="cnum">3 / 3 &middot; builds on <s>prompt-caching</s></span>
+<span class="cnum">4 / 4 &middot; builds on <s>prompt-caching</s></span>
 <h2>Advisor mode</h2>
 <p class="oneline">A strong model plans and a cheap model executes, calling the planner back only when it gets stuck, so most turns run at the cheap model's price.</p>
 </div></div>
