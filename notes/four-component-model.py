@@ -31,10 +31,10 @@ NOTE = {
         " know how to describe in words: the instructions live in the skill, and Claude still"
         " does the work itself. Common uses: a PR review checklist, a landing-page teardown, a"
         " customer-notes extraction — anything you've typed a version of more than once. An MCP"
-        " gives Claude reach it doesn't otherwise have — a live connection into Gmail, a CRM, a"
-        " video editor — where the point isn't packaged instructions but the ability to act"
-        " inside a system it couldn't touch before. Common uses: reading your inbox, pulling"
-        " issues from a tracker, checking a live doc instead of a pasted copy.",
+        " gives Claude reach it doesn't otherwise have — a live connection into GitHub, JIRA,"
+        " mail, a database — where the point isn't packaged instructions but the ability to act"
+        " inside a system it couldn't touch before. Common uses: pulling PRs, pulling tickets"
+        " from a tracker, reading your inbox, querying a database directly.",
 
         "A sub agent solves neither memory nor access — it solves scale. When a task is too big"
         " to fit in one context window, or splits naturally into independent pieces, a sub agent"
@@ -144,31 +144,37 @@ NOTE = {
             "title": "MCP: access, not instructions",
             "caption": "A skill tells Claude how; an MCP gives it somewhere new to actually reach.",
             "svg": '''<svg viewBox="0 0 460 200" role="img"
-  aria-label="Claude connects out through MCP to three external apps — Gmail, Linear, and Drive — reading and acting inside each. Common uses: read your inbox, pull issues from a tracker, check a live doc.">
+  aria-label="Claude connects out through MCP to four external systems — GitHub, JIRA, mail, and a database — reading and acting inside each. Common uses: pull PRs, pull tickets from a tracker, read your inbox, query a database directly.">
   <rect x="170" y="10" width="120" height="40" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/>
   <text x="230" y="35" class="d-fix" text-anchor="middle">Claude</text>
   <circle cx="230" cy="50" r="3" fill="var(--signal)"/>
 
-  <path d="M230 50 V66 H75 V110" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
-  <path d="M230 50 V110" stroke="var(--interference)" stroke-width="1.5"/>
-  <path d="M230 50 V66 H385 V110" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
-  <circle cx="75" cy="110" r="3" fill="var(--interference)"/>
-  <circle cx="230" cy="110" r="3" fill="var(--interference)"/>
-  <circle cx="385" cy="110" r="3" fill="var(--interference)"/>
+  <path d="M230 50 V66 H60 V110" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
+  <path d="M230 50 V66 H175 V110" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
+  <path d="M230 50 V66 H290 V110" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
+  <path d="M230 50 V66 H405 V110" fill="none" stroke="var(--interference)" stroke-width="1.5"/>
+  <circle cx="60" cy="110" r="3" fill="var(--interference)"/>
+  <circle cx="175" cy="110" r="3" fill="var(--interference)"/>
+  <circle cx="290" cy="110" r="3" fill="var(--interference)"/>
+  <circle cx="405" cy="110" r="3" fill="var(--interference)"/>
 
-  <rect x="10" y="110" width="130" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
-  <text x="75" y="132" class="d-node" text-anchor="middle">Gmail</text>
-  <text x="75" y="148" class="d-label" text-anchor="middle">read inbox</text>
+  <rect x="10" y="110" width="100" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="60" y="132" class="d-node" text-anchor="middle">GitHub</text>
+  <text x="60" y="148" class="d-label" text-anchor="middle">pull PRs</text>
 
-  <rect x="165" y="110" width="130" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
-  <text x="230" y="132" class="d-node" text-anchor="middle">Linear</text>
-  <text x="230" y="148" class="d-label" text-anchor="middle">pull issues</text>
+  <rect x="125" y="110" width="100" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="175" y="132" class="d-node" text-anchor="middle">JIRA</text>
+  <text x="175" y="148" class="d-label" text-anchor="middle">pull issues</text>
 
-  <rect x="320" y="110" width="130" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
-  <text x="385" y="132" class="d-node" text-anchor="middle">Drive</text>
-  <text x="385" y="148" class="d-label" text-anchor="middle">check a doc</text>
+  <rect x="240" y="110" width="100" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="290" y="132" class="d-node" text-anchor="middle">Mail</text>
+  <text x="290" y="148" class="d-label" text-anchor="middle">read inbox</text>
 
-  <text x="10" y="188" class="d-label">a live connection out — Claude reaches into the app itself</text>
+  <rect x="355" y="110" width="100" height="50" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="405" y="132" class="d-node" text-anchor="middle">Database</text>
+  <text x="405" y="148" class="d-label" text-anchor="middle">query rows</text>
+
+  <text x="10" y="188" class="d-label">a live connection out — Claude reaches into the system itself</text>
 </svg>''',
         },
         {
