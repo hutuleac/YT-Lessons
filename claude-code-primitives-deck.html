@@ -1,61 +1,10 @@
-#!/usr/bin/env python3
-"""Render lessons from notes.
-
-    python3 build.py lessons/context-engineering.py   # one lesson + refresh index
-    python3 build.py --all                            # every lesson + index
-
-A note (notes/<id>.py) is the durable unit: one short video, one concept, its own diagrams.
-A lesson (lessons/<id>.py) is a manifest naming notes in teaching order. A note can appear in
-any number of lessons, so a single-note lesson published today can be absorbed into a larger
-one later without touching the note.
-
-DESIGN
-Dark-first, light supported. Monospace display / serif body — the machine speaks in mono, the
-teaching speaks in serif. Palette is a signal-degradation axis (teal signal, magenta
-interference) rather than green-good/red-bad, because the subject is quality decaying across a
-gradient. Signature element: a context rail down the left edge that fills with scroll progress
-and crosses into the dumb zone near the end, so the page enacts the thing it explains.
-System font stacks only, all CSS/SVG inline — the page is self-contained with no build step.
-"""
-import html
-import importlib.util
-import pathlib
-import sys
-
-# Notes and lessons are data files loaded by path, and a stale .pyc silently serves the previous
-# version whenever an edit keeps the same byte size within the same second — you edit a note,
-# rebuild, and the page doesn't change. Never write bytecode for them.
-sys.dont_write_bytecode = True
-
-ROOT = pathlib.Path(__file__).parent
-NOTES = ROOT / "notes"
-LESSONS = ROOT / "lessons"
-
-
-def load(path, attr):
-    spec = importlib.util.spec_from_file_location(path.stem.replace("-", "_"), path)
-    mod = importlib.util.module_from_spec(spec)
-    sys.path.insert(0, str(path.parent))
-    try:
-        spec.loader.exec_module(mod)
-    finally:
-        sys.path.pop(0)
-    return getattr(mod, attr)
-
-
-def e(s):
-    return html.escape(str(s), quote=False)
-
-
-def diagram_body(d):
-    """A diagram is inline SVG (the default — themes itself) or, for citing a source
-    chart verbatim, a data-URI raster image under an "img" key with "alt" text."""
-    if d.get("img"):
-        return f'<img src="{d["img"]}" alt="{e(d.get("alt", d["title"]))}" loading="lazy">'
-    return d["svg"]
-
-
-CSS = """
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The four things in Claude Code, and what each one is actually for &mdash; deck</title>
+<style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
   --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
@@ -193,7 +142,7 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do ul{margin:0; padding:0; list-style:none}
 .do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
 .do li:last-child{margin-bottom:0}
-.do li::before{content:"\\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
@@ -211,13 +160,7 @@ footer a{color:var(--muted)}
 
 a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
-"""
 
-# The deck is the lesson at presenting detail. It reads the slide-shaped fields — `skeleton`,
-# `numbers`, `analogy`, `practice`, `diagrams` — and never `mechanism`, whose paragraphs would
-# turn a slide back into the page. It shares the palette and type tokens above and drops the
-# page's reading measure: a slide uses the whole viewport.
-DECK_CSS = """
 html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
 body{font-family:var(--sans)}
 .slide{
@@ -304,7 +247,7 @@ body{font-family:var(--sans)}
               clamp(16px,2vh,24px) clamp(38px,3.4vw,52px)
 }
 .acts li::before{
-  content:"\\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
+  content:"\2192"; position:absolute; left:clamp(16px,1.6vw,24px); top:clamp(16px,2vh,24px);
   color:var(--interference); font-family:var(--mono)
 }
 
@@ -476,16 +419,42 @@ html.overview .k-section{display:block}
 html.overview .k-section .idx, html.overview .k-section h2{display:block}
 html.overview .slide figcaption{margin:0}
 html.overview .slide figcaption b{font-size:11px; line-height:1.3}
-"""
+</style>
+</head>
+<body>
+<section class="slide k-title"><div class="tick"><span>Claude Code setup</span><s>1 / 8</s></div><h1>The four things in Claude Code, and what each one is actually for</h1><p class="lead">CLAUDE.md, skills, MCPs and sub agents solve four different problems — memory, repeatable action, external access, and scale. Confusing them is the fastest way to a setup that burns tokens without doing more.</p><p class="audience">You're setting up or cleaning up a Claude Code project and keep reaching for whichever tool you already know, instead of the one built for the job.</p><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:12.5%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>Where this goes</span><s>2 / 8</s></div><figure><div class="plate"><svg viewBox="-2 -2 774 76" role="img" aria-label="Concept map of the lesson: CLAUDE.md, skill, MCP, sub agent, joined by arrows showing which concept each one builds on."><defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs><rect x="0" y="0" width="230" height="72" rx="6" fill="var(--surface-2)" stroke="var(--signal)"/><text x="16" y="25" class="d-num">01</text><text x="16" y="47" class="d-node"><tspan x="16" dy="0">CLAUDE.md, skill, MCP,</tspan><tspan x="16" dy="17">sub agent</tspan></text></svg></div><figcaption><b>The concepts, and what each one needs first</b><span>Drawn from the prerequisites the build checks, so the map cannot drift from the lesson.</span></figcaption></figure><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:25.0%"></i></div></section>
+<section class="slide k-section"><div class="tick"><span>CLAUDE.md, skill, MCP, sub agent</span><s>3 / 8</s></div><p class="idx">01</p><h2>CLAUDE.md, skill, MCP, sub agent</h2><p class="lead">Claude Code has four components with non-overlapping jobs — memory, repeatable action, external access, and context-splitting — and most setups burn tokens because people reach for whichever one they know instead of the one whose job actually matches the problem.</p><div class="src"><a href="https://youtube.com/shorts/JgdGmeAvZts" target="_blank" rel="noopener">Charlie Automates &middot; CLAUDE.md vs Skills vs Subagents explained &middot; 1:27 &#8599;</a></div><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:37.5%"></i></div></section>
+<section class="slide k-bullets"><div class="tick"><span>CLAUDE.md, skill, MCP, sub agent</span><s>4 / 8</s></div><h2>CLAUDE.md, skill, MCP, sub agent</h2><ol class="bul"><li class="step">CLAUDE.md is memory — rules and facts Claude should know every conversation.</li><li class="step">A skill is a repeatable task — package it once, trigger it on demand.</li><li class="step">An MCP is access to another app or live data, not instructions.</li><li class="step">A sub agent splits a task too big for one context window into parallel workers.</li><li class="step">Jamming everything into CLAUDE.md, or installing skills and MCPs you never trigger, is what burns tokens.</li></ol><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:50.0%"></i></div></section>
+<section class="slide k-figs"><div class="tick"><span>CLAUDE.md, skill, MCP, sub agent</span><s>5 / 8</s></div><figure><div class="plate"><svg viewBox="0 0 460 260" role="img"
+  aria-label="Four components each answer a different question. CLAUDE.md: know every time, memory. Skill: do on demand, repeatable action. MCP: reach another app, external access. Sub agent: too big for one window, parallel split.">
+  <rect x="0" y="10" width="210" height="60" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="105" y="34" class="d-node" text-anchor="middle">CLAUDE.md</text>
+  <text x="105" y="52" class="d-fix" text-anchor="middle">know every time — memory</text>
 
-# F fullscreen, D theme, O overview grid, Left/Right step or move. Native scroll-snap already
-# does the scrolling; this just points it at the right slide and toggles two classes.
-#
-# Right steps through the `.step` items on the current slide before advancing, so a list arrives
-# a line at a time. Two rules keep that from ever showing a blank slide: arriving forward starts
-# a slide at zero steps, arriving backward starts it fully revealed, and any slide reached by
-# scrolling or by clicking an overview card reveals everything (only the arrows present).
-DECK_JS = """
+  <rect x="230" y="10" width="210" height="60" rx="4" fill="var(--sand)" opacity="0.45"/>
+  <text x="335" y="34" class="d-node" text-anchor="middle">skill</text>
+  <text x="335" y="52" class="d-fix" text-anchor="middle">do on demand — repeatable</text>
+
+  <rect x="0" y="90" width="210" height="60" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="105" y="114" class="d-node" text-anchor="middle">MCP</text>
+  <text x="105" y="132" class="d-fix" text-anchor="middle">reach another app — access</text>
+
+  <rect x="230" y="90" width="210" height="60" rx="4" fill="var(--muted)" opacity="0.3"/>
+  <text x="335" y="114" class="d-node" text-anchor="middle">sub agent</text>
+  <text x="335" y="132" class="d-fix" text-anchor="middle">too big for one window — split</text>
+
+  <text x="0" y="180" class="d-label">rules and facts</text>
+  <text x="230" y="180" class="d-label">a packaged, repeatable task</text>
+  <text x="0" y="200" class="d-label">Gmail, CRM, video editor</text>
+  <text x="230" y="200" class="d-label">parallel workers, clean main context</text>
+
+  <text x="0" y="240" class="d-label">jam these together and you get unintentional bloat</text>
+</svg></div><figcaption><b>Four jobs, one question each</b><span>Confusing these is what turns a setup into unintentional bloat.</span></figcaption></figure><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:62.5%"></i></div></section>
+<section class="slide k-nums"><div class="tick"><span>CLAUDE.md, skill, MCP, sub agent</span><s>6 / 8</s></div><h2>By the numbers</h2><div class="nums"><div class="step"><b>10</b><i>MCP servers</i><span>example count the video gives for a bloated, unintentional setup</span></div><div class="step"><b>hundreds</b><i>skills</i><span>example scale of skills installed from GitHub and never used</span></div></div><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:75.0%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>CLAUDE.md, skill, MCP, sub agent</span><s>7 / 8</s></div><h2>What to do</h2><ul class="acts"><li class="step">Before adding anything, name which of the four it is: does Claude need to know this every time (CLAUDE.md), do it repeatably on demand (skill), reach into another app (MCP), or offload a task too big for one context window (sub agent)?</li><li class="step">Keep CLAUDE.md to what must be true every conversation — move task-specific instructions into a skill instead.</li><li class="step">Uninstall MCP servers and skills you can't currently name a trigger for.</li></ul><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:87.5%"></i></div></section>
+<section class="slide k-close"><div class="tick"><span>In one move</span><s>8 / 8</s></div><h2>One question per component</h2><p class="lead">Before adding anything: does Claude need to know this every conversation (CLAUDE.md), do it repeatably on demand (skill), reach into another app (MCP), or split a task too big for one context window (sub agent)? Pick the one whose job matches, not the one you already have installed.</p><div class="foot"><em>Claude Code setup</em><em>The four things in Claude Code, and what each one is actually for</em></div><div class="bar"><i style="width:100.0%"></i></div></section>
+<script>
 (function(){
   var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
   function current(){
@@ -576,435 +545,6 @@ DECK_JS = """
     }
   });
 })();
-"""
-
-RAIL_JS = """
-(function(){
-  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
-  function u(){
-    var h=document.documentElement,
-        m=(h.scrollHeight-h.clientHeight)||1,
-        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
-    f.style.height=(p*100)+'%';
-    t.style.top=(4+p*92)+'%';
-    t.textContent=p<0.72?'smart zone':'dumb zone';
-    r.classList.toggle('deep',p>=0.72);
-    r.classList.toggle('on',p>0.02);
-  }
-  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
-})();
-"""
-
-
-def lesson_index():
-    """note id -> id of a lesson that teaches it, so an out-of-lesson prerequisite can link out.
-
-    A lesson carries its own argument; pulling in a whole prerequisite chain just to satisfy the
-    'builds on' line is what turns two lessons into the same lesson.
-    """
-    where = {}
-    for p in sorted(LESSONS.glob("*.py")):
-        L = load(p, "LESSON")
-        for nid in L["notes"]:
-            where.setdefault(nid, L["id"])
-    return where
-
-
-def render_note(n, idx, total, bridge, here, where):
-    o = []
-    if bridge:
-        o.append(f'<p class="bridge">{e(bridge)}</p>')
-    o.append(f'<section id="{e(n["id"])}">')
-
-    # Structural device: the prerequisite chain, which is real data from the note.
-    pre = n.get("prerequisites") or []
-    parts = []
-    for p in pre:
-        if p in here:
-            parts.append(f"<s>{e(p)}</s>")
-        elif p in where:
-            # Taught elsewhere: link out rather than dragging the note into this lesson.
-            parts.append(f'<a class="out" href="{e(where[p])}.html#{e(p)}">{e(p)}</a>')
-        else:
-            parts.append(f"<s>{e(p)}</s>")
-    chain = f' &middot; builds on {", ".join(parts)}' if parts else " &middot; start here"
-    o.append('<div class="wrap"><div class="chead">')
-    o.append(f'<span class="cnum">{idx} / {total}{chain}</span>')
-    o.append(f'<h2>{e(n["concept"])}</h2>')
-    o.append(f'<p class="oneline">{e(n["one_liner"])}</p>')
-    o.append("</div></div>")
-
-    o.append('<div class="wrap">')
-    for p in n.get("mechanism", []):
-        o.append(f"<p>{e(p)}</p>")
-    o.append("</div>")
-
-    figs = n.get("numbers") or []
-    if figs:
-        o.append('<div class="figs">')
-        for f in figs:
-            o.append(
-                f'<div class="fig"><b>{e(f["value"])}</b>'
-                f'<i>{e(f.get("unit",""))}</i><span>{e(f["label"])}</span></div>'
-            )
-        o.append("</div>")
-
-    for d in n.get("diagrams") or []:
-        plate_cls = "plate photo" if d.get("img") else "plate"
-        o.append(
-            f'<figure><div class="{plate_cls}">{diagram_body(d)}</div>'
-            f'<figcaption><b>{e(d["title"])}</b><span>{e(d["caption"])}</span></figcaption></figure>'
-        )
-
-    a = n.get("analogy")
-    if a:
-        o.append(f'<div class="analogy"><q>{e(a["text"])}</q><p>{e(a["note"])}</p></div>')
-
-    if n.get("practice"):
-        o.append('<div class="do"><h3>What to do</h3><ul>')
-        for p in n["practice"]:
-            o.append(f"<li>{e(p)}</li>")
-        o.append("</ul></div>")
-
-    s = n["source"]
-    o.append(
-        f'<div class="src"><a href="{e(s["url"])}" target="_blank" rel="noopener">'
-        f'{e(s["channel"])} &middot; {e(s["title"])} &middot; {e(s["duration"])} &#8599;</a></div>'
-    )
-    o.append("</section>")
-    return "\n".join(o)
-
-
-def concept_map(L, notes, per_row=3):
-    """The lesson's own prerequisite graph, drawn from the data the build already validates.
-
-    Serpentine layout so consecutive concepts are adjacent, which keeps the common case — a
-    straight chain of prerequisites — reading as a straight line.
-    """
-    w, h, gx, gy = 230, 72, 40, 54
-    pos = {}
-    for i, nid in enumerate(L["notes"]):
-        row, col = divmod(i, per_row)
-        if row % 2:  # serpentine: odd rows run right to left
-            col = per_row - 1 - col
-        pos[nid] = (col * (w + gx), row * (h + gy))
-
-    rows = (len(L["notes"]) + per_row - 1) // per_row
-    vb_w = per_row * w + (per_row - 1) * gx
-    vb_h = rows * h + (rows - 1) * gy
-
-    def on_border(cx, cy, tx, ty):
-        """Where the line from this box's centre towards (tx,ty) leaves the box."""
-        dx, dy = tx - cx, ty - cy
-        if dx == 0 and dy == 0:
-            return cx, cy
-        s = min(
-            (w / 2) / abs(dx) if dx else float("inf"),
-            (h / 2) / abs(dy) if dy else float("inf"),
-        )
-        return cx + dx * s, cy + dy * s
-
-    edges = []
-    for nid in L["notes"]:
-        for p in notes[nid].get("prerequisites") or []:
-            if p not in pos:  # taught by another lesson — the section heading links out to it
-                continue
-            cx1, cy1 = pos[p][0] + w / 2, pos[p][1] + h / 2
-            cx2, cy2 = pos[nid][0] + w / 2, pos[nid][1] + h / 2
-            sx, sy = on_border(cx1, cy1, cx2, cy2)
-            tx, ty = on_border(cx2, cy2, cx1, cy1)
-            edges.append(
-                f'<line x1="{sx:.0f}" y1="{sy:.0f}" x2="{tx:.0f}" y2="{ty:.0f}" '
-                f'stroke="var(--interference)" stroke-width="1.6" opacity="0.7" '
-                f'marker-end="url(#cm-a)"/>'
-            )
-
-    boxes = []
-    for i, nid in enumerate(L["notes"], 1):
-        x, y = pos[nid]
-        # Two lines at most — the concept names are short, but "Docs as a second source of
-        # truth" is not, and an overflowing label is worse than a wrapped one.
-        words, lines, cur = notes[nid]["concept"].split(), [], ""
-        for word in words:
-            if len(cur) + len(word) + 1 > 24 and cur:
-                lines.append(cur)
-                cur = word
-            else:
-                cur = f"{cur} {word}".strip()
-        lines.append(cur)
-        label = "".join(
-            f'<tspan x="{x + 16}" dy="{0 if k == 0 else 17}">{e(t)}</tspan>'
-            for k, t in enumerate(lines[:2])
-        )
-        boxes.append(
-            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="var(--surface-2)" '
-            f'stroke="var(--signal)"/>'
-            f'<text x="{x + 16}" y="{y + 25}" class="d-num">{i:02d}</text>'
-            f'<text x="{x + 16}" y="{y + 47}" class="d-node">{label}</text>'
-        )
-
-    return (
-        f'<svg viewBox="-2 -2 {vb_w + 4} {vb_h + 4}" role="img" '
-        f'aria-label="Concept map of the lesson: {e(", ".join(notes[n]["concept"] for n in L["notes"]))},'
-        f' joined by arrows showing which concept each one builds on.">'
-        '<defs><marker id="cm-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">'
-        '<path d="M0 0 L6 3 L0 6 z" fill="var(--interference)"/></marker></defs>'
-        + "".join(edges)
-        + "".join(boxes)
-        + "</svg>"
-    )
-
-
-def build_deck(L, notes):
-    """The lesson as slides: one kind of slide per slide-shaped field of the note.
-
-    `mechanism` is deliberately absent — its paragraphs are what make a page a page.
-    """
-    slides = []  # (label, kind, inner html)
-    slides.append((
-        L["subject"], "title",
-        f'<h1>{e(L["title"])}</h1><p class="lead">{e(L["standfirst"])}</p>'
-        f'<p class="audience">{e(L["audience"])}</p>',
-    ))
-
-    slides.append((
-        "Where this goes", "figs",
-        f'<figure><div class="plate">{concept_map(L, notes)}</div>'
-        f'<figcaption><b>The concepts, and what each one needs first</b>'
-        f'<span>Drawn from the prerequisites the build checks, so the map cannot drift from'
-        f' the lesson.</span></figcaption></figure>',
-    ))
-
-    for i, nid in enumerate(L["notes"], 1):
-        n = notes[nid]
-        if not n.get("skeleton"):
-            raise SystemExit(f"notes/{nid}.py: empty 'skeleton' — the deck has nothing to show")
-        label = n["concept"]
-        s = n["source"]
-
-        # Divider: the number carries the position so the concept slide doesn't have to.
-        slides.append((
-            label, "section",
-            f'<p class="idx">{i:02d}</p><h2>{e(n["concept"])}</h2>'
-            f'<p class="lead">{e(n["one_liner"])}</p>'
-            f'<div class="src"><a href="{e(s["url"])}" target="_blank" rel="noopener">'
-            f'{e(s["channel"])} &middot; {e(s["title"])} &middot; {e(s["duration"])} &#8599;</a></div>',
-        ))
-        slides.append((
-            label, "bullets",
-            f'<h2>{e(n["concept"])}</h2><ol class="bul">'
-            + "".join(f'<li class="step">{e(x)}</li>' for x in n["skeleton"])
-            + "</ol>",
-        ))
-        for d in n.get("diagrams") or []:
-            plate_cls = "plate photo" if d.get("img") else "plate"
-            slides.append((
-                label, "figs",
-                f'<figure><div class="{plate_cls}">{diagram_body(d)}</div>'
-                f'<figcaption><b>{e(d["title"])}</b><span>{e(d["caption"])}</span>'
-                f"</figcaption></figure>",
-            ))
-        if n.get("numbers"):
-            slides.append((
-                label, "nums",
-                '<h2>By the numbers</h2><div class="nums">'
-                + "".join(
-                    f'<div class="step"><b>{e(f["value"])}</b><i>{e(f.get("unit",""))}</i>'
-                    f'<span>{e(f["label"])}</span></div>'
-                    for f in n["numbers"]
-                )
-                + "</div>",
-            ))
-        a = n.get("analogy")
-        if a:
-            slides.append((label, "quote", f'<q>{e(a["text"])}</q><p>{e(a["note"])}</p>'))
-        if n.get("practice"):
-            slides.append((
-                label, "do",
-                '<h2>What to do</h2><ul class="acts">'
-                + "".join(f'<li class="step">{e(x)}</li>' for x in n["practice"])
-                + "</ul>",
-            ))
-
-    c = L.get("closing")
-    if c:
-        slides.append((
-            "In one move", "close",
-            f'<h2>{e(c["title"])}</h2><p class="lead">{e(c["body"])}</p>',
-        ))
-
-    total = len(slides)
-    body = []
-    for i, (label, kind, inner) in enumerate(slides, 1):
-        body.append(
-            f'<section class="slide k-{kind}">'
-            f'<div class="tick"><span>{e(label)}</span><s>{i} / {total}</s></div>'
-            f"{inner}"
-            f'<div class="foot"><em>{e(L["subject"])}</em><em>{e(L["title"])}</em></div>'
-            f'<div class="bar"><i style="width:{i / total * 100:.1f}%"></i></div></section>'
-        )
-
-    doc = (
-        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
-        '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
-        f"<title>{e(L['title'])} &mdash; deck</title>\n"
-        f"<style>{CSS}{DECK_CSS}</style>\n</head>\n<body>\n"
-        + "\n".join(body)
-        + f"\n<script>{DECK_JS}</script>\n</body>\n</html>\n"
-    )
-    out = ROOT / f"{L['id']}-deck.html"
-    out.write_text(doc, encoding="utf-8")
-    print(f"wrote {out.name}  ({total} slides)")
-
-
-def check_note(nid, n):
-    """Catch the errors that would otherwise render silently to the reader."""
-    if n["id"] != nid:
-        raise SystemExit(f"notes/{nid}.py: declares id '{n['id']}' — must match its filename")
-    for field in ("prerequisites", "related"):
-        for ref in n.get(field) or []:
-            if not (NOTES / f"{ref}.py").exists():
-                raise SystemExit(
-                    f"notes/{nid}.py: {field} names '{ref}', which is not a note. "
-                    f"Typo, or write that note first."
-                )
-
-
-def build_lesson(path):
-    L = load(path, "LESSON")
-    where = lesson_index()
-    notes = {}
-    for i in L["notes"]:
-        f = NOTES / f"{i}.py"
-        if not f.exists():
-            raise SystemExit(f"{path.name}: lists note '{i}', which does not exist")
-        notes[i] = load(f, "NOTE")
-        check_note(i, notes[i])
-
-    # The concept graph is enforced, not decorative: a note may not appear before its prerequisite.
-    seen = []
-    for nid in L["notes"]:
-        for p in notes[nid].get("prerequisites") or []:
-            if p not in L["notes"]:
-                # Taught by another lesson: the heading links out to it. Only a prerequisite
-                # that no lesson covers is an error, because it can't be linked either.
-                if p not in where:
-                    raise SystemExit(
-                        f"{path.name}: '{nid}' builds on '{p}', which no lesson covers — "
-                        f"add '{p}' to this lesson, or to one that runs before it"
-                    )
-                continue
-            if p not in seen:
-                raise SystemExit(
-                    f"{path.name}: '{nid}' needs '{p}' first — reorder 'notes' in the lesson"
-                )
-        seen.append(nid)
-
-    body = [
-        '<div class="rail" id="rail"><i></i><b></b></div>',
-        "<header><div class='wrap'>",
-        f'<p class="eyebrow">{e(L["subject"])}</p>',
-        f'<h1>{e(L["title"])}</h1>',
-        f'<p class="standfirst">{e(L["standfirst"])}</p>',
-        f'<p class="audience">{e(L["audience"])}</p>',
-        "</div></header>",
-    ]
-    total = len(L["notes"])
-    for i, nid in enumerate(L["notes"], 1):
-        body.append(
-            render_note(notes[nid], i, total, L.get("bridges", {}).get(nid), L["notes"], where)
-        )
-
-    c = L.get("closing")
-    if c:
-        body.append(
-            f'<div class="close"><div class="wrap"><h2>{e(c["title"])}</h2>'
-            f'<p>{e(c["body"])}</p></div></div>'
-        )
-    body.append(
-        '<footer><div class="wrap">Built from short-form video. '
-        '<a href="index.html">All lessons</a></div></footer>'
-    )
-
-    doc = (
-        "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
-        '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
-        f"<title>{e(L['title'])}</title>\n"
-        f'<meta name="description" content="{e(L["standfirst"])}">\n'
-        f"<style>{CSS}</style>\n</head>\n<body>\n"
-        + "\n".join(body)
-        + f"\n<script>{RAIL_JS}</script>\n</body>\n</html>\n"
-    )
-    out = ROOT / f"{L['id']}.html"
-    out.write_text(doc, encoding="utf-8")
-    print(f"wrote {out.name}  ({total} notes)")
-    build_deck(L, notes)
-    return L
-
-
-def build_index(all_lessons):
-    cards = []
-    for L in sorted(all_lessons, key=lambda x: (LESSONS / f"{x['id']}.py").stat().st_mtime, reverse=True):
-        cards.append(
-            f'<li><span class="k">{e(L["subject"])}</span>'
-            f'<b>{e(L["title"])}</b><i>{e(L["standfirst"])}</i>'
-            f'<div class="ix-foot"><u>{len(L["notes"])} concepts</u>'
-            f'<div class="ix-go">'
-            f'<a class="go go-read" href="{e(L["id"])}.html">Read &#8594;</a>'
-            f'<a class="go go-deck" href="{e(L["id"])}-deck.html">Deck &#8599;</a>'
-            f"</div></div></li>"
-        )
-    doc = (
-        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
-        '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
-        "<title>Lessons</title>\n<style>"
-        + CSS
-        + """
-        .ix{max-width:var(--wide);margin:0 auto;padding:14vh 22px 12vh}
-        .ix ul{list-style:none;margin:44px 0 0;padding:0}
-        .ix li{border-top:1px solid var(--line);padding:30px 0}
-        .k{font:500 11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--interference)}
-        .ix b{display:block;font-family:var(--mono);font-size:26px;font-weight:600;
-              letter-spacing:-.03em;margin:12px 0 10px}
-        .ix i{display:block;font-style:normal;color:var(--muted);font-size:17px;max-width:60ch}
-        .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted)}
-        .ix-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
-                 gap:16px;margin-top:22px}
-        .ix-go{display:flex;gap:10px}
-        /* Two equal-weight actions, not one primary link with a footnote — reading and presenting
-           are both first-class outputs of the same source, so neither gets buried. */
-        .go{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
-            text-decoration:none;padding:11px 18px;border-radius:999px;border:1px solid var(--line)}
-        .go-read{color:var(--void);background:var(--signal);border-color:var(--signal)}
-        .go-read:hover{opacity:.85}
-        .go-deck{color:var(--ink);background:transparent}
-        .go-deck:hover{border-color:var(--interference);color:var(--interference)}
-        </style>\n</head>\n<body>\n<div class="ix">
-        <p class="eyebrow">Lessons</p>
-        <h1>Ideas worth more than 60 seconds</h1>
-        <p class="standfirst">Short-form video, taken apart and put back together as something you
-        can actually learn from. Every lesson comes in two shapes: read it end to end, or open it
-        as a deck for presenting.</p>
-        <ul>"""
-        + "".join(cards)
-        + "</ul></div>\n</body>\n</html>\n"
-    )
-    (ROOT / "index.html").write_text(doc, encoding="utf-8")
-    print(f"wrote index.html  ({len(cards)} lessons)")
-
-
-def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    if "--all" in sys.argv or not args:
-        paths = sorted(LESSONS.glob("*.py"))
-    else:
-        paths = [pathlib.Path(a) for a in args]
-    if not paths:
-        raise SystemExit("no lessons found in lessons/")
-    built = [build_lesson(p) for p in paths]
-    # The index always reflects every lesson on disk, not just the one just built.
-    build_index([load(p, "LESSON") for p in sorted(LESSONS.glob("*.py"))] if args else built)
-
-
-if __name__ == "__main__":
-    main()
+</script>
+</body>
+</html>

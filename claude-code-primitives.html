@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lessons</title>
+<title>The four things in Claude Code, and what each one is actually for</title>
+<meta name="description" content="CLAUDE.md, skills, MCPs and sub agents solve four different problems — memory, repeatable action, external access, and scale. Confusing them is the fastest way to a setup that burns tokens without doing more.">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -160,35 +161,81 @@ footer a{color:var(--muted)}
 
 a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
-
-        .ix{max-width:var(--wide);margin:0 auto;padding:14vh 22px 12vh}
-        .ix ul{list-style:none;margin:44px 0 0;padding:0}
-        .ix li{border-top:1px solid var(--line);padding:30px 0}
-        .k{font:500 11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--interference)}
-        .ix b{display:block;font-family:var(--mono);font-size:26px;font-weight:600;
-              letter-spacing:-.03em;margin:12px 0 10px}
-        .ix i{display:block;font-style:normal;color:var(--muted);font-size:17px;max-width:60ch}
-        .ix u{display:block;text-decoration:none;font:400 11px var(--mono);color:var(--muted)}
-        .ix-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
-                 gap:16px;margin-top:22px}
-        .ix-go{display:flex;gap:10px}
-        /* Two equal-weight actions, not one primary link with a footnote — reading and presenting
-           are both first-class outputs of the same source, so neither gets buried. */
-        .go{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
-            text-decoration:none;padding:11px 18px;border-radius:999px;border:1px solid var(--line)}
-        .go-read{color:var(--void);background:var(--signal);border-color:var(--signal)}
-        .go-read:hover{opacity:.85}
-        .go-deck{color:var(--ink);background:transparent}
-        .go-deck:hover{border-color:var(--interference);color:var(--interference)}
-        </style>
+</style>
 </head>
 <body>
-<div class="ix">
-        <p class="eyebrow">Lessons</p>
-        <h1>Ideas worth more than 60 seconds</h1>
-        <p class="standfirst">Short-form video, taken apart and put back together as something you
-        can actually learn from. Every lesson comes in two shapes: read it end to end, or open it
-        as a deck for presenting.</p>
-        <ul><li><span class="k">Claude Code setup</span><b>The four things in Claude Code, and what each one is actually for</b><i>CLAUDE.md, skills, MCPs and sub agents solve four different problems — memory, repeatable action, external access, and scale. Confusing them is the fastest way to a setup that burns tokens without doing more.</i><div class="ix-foot"><u>1 concepts</u><div class="ix-go"><a class="go go-read" href="claude-code-primitives.html">Read &#8594;</a><a class="go go-deck" href="claude-code-primitives-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Context engineering</span><b>Everything is competing for the same window</b><i>One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.</i><div class="ix-foot"><u>9 concepts</u><div class="ix-go"><a class="go go-read" href="context-engineering.html">Read &#8594;</a><a class="go go-deck" href="context-engineering-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Token economics</span><b>The bill is mostly about timing, not brevity</b><i>A rule to "be brief" only trims output tokens. The real 20x swing in your bill comes from something else: did your message land inside the 1-hour cache window, or miss it.</i><div class="ix-foot"><u>4 concepts</u><div class="ix-go"><a class="go go-read" href="token-economics.html">Read &#8594;</a><a class="go go-deck" href="token-economics-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Skill design</span><b>How to design a skill an agent actually follows</b><i>Seven small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.</i><div class="ix-foot"><u>8 concepts</u><div class="ix-go"><a class="go go-read" href="skill-design-principles.html">Read &#8594;</a><a class="go go-deck" href="skill-design-principles-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Working with a coding agent</span><b>Questions, then checks, then context, then pipelines</b><i>The person who built Claude Code teaches it as a ladder, not a feature list: start by asking the codebase questions, give the agent a way to grade its own work, place your context where it belongs, and only then wire it into everything else.</i><div class="ix-foot"><u>5 concepts</u><div class="ix-go"><a class="go go-read" href="claude-code-in-practice.html">Read &#8594;</a><a class="go go-deck" href="claude-code-in-practice-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Agent operations</span><b>Set up a coding agent like you'd onboard a new hire</b><i>The same eight things a new employee needs — a workspace, a clear ticket, a way to check their own work, review standards, recurring duties, and boundaries — turn a coding agent from a chat window into something closer to staff.</i><div class="ix-foot"><u>8 concepts</u><div class="ix-go"><a class="go go-read" href="ai-employee-setup.html">Read &#8594;</a><a class="go go-deck" href="ai-employee-setup-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Agent-native engineering practice</span><b>Stop steering agents. Build gauntlets instead.</b><i>Uncle Bob spent fifty years writing rules for humans. In the last year, he tested which rules still work for agents, which rules need new limits, and which rules were never real rules at all, just habits built around a human's limits.</i><div class="ix-foot"><u>6 concepts</u><div class="ix-go"><a class="go go-read" href="agent-native-engineering.html">Read &#8594;</a><a class="go go-deck" href="agent-native-engineering-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">Working above the agent</span><b>You are the lead developer now</b><i>The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.</i><div class="ix-foot"><u>9 concepts</u><div class="ix-go"><a class="go go-read" href="lead-developer.html">Read &#8594;</a><a class="go go-deck" href="lead-developer-deck.html">Deck &#8599;</a></div></div></li><li><span class="k">LLM fundamentals</span><b>What is actually happening when you talk to an LLM</b><i>Six shorts that take the whole stack apart in order: tokens, then messages, then the window they live in, then tools, then the two ways of chaining calls together. Nothing here is magic once you have seen the list.</i><div class="ix-foot"><u>7 concepts</u><div class="ix-go"><a class="go go-read" href="llm-fundamentals.html">Read &#8594;</a><a class="go go-deck" href="llm-fundamentals-deck.html">Deck &#8599;</a></div></div></li></ul></div>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">Claude Code setup</p>
+<h1>The four things in Claude Code, and what each one is actually for</h1>
+<p class="standfirst">CLAUDE.md, skills, MCPs and sub agents solve four different problems — memory, repeatable action, external access, and scale. Confusing them is the fastest way to a setup that burns tokens without doing more.</p>
+<p class="audience">You're setting up or cleaning up a Claude Code project and keep reaching for whichever tool you already know, instead of the one built for the job.</p>
+</div></header>
+<section id="four-component-model">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 1 &middot; start here</span>
+<h2>CLAUDE.md, skill, MCP, sub agent</h2>
+<p class="oneline">Claude Code has four components with non-overlapping jobs — memory, repeatable action, external access, and context-splitting — and most setups burn tokens because people reach for whichever one they know instead of the one whose job actually matches the problem.</p>
+</div></div>
+<div class="wrap">
+<p>Each component answers a different question, and the failure mode is picking the one you already know how to use instead of the one whose job matches the problem. CLAUDE.md loads into every conversation whether it's relevant or not, so it should hold only what actually needs to be true every time — durable facts and rules about you or the project, not task-specific instructions. Stuffing one-off procedures into it means paying to load them on turns that never need them.</p>
+<p>A skill and an MCP look similar from the outside — both are things you 'install' — but they solve opposite problems. A skill packages a way of doing something you already know how to describe in words: the instructions live in the skill, and Claude still does the work itself. An MCP gives Claude reach it doesn't otherwise have — a live connection into Gmail, a CRM, a video editor — where the point isn't packaged instructions but the ability to act inside a system it couldn't touch before.</p>
+<p>A sub agent solves neither memory nor access — it solves scale. When a task is too big to fit in one context window, or splits naturally into independent pieces, a sub agent lets Claude farm the work out to parallel workers and keep the main conversation's context clean instead of filling it with the intermediate steps of every sub-task.</p>
+<p>The video doesn't explain the token-burning mechanism beyond naming it — 'unintentional bloat' from a bloated CLAUDE.md plus unused MCP servers and skills is asserted, not walked through. The plausible mechanism, consistent with how CLAUDE.md and skills actually load, is that CLAUDE.md content loads on every single turn regardless of relevance, while an installed-but-untriggered skill or MCP server's overhead depends on how the client surfaces it — worth treating as this video's least-supported claim.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>10</b><i>MCP servers</i><span>example count the video gives for a bloated, unintentional setup</span></div>
+<div class="fig"><b>hundreds</b><i>skills</i><span>example scale of skills installed from GitHub and never used</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 260" role="img"
+  aria-label="Four components each answer a different question. CLAUDE.md: know every time, memory. Skill: do on demand, repeatable action. MCP: reach another app, external access. Sub agent: too big for one window, parallel split.">
+  <rect x="0" y="10" width="210" height="60" rx="4" fill="var(--signal)" opacity="0.35"/>
+  <text x="105" y="34" class="d-node" text-anchor="middle">CLAUDE.md</text>
+  <text x="105" y="52" class="d-fix" text-anchor="middle">know every time — memory</text>
+
+  <rect x="230" y="10" width="210" height="60" rx="4" fill="var(--sand)" opacity="0.45"/>
+  <text x="335" y="34" class="d-node" text-anchor="middle">skill</text>
+  <text x="335" y="52" class="d-fix" text-anchor="middle">do on demand — repeatable</text>
+
+  <rect x="0" y="90" width="210" height="60" rx="4" fill="var(--interference)" opacity="0.3"/>
+  <text x="105" y="114" class="d-node" text-anchor="middle">MCP</text>
+  <text x="105" y="132" class="d-fix" text-anchor="middle">reach another app — access</text>
+
+  <rect x="230" y="90" width="210" height="60" rx="4" fill="var(--muted)" opacity="0.3"/>
+  <text x="335" y="114" class="d-node" text-anchor="middle">sub agent</text>
+  <text x="335" y="132" class="d-fix" text-anchor="middle">too big for one window — split</text>
+
+  <text x="0" y="180" class="d-label">rules and facts</text>
+  <text x="230" y="180" class="d-label">a packaged, repeatable task</text>
+  <text x="0" y="200" class="d-label">Gmail, CRM, video editor</text>
+  <text x="230" y="200" class="d-label">parallel workers, clean main context</text>
+
+  <text x="0" y="240" class="d-label">jam these together and you get unintentional bloat</text>
+</svg></div><figcaption><b>Four jobs, one question each</b><span>Confusing these is what turns a setup into unintentional bloat.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before adding anything, name which of the four it is: does Claude need to know this every time (CLAUDE.md), do it repeatably on demand (skill), reach into another app (MCP), or offload a task too big for one context window (sub agent)?</li>
+<li>Keep CLAUDE.md to what must be true every conversation — move task-specific instructions into a skill instead.</li>
+<li>Uninstall MCP servers and skills you can't currently name a trigger for.</li>
+</ul></div>
+<div class="src"><a href="https://youtube.com/shorts/JgdGmeAvZts" target="_blank" rel="noopener">Charlie Automates &middot; CLAUDE.md vs Skills vs Subagents explained &middot; 1:27 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>One question per component</h2><p>Before adding anything: does Claude need to know this every conversation (CLAUDE.md), do it repeatably on demand (skill), reach into another app (MCP), or split a task too big for one context window (sub agent)? Pick the one whose job matches, not the one you already have installed.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
 </body>
 </html>
