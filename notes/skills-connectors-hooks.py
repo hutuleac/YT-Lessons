@@ -25,6 +25,14 @@ NOTE = {
         " use. The signal that something should become a skill is noticing you've typed a version"
         " of the same prompt more than once.",
 
+        "A multi-step workflow doesn't need the second occurrence to earn a skill, though — it"
+        " needs one clean success. If a task took ten decisions across several tools (crawl a"
+        " reference site, script browser automation against it, hand the result to an"
+        " orchestrator, deploy the output) and it just worked, the run itself is the raw material:"
+        " ask the agent to write the skill from what it just did while every tool call and"
+        " decision is still in the conversation, rather than waiting to retype the prompt and"
+        " reconstruct the steps from memory the second time around.",
+
         "A connector is not a prompt at all — it's access. It's what lets the agent read GitHub"
         " issues, pull from Linear, or check a Google Drive doc instead of you copy-pasting"
         " content into the conversation. Where a skill encodes *how* to do something, a connector"
@@ -45,6 +53,8 @@ NOTE = {
         "Before writing a new instruction, ask which of the three it actually is — a repeatable"
         " task (skill), a data source (connector), or a rule that must always fire (hook).",
         "Turn a prompt into a skill the second time you type a version of it, not the fifth.",
+        "After a complex multi-tool workflow succeeds even once, ask the agent to turn its own"
+        " run into a skill immediately — don't wait to repeat it by hand first.",
         "Put anything that must always happen — formatting, tests before a PR — in a hook, not in"
         " a prompt you might forget to add.",
     ],
