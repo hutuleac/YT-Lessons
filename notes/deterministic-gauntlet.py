@@ -6,13 +6,15 @@ NOTE = {
                  " not a long list of rules.",
 
     "prerequisites": ["context-window"],
-    "related": ["dumb-zone", "review-checkpoints", "tool-overload"],
+    "related": ["dumb-zone", "review-checkpoints", "tool-overload", "skills-connectors-hooks",
+                "claude-md-as-index"],
 
     "skeleton": [
         "Written rules compete for space in a small area of full attention.",
         "A long list of rules becomes advice to the model, not law.",
         "A tool that checks the code does not lose strength. It passes or it fails.",
         "Keep the prompt short. Use a tool loop to enforce the rest.",
+        "ALL-CAPS rules are still requests. A hook is a guarantee.",
     ],
 
     "mechanism": [
@@ -38,6 +40,15 @@ NOTE = {
         " quality, and he says he has not found the point where this trade stops paying off. But"
         " he has found a floor. Even with many checks, the agent still works about two to four"
         " times faster than he does by hand.",
+
+        "Shouting doesn't rescue a buried rule either. Writing IMPORTANT or MUST in capitals"
+        " because the model kept missing something no longer works, per Simon Scrapes. In Claude"
+        " Code the tool form of a must-never rule is a hook: a small script that runs at a moment"
+        " you define — before every tool call, say — deterministically, spending no model tokens"
+        " and firing whatever the model decided. \"Never email the client\" as a CLAUDE.md line"
+        " is a request; as a hook that blocks any email to a client, it is a guarantee. That"
+        " gives a mechanical audit: every all-caps line is either something Claude does anyway,"
+        " so delete it, or something that must never happen, so make it a hook.",
     ],
 
     "numbers": [
@@ -60,6 +71,8 @@ NOTE = {
         " says it is done.",
         "Bring back checks you once rejected as too slow for a human. An agent does not mind"
         " the wait.",
+        "Search CLAUDE.md for anything in capitals. Delete it if Claude does it anyway; turn it"
+        " into a hook if it must never happen.",
     ],
 
     "diagrams": [
@@ -107,4 +120,13 @@ NOTE = {
         "title": "LIVE: Uncle Bob on Software Fundamentals in the Age of AI",
         "duration": "56:39",
     },
+
+    "also": [
+        {
+            "url": "https://www.youtube.com/watch?v=J9NQTYUP6k0",
+            "channel": "Simon Scrapes",
+            "title": "How the Top 1% Use Claude Code Differently",
+            "duration": "18:09",
+        },
+    ],
 }

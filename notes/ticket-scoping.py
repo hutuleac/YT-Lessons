@@ -7,12 +7,13 @@ NOTE = {
                  ,
 
     "prerequisites": [],
-    "related": ["grooming-skill", "slice-by-feature", "spec-driven-trap"],
+    "related": ["grooming-skill", "slice-by-feature", "spec-driven-trap", "checkable-oracle",
+                "goal-judge"],
 
     "skeleton": [
         "\"Make the app better\" forces the agent to guess. Guessing means you clean up later.",
-        "A ticket needs: the job, the scope, the expected experience, the boundary.",
-        "Plan mode first: inspect the repo, propose the approach, wait for approval.",
+        "Brief it in three parts: the task, the guardrails, what done looks like.",
+        "Newer models plan as they work. Check what it did, not what it planned.",
         "Then implement as one focused, reviewable change — not a pile of everything at once.",
     ],
 
@@ -24,12 +25,25 @@ NOTE = {
         " state, matching the current brand' has a scope an agent can actually finish and a"
         " reviewer can actually check against.",
 
-        "Plan mode is the step before the ticket gets built: ask the agent to inspect the repo and"
-        " its own context files first, then hand back the files it would touch, the smallest"
-        " implementation, the user-facing risk, and what it's deliberately leaving out — before"
-        " touching anything. This isn't a full upfront project plan (see [[spec-driven-trap]] for"
-        " why that fails); it's sized to one ticket, and it exists so you have something concrete"
-        " to react to instead of a blank diff.",
+        "Greg Isenberg's version puts plan mode before the build: the agent inspects the repo,"
+        " hands back the files it would touch, the smallest implementation, the risk, and what it"
+        " is leaving out, and waits. Sized to one ticket, not a project plan (see"
+        " [[spec-driven-trap]]), so you have something concrete to react to.",
+
+        "That step has since been dropped by the person who invented it. Boris Cherny, who built"
+        " Claude Code, said in January that most of his sessions started in plan mode; by"
+        " autumn 2026 he said on Hacker News it is no longer useful. Plan mode never changed"
+        " what Claude could do — it appended a reminder not to start coding yet, a fix for older"
+        " models (Sonnet 4.6, early Opus) that jumped straight in. Newer models plan while they"
+        " work, so his brief became three parts: the task, the guardrails around it, and what"
+        " done looks like — then let the model work it out and check the result afterwards. For"
+        " bigger changes he asks for a diagram or an interactive demo of what changed. Plan mode"
+        " still exists and still earns its place on a model that dives in too early; it is no"
+        " longer the default.",
+
+        "The definition of done is the part that compounds. It is the finish line the agent works"
+        " toward, the thing you check the output against, and — written precisely enough — the"
+        " check the agent can run on itself ([[checkable-oracle]]).",
 
         "Ticket size is also what makes review possible. A tightly scoped ticket produces a diff"
         " you can actually read; a vague one produces a pile of changes that might look impressive"
@@ -43,8 +57,10 @@ NOTE = {
     "practice": [
         "Write the ticket the way you'd brief a new hire: job, scope, expected experience, and"
         " what's off-limits — not \"make it better.\"",
-        "Run plan mode before implementation on anything that isn't trivial — the ask is inspect"
-        " first, propose second, wait for approval third.",
+        "Brief in three lines — task: this week's report from the CRM export; guardrails: don't"
+        " amend the template, don't email anyone; done: every figure matches the export.",
+        "Reach for plan mode only when the model starts building before it understands the job.",
+        "When it finishes, ask for a one-page visual of what it did and what it assumed.",
         "If a ticket is big enough that you can't review the diff in one sitting, it's not one"
         " ticket.",
     ],
@@ -83,4 +99,13 @@ NOTE = {
         "title": "Claude Code New Features, Explained",
         "duration": "48:10",
     },
+
+    "also": [
+        {
+            "url": "https://www.youtube.com/watch?v=J9NQTYUP6k0",
+            "channel": "Simon Scrapes",
+            "title": "How the Top 1% Use Claude Code Differently",
+            "duration": "18:09",
+        },
+    ],
 }

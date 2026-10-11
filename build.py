@@ -20,6 +20,7 @@ System font stacks only, all CSS/SVG inline — the page is self-contained with 
 import html
 import importlib.util
 import pathlib
+import re
 import sys
 
 # Notes and lessons are data files loaded by path, and a stale .pyc silently serves the previous
@@ -45,6 +46,28 @@ def load(path, attr):
 
 def e(s):
     return html.escape(str(s), quote=False)
+
+
+def prose(s, href=lambda nid: None):
+    """Escape note text, then render its inline marks: `code`, *emphasis*, and [[note-id]] as the
+    referenced concept's name — linked wherever `href` says that note is taught."""
+    out = re.sub(r"`([^`]+)`", r"<code>\1</code>", e(s))
+    out = re.sub(r"(?<![\w*])\*([^*\s][^*]*?)\*(?![\w*])", r"<em>\1</em>", out)
+    def ref(m):
+        name = e(load(NOTES / f"{m.group(1)}.py", "NOTE")["concept"])
+        url = href(m.group(1))
+        return f'<a class="ref" href="{e(url)}">{name}</a>' if url else f"<em>{name}</em>"
+    return re.sub(r"\[\[([\w-]+)\]\]", ref, out)
+
+
+def src_links(n):
+    """The note's source, plus any later video that sharpened it (`also`), so a claim added
+    from a second video stays attributed to it instead of borrowing the first one's citation."""
+    return '<div class="src">' + "".join(
+        f'<a href="{e(s["url"])}" target="_blank" rel="noopener">'
+        f'{e(s["channel"])} &middot; {e(s["title"])} &middot; {e(s["duration"])} &#8599;</a>'
+        for s in [n["source"], *(n.get("also") or [])]
+    ) + "</div>"
 
 
 def diagram_body(d):
@@ -177,7 +200,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -195,6 +218,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -202,6 +229,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -611,9 +640,14 @@ def lesson_index():
 
 
 def render_note(n, idx, total, bridge, here, where):
+    def href(nid):
+        if nid in here:
+            return f"#{nid}"
+        return f"{where[nid]}.html#{nid}" if nid in where else None
+
     o = []
     if bridge:
-        o.append(f'<p class="bridge">{e(bridge)}</p>')
+        o.append(f'<p class="bridge">{prose(bridge, href)}</p>')
     o.append(f'<section id="{e(n["id"])}">')
 
     # Structural device: the prerequisite chain, which is real data from the note.
@@ -631,12 +665,12 @@ def render_note(n, idx, total, bridge, here, where):
     o.append('<div class="wrap"><div class="chead">')
     o.append(f'<span class="cnum">{idx} / {total}{chain}</span>')
     o.append(f'<h2>{e(n["concept"])}</h2>')
-    o.append(f'<p class="oneline">{e(n["one_liner"])}</p>')
+    o.append(f'<p class="oneline">{prose(n["one_liner"], href)}</p>')
     o.append("</div></div>")
 
     o.append('<div class="wrap">')
     for p in n.get("mechanism", []):
-        o.append(f"<p>{e(p)}</p>")
+        o.append(f"<p>{prose(p, href)}</p>")
     o.append("</div>")
 
     figs = n.get("numbers") or []
@@ -653,24 +687,20 @@ def render_note(n, idx, total, bridge, here, where):
         plate_cls = "plate photo" if d.get("img") else "plate"
         o.append(
             f'<figure><div class="{plate_cls}">{diagram_body(d)}</div>'
-            f'<figcaption><b>{e(d["title"])}</b><span>{e(d["caption"])}</span></figcaption></figure>'
+            f'<figcaption><b>{e(d["title"])}</b><span>{prose(d["caption"])}</span></figcaption></figure>'
         )
 
     a = n.get("analogy")
     if a:
-        o.append(f'<div class="analogy"><q>{e(a["text"])}</q><p>{e(a["note"])}</p></div>')
+        o.append(f'<div class="analogy"><q>{e(a["text"])}</q><p>{prose(a["note"], href)}</p></div>')
 
     if n.get("practice"):
         o.append('<div class="do"><h3>What to do</h3><ul>')
         for p in n["practice"]:
-            o.append(f"<li>{e(p)}</li>")
+            o.append(f"<li>{prose(p, href)}</li>")
         o.append("</ul></div>")
 
-    s = n["source"]
-    o.append(
-        f'<div class="src"><a href="{e(s["url"])}" target="_blank" rel="noopener">'
-        f'{e(s["channel"])} &middot; {e(s["title"])} &middot; {e(s["duration"])} &#8599;</a></div>'
-    )
+    o.append(src_links(n))
     o.append("</section>")
     return "\n".join(o)
 
@@ -780,20 +810,18 @@ def build_deck(L, notes):
         if not n.get("skeleton"):
             raise SystemExit(f"notes/{nid}.py: empty 'skeleton' — the deck has nothing to show")
         label = n["concept"]
-        s = n["source"]
 
         # Divider: the number carries the position so the concept slide doesn't have to.
         slides.append((
             label, "section",
             f'<p class="idx">{i:02d}</p><h2>{e(n["concept"])}</h2>'
-            f'<p class="lead">{e(n["one_liner"])}</p>'
-            f'<div class="src"><a href="{e(s["url"])}" target="_blank" rel="noopener">'
-            f'{e(s["channel"])} &middot; {e(s["title"])} &middot; {e(s["duration"])} &#8599;</a></div>',
+            f'<p class="lead">{prose(n["one_liner"])}</p>'
+            + src_links(n),
         ))
         slides.append((
             label, "bullets",
             f'<h2>{e(n["concept"])}</h2><ol class="bul">'
-            + "".join(f'<li class="step">{e(x)}</li>' for x in n["skeleton"])
+            + "".join(f'<li class="step">{prose(x)}</li>' for x in n["skeleton"])
             + "</ol>",
         ))
         for d in n.get("diagrams") or []:
@@ -801,7 +829,7 @@ def build_deck(L, notes):
             slides.append((
                 label, "figs",
                 f'<figure><div class="{plate_cls}">{diagram_body(d)}</div>'
-                f'<figcaption><b>{e(d["title"])}</b><span>{e(d["caption"])}</span>'
+                f'<figcaption><b>{e(d["title"])}</b><span>{prose(d["caption"])}</span>'
                 f"</figcaption></figure>",
             ))
         if n.get("numbers"):
@@ -817,12 +845,12 @@ def build_deck(L, notes):
             ))
         a = n.get("analogy")
         if a:
-            slides.append((label, "quote", f'<q>{e(a["text"])}</q><p>{e(a["note"])}</p>'))
+            slides.append((label, "quote", f'<q>{e(a["text"])}</q><p>{prose(a["note"])}</p>'))
         if n.get("practice"):
             slides.append((
                 label, "do",
                 '<h2>What to do</h2><ul class="acts">'
-                + "".join(f'<li class="step">{e(x)}</li>' for x in n["practice"])
+                + "".join(f'<li class="step">{prose(x)}</li>' for x in n["practice"])
                 + "</ul>",
             ))
 
@@ -845,7 +873,7 @@ def build_deck(L, notes):
         )
 
     doc = (
-        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<link rel="icon" href="data:,">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         f"<title>{e(L['title'])} &mdash; deck</title>\n"
         f"<style>{CSS}{DECK_CSS}</style>\n</head>\n<body>\n"
@@ -868,6 +896,11 @@ def check_note(nid, n):
                     f"notes/{nid}.py: {field} names '{ref}', which is not a note. "
                     f"Typo, or write that note first."
                 )
+    text = " ".join(map(str, [n.get("one_liner"), *n.get("skeleton", []), *n.get("mechanism", []),
+                              *n.get("practice", []), (n.get("analogy") or {}).get("note")]))
+    for ref in re.findall(r"\[\[([^\]]+)\]\]", text):
+        if not (NOTES / f"{ref}.py").exists():
+            raise SystemExit(f"notes/{nid}.py: text links [[{ref}]], which is not a note")
 
 
 def build_lesson(path):
@@ -927,7 +960,7 @@ def build_lesson(path):
     )
 
     doc = (
-        "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
+        "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<link rel=\"icon\" href=\"data:,\">\n"
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         f"<title>{e(L['title'])}</title>\n"
         f'<meta name="description" content="{e(L["standfirst"])}">\n'
@@ -955,7 +988,7 @@ def build_index(all_lessons):
             f"</div></div></li>"
         )
     doc = (
-        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<link rel="icon" href="data:,">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         "<title>Lessons</title>\n<style>"
         + CSS

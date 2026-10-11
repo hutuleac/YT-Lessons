@@ -12,6 +12,7 @@ NOTE = {
         "Exploration barely benefits from effort — it just costs more.",
         "Benchmarks hold the task static. You don't have to.",
         "Start at the lowest effort you have and crank up only if you need to.",
+        "\"Think hard\" in a prompt is now just words. Effort is a setting.",
     ],
 
     "mechanism": [
@@ -33,9 +34,22 @@ NOTE = {
         "The practical recommendation is to start at the lowest effort level you have access to"
         " and raise it from there. Not zero: some thinking tokens are worth having, because chain"
         " of thought is a genuinely useful way to work with agents.",
+
+        "The old in-prompt version of this dial is gone, per Simon Scrapes. Claude Code once mapped \"think\","
+        " \"think hard\", \"think harder\" and \"ultrathink\" to bigger thinking budgets; it now"
+        " reads them as ordinary words, and effort is a separate setting with a recommended level"
+        " per model. Simon Scrapes, relaying Anthropic, puts the default further up than Pocock"
+        " does: Opus 5.5 recommends medium, and Anthropic says medium matches or beats Opus 5 on"
+        " high for coding and knowledge work, so his advice is to leave it on the recommendation."
+        " The two disagree on the floor, not the direction — neither raises effort by default,"
+        " and both treat a better-specified task as the thing that actually buys quality.",
     ],
 
-    "numbers": [],
+    "numbers": [
+        {"value": "medium", "unit": "", "label": "Opus 5.5's recommended effort — which"
+                                                 " Anthropic says matches or beats Opus 5 on high"
+                                                 " for coding and knowledge work"},
+    ],
 
     "analogy": {
         "text": "The more high-quality information you give it, the lower effort you actually"
@@ -49,6 +63,8 @@ NOTE = {
         "Don't spend effort on exploration — spend it on the reasoning-heavy step, if any.",
         "Improve the spec before raising the dial; information substitutes for thinking tokens.",
         "Keep some thinking tokens — chain of thought is worth its cost.",
+        "Drop \"think hard\" / \"ultrathink\" from prompts — set effort in the setting instead.",
+        "If you don't want to tune it, leave it on the model's recommended level, never above.",
     ],
 
     "diagrams": [],
@@ -59,4 +75,13 @@ NOTE = {
         "title": "Your effort level is TOO DAMN HIGH",
         "duration": "1:17",
     },
+
+    "also": [
+        {
+            "url": "https://www.youtube.com/watch?v=J9NQTYUP6k0",
+            "channel": "Simon Scrapes",
+            "title": "How the Top 1% Use Claude Code Differently",
+            "duration": "18:09",
+        },
+    ],
 }

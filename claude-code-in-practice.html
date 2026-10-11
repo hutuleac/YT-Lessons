@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Questions, then checks, then context, then pipelines</title>
 <meta name="description" content="The person who built Claude Code teaches it as a ladder, not a feature list: start by asking the codebase questions, give the agent a way to grade its own work, place your context where it belongs, and only then wire it into everything else.">
@@ -127,7 +128,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -145,6 +146,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -152,6 +157,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -235,9 +242,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>That something has to be objective. A unit test run, a Puppeteer screenshot of the page, a screenshot from the iOS simulator: each produces evidence the model can read back on the next turn and compare against the target. Without one, the agent has already emitted its best single guess, and asking it to try again just resamples the same guess. With one, it has a gradient — this failed, that passed, the layout is off by this much — and it can walk it without you in the loop. His number is two or three iterations to go from good to almost perfect.</p>
 <p>The practical consequence is that setting up the check is the work. Whatever the domain is — unit tests, integration tests, browser screenshots, native app screenshots — the job is to hand the agent a way to see its own result, and then let it iterate. This is why a Puppeteer MCP server checked into a repo is worth more than any prompt written about the UI: it converts a single-shot request into a loop.</p>
 <p>It is a narrower thing than having the agent judge a product as a user would. Taste questions — is this headline persuasive, is this flow confusing — are not oracles, because there is no pass/fail to read back. Those still need a human, or an explicit persona framing.</p>
+<p>Two refinements since, both from Simon Scrapes. First, telling Claude to double-check in the prompt is now dead weight: per Anthropic's Opus 5 guide it already checks its own work unprompted, so the line adds cost without changing the result. What it cannot know unprompted is your pass/fail. Second, the check should come straight from the definition of done in the brief (<a class="ref" href="ai-employee-setup.html#ticket-scoping">The ticket needs a visible finish line</a>). "Every figure matches the export" becomes a small check_report script that compares each figure and confirms every template section is filled: the first run fails on one figure, Claude fixes it, reruns, passes, and only then shows you — you read evidence instead of running the checks yourself. The check doesn't have to be code (a brand-voice doc a draft is graded against counts), but the more deterministic it is, the more it catches.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>2-3</b><i>iterations</i><span>from "pretty good" to "almost perfect", given a check</span></div>
+<div class="fig"><b>2-3x</b><i>quality</i><span>Boris's January 2026 claim for what a way to verify adds to the final result</span></div>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
   aria-label="A chart with attempts on the horizontal axis (1, 2, 3) and closeness to the target on the vertical axis. Without a check, the curve rises to pretty good on the first attempt and stays flat across attempts two and three. With a check, it starts at the same point and climbs on each attempt, reaching almost perfect by the third.">
@@ -268,9 +277,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <li>Give UI work a screenshot tool (browser or simulator), not a written description.</li>
 <li>Give logic work a test command it can run itself, not a request to be careful.</li>
 <li>Say explicitly to iterate until the check passes, not to make one attempt.</li>
+<li>Turn the brief's definition of done into the check — a script, or a doc the draft is graded against.</li>
+<li>Don't write "double-check your work" — give it criteria it can pass or fail.</li>
 <li>Check in the tooling — an MCP server or script in the repo — so the loop is shared.</li>
 </ul></div>
-<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
 </section>
 <p class="bridge">A check tells the agent whether it hit the target. It says nothing about which target — that comes from the context you give it, and where you put that context decides who gets it and what it costs.</p>
 <section id="context-hierarchy">

@@ -43,6 +43,15 @@ NOTE = {
         " favor the pipeline. One agent alone finishes a task in about five minutes, with weak"
         " results. The full pipeline takes about an hour, with much better results. A human doing"
         " the same work by hand takes about half a day.",
+
+        "The counterweight is that newer models build this pipeline themselves, and over-build"
+        " it. Per Anthropic's Opus 5 guide, as relayed by Simon Scrapes, the model hands work to"
+        " sub agents more readily than any before it, which on small jobs just multiplies cost"
+        " and time — so the advice has shifted from hand-wiring orchestrators and agent files to"
+        " capping how many sub agents it may spawn and letting it choose the split. The one place"
+        " to still say it explicitly is inside a skill: a heavy research step or an MCP call"
+        " belongs in a sub agent so the main context stays clean, which is the original reason"
+        " for splitting work at all.",
     ],
 
     "numbers": [
@@ -62,6 +71,9 @@ NOTE = {
         " each agent.",
         "Give a reviewer or checker the diff, not the whole codebase. It will not need to explore"
         " what already happened.",
+        "On a current model, cap the sub-agent count in config before hand-building a team —"
+        " it will split the work itself, and over-split small jobs.",
+        "In a skill, name the noisy step — research, an MCP call — as a sub-agent step.",
     ],
 
     "diagrams": [
@@ -119,4 +131,13 @@ NOTE = {
         "title": "LIVE: Uncle Bob on Software Fundamentals in the Age of AI",
         "duration": "56:39",
     },
+
+    "also": [
+        {
+            "url": "https://www.youtube.com/watch?v=J9NQTYUP6k0",
+            "channel": "Simon Scrapes",
+            "title": "How the Top 1% Use Claude Code Differently",
+            "duration": "18:09",
+        },
+    ],
 }

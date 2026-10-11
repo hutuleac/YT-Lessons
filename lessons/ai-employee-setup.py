@@ -42,8 +42,8 @@ LESSON = {
     "closing": {
         "title": "The whole loop",
         "body": "Customer feedback goes into /customers. Direction goes into roadmap.md. Working"
-                " style goes into claude.md. Standards go into review.md. Small tasks go through"
-                " plan mode. Changes go through preview and review. Recurring work becomes a"
+                " style goes into claude.md. Standards go into review.md. Small tasks get a brief"
+                " with a finish line. Changes go through preview and review. Recurring work becomes a"
                 " scheduled routine. None of these pieces is impressive alone — the leverage is"
                 " in running them as one loop instead of reaching for whichever one you remember"
                 " that day.",

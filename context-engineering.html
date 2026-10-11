@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Everything is competing for the same window</title>
 <meta name="description" content="One pool of tokens, one mechanism that degrades as it fills, and six different things quietly spending it — the tools you added, the ones your harness shipped, the memories your agent saved itself, the docs nobody tests. Same resource, same fix.">
@@ -127,7 +128,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -145,6 +146,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -152,6 +157,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -223,7 +230,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="wrap">
 <p>Plan mode has to do real work before it can propose anything: reading files, checking how things connect, ruling out approaches. All of that reasoning and every file it read lands in the conversation as normal turns, because that's how the model produced the plan in the first place. Once the plan is accepted, though, none of that discovery process is still doing anything for you — only the conclusion is.</p>
 <p>The two are separable because the plan doesn't actually live in the chat transcript. Accepting a plan writes it to its own file, so the conclusion persists independently of the conversation that produced it. That's what makes the setting safe: clearing the context afterward looks like it should throw away the plan along with the exploration, but the plan was never only in the chat to begin with — the exploration was.</p>
-<p>The practical effect is that a feature that costs a large planning conversation to design doesn't have to cost a large context budget to build. Turn the setting on (`show clear context on plan accept` set to true in settings.json), and accepting a plan offers to bin the file reads and side-exploration while carrying the plan forward into the next turn — you get the answer without paying rent on how it was found.</p>
+<p>The practical effect is that a feature that costs a large planning conversation to design doesn't have to cost a large context budget to build. Turn the setting on (<code>show clear context on plan accept</code> set to true in settings.json), and accepting a plan offers to bin the file reads and side-exploration while carrying the plan forward into the next turn — you get the answer without paying rent on how it was found.</p>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
   aria-label="Plan mode produces two things: exploration, made of many file reads, which stays only in the chat window; and a plan, written to its own file. After accepting the plan, the exploration can be cleared from context while the plan file persists independently."
@@ -259,7 +266,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
   </defs>
 </svg></div><figcaption><b>One output, two different lifespans</b><span>The plan is written to its own file. The exploration that produced it only ever lived in the chat, so only it needs clearing.</span></figcaption></figure>
 <div class="do"><h3>What to do</h3><ul>
-<li>Set `show clear context on plan accept: true` in settings.json.</li>
+<li>Set <code>show clear context on plan accept: true</code> in settings.json.</li>
 <li>Take the offer to clear when a plan is accepted — the plan file survives it.</li>
 <li>Don't hand-copy plan-mode findings into notes before accepting; the plan file already keeps them.</li>
 </ul></div>

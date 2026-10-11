@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>You are the lead developer now</title>
 <meta name="description" content="The agent took the tactical half of the job, which promoted everyone to a role nobody applied for. Seven shorts on what that role actually involves: where to put the human check, which dials to turn, and why the codebase became your main lever on output quality.">
@@ -127,7 +128,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -145,6 +146,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -152,6 +157,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -267,7 +274,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="wrap">
 <p>A permission mode controls how much the agent checks with you before doing anything, and Claude Code ships six of them. Four can be switched mid-session with shift-tab: manual approval, accept-edits (file edits in the current folder go through), plan mode, and auto. Two can only be set at startup: don't-ask, which executes pre-approved actions and auto-denies everything else, and bypass-permissions, which skips every check. The video's own position on bypass is that you should not use it — you need control over the agent. Defaults live in settings JSON, and any mode can also be chosen with a launch flag.</p>
 <p>The change worth understanding is that auto is now the default rather than manual approval. Auto does almost everything on its own and aims to block dangerous actions, and it decides in two stages.</p>
-<p>Stage one is your rules. When the agent wants to act — editing a file, fetching a site, running a bash command — the rules are consulted first, and an exact match resolves it without any model being involved. You can allow web fetches outright and hard-deny `git push`, for example. The configuration has several levers: an `environment` field describing your infrastructure in plain English, `allow` for exceptions, `soft deny` for things blocked unless you explicitly ask, `hard deny` for things blocked whatever you ask, plus `deny` and `ask` rules. The distinction matters: environment and the deny levels are guidance the classifier weighs, while `deny` and `ask` rules are hard limits on matching tool calls.</p>
+<p>Stage one is your rules. When the agent wants to act — editing a file, fetching a site, running a bash command — the rules are consulted first, and an exact match resolves it without any model being involved. You can allow web fetches outright and hard-deny <code>git push</code>, for example. The configuration has several levers: an <code>environment</code> field describing your infrastructure in plain English, <code>allow</code> for exceptions, <code>soft deny</code> for things blocked unless you explicitly ask, <code>hard deny</code> for things blocked whatever you ask, plus <code>deny</code> and <code>ask</code> rules. The distinction matters: environment and the deny levels are guidance the classifier weighs, while <code>deny</code> and <code>ask</code> rules are hard limits on matching tool calls.</p>
 <p>Stage two only runs when the rules are silent. The classifier is itself an AI model — Sonnet 5, in a separate context — and it answers two questions about the action: could this cause a security issue, and is this dangerous and irreversible, like deleting the files in your folder. Two noes and the action proceeds; a single yes denies it.</p>
 <p>The gap is observability. Classifier decisions can be tracked through OpenTelemetry, but that takes a background most users don't have, so in practice you cannot review what was approved on your behalf. That is the argument for writing rules rather than relying on the classifier: a rule is a decision you can read afterwards.</p>
 </div>
@@ -353,7 +360,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>To test whether a classifier does better, Anthropic ran a blind study: 1,053 paid testers worked through a coding task, and partway through, one ordinary permission prompt was swapped for a clearly dangerous command — with the action itself never actually run, only the prompt text changed. Humans caught it 13.6% of the time. Auto mode, given the same swapped prompts, caught 89%. The gap widened with fatigue: human catch rate dropped from about 17% early in a session to about 5% after 50-plus prior prompts, while the classifier's rate held flat — it doesn't get tired, because it evaluates each action on its own, with no memory of how many prompts came before.</p>
 <p>That result held outside the lab too. Anthropic re-graded real sessions flagged by its safety pipeline on a 0-10 harm-severity scale, and at production-level severity (7+), sessions using manual approval contained a harmful action the user hadn't explicitly asked for 6.3% of the time, versus 2.4% for auto mode sessions — the gap held at every severity level tested.</p>
 <p>The prompt-injection numbers hide a detail worth pulling out: the risk isn't spread evenly across what an agent does. Split by task type, tool-calling tasks — where a result comes back as text — were already close to safe for everyone: 0% for Claude in auto mode, 2.00% even for GPT-5.6 Sol in Codex's Auto-review mode. Browser-use tasks, where the model reads a screenshot instead of structured text, are where the gap opens: still 0% for Claude, but 7.87% for GPT-5.6 Sol in Auto-review and 25.53% in Full Access. The vulnerability isn't the model reasoning about untrusted content in general — it's specifically the harder-to-screen channel of a rendered image.</p>
-<p>The classifier isn't static, either. A two-week adversarial pilot with Apollo Research injected synthetic attacks into real coding trajectories; Anthropic hardened the classifier mainly by giving it more context about what it's protecting — repo visibility, git state, data-handling rules — rather than patching individual attacks. Re-tested on a held-out attack set Anthropic never saw, the miss rate fell from 12% to 7%, evidence the fix generalized rather than just covering the shared examples. The same logic shows up in specific, narrow defenses layered on top: hard denies that can never be approved even if asked (data exfiltration), a check on whether a git push target is public or private before it runs, and a git-status check before destructive commands like `git reset --hard`.</p>
+<p>The classifier isn't static, either. A two-week adversarial pilot with Apollo Research injected synthetic attacks into real coding trajectories; Anthropic hardened the classifier mainly by giving it more context about what it's protecting — repo visibility, git state, data-handling rules — rather than patching individual attacks. Re-tested on a held-out attack set Anthropic never saw, the miss rate fell from 12% to 7%, evidence the fix generalized rather than just covering the shared examples. The same logic shows up in specific, narrow defenses layered on top: hard denies that can never be approved even if asked (data exfiltration), a check on whether a git push target is public or private before it runs, and a git-status check before destructive commands like <code>git reset --hard</code>.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>97</b><i>%</i><span>of permission prompts users approve</span></div>
@@ -431,6 +438,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>The benchmark charts do show quality rising with effort, and Pocock's objection to them is precise: those charts hold the task static. The task is a fixed prompt on a fixed problem. You, unlike the benchmark, can change how the task is specified.</p>
 <p>That is the substitution worth understanding. High-quality information given to the agent up front does the work that reasoning tokens would otherwise have to do. The better the spec, the less effort the same job requires — so effort is a knob you reach for when your specification has run out, not the first thing you turn up.</p>
 <p>The practical recommendation is to start at the lowest effort level you have access to and raise it from there. Not zero: some thinking tokens are worth having, because chain of thought is a genuinely useful way to work with agents.</p>
+<p>The old in-prompt version of this dial is gone, per Simon Scrapes. Claude Code once mapped "think", "think hard", "think harder" and "ultrathink" to bigger thinking budgets; it now reads them as ordinary words, and effort is a separate setting with a recommended level per model. Simon Scrapes, relaying Anthropic, puts the default further up than Pocock does: Opus 5.5 recommends medium, and Anthropic says medium matches or beats Opus 5 on high for coding and knowledge work, so his advice is to leave it on the recommendation. The two disagree on the floor, not the direction — neither raises effort by default, and both treat a better-specified task as the thing that actually buys quality.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>medium</b><i></i><span>Opus 5.5's recommended effort — which Anthropic says matches or beats Opus 5 on high for coding and knowledge work</span></div>
 </div>
 <div class="analogy"><q>The more high-quality information you give it, the lower effort you actually need to complete the task.</q><p>It turns effort from a quality dial into a symptom: if you need max effort for routine work, the specification is doing too little.</p></div>
 <div class="do"><h3>What to do</h3><ul>
@@ -438,8 +449,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <li>Don't spend effort on exploration — spend it on the reasoning-heavy step, if any.</li>
 <li>Improve the spec before raising the dial; information substitutes for thinking tokens.</li>
 <li>Keep some thinking tokens — chain of thought is worth its cost.</li>
+<li>Drop "think hard" / "ultrathink" from prompts — set effort in the setting instead.</li>
+<li>If you don't want to tune it, leave it on the model's recommended level, never above.</li>
 </ul></div>
-<div class="src"><a href="https://www.youtube.com/shorts/iQb3F9UzBR4" target="_blank" rel="noopener">Matt Pocock &middot; Your effort level is TOO DAMN HIGH &middot; 1:17 &#8599;</a></div>
+<div class="src"><a href="https://www.youtube.com/shorts/iQb3F9UzBR4" target="_blank" rel="noopener">Matt Pocock &middot; Your effort level is TOO DAMN HIGH &middot; 1:17 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
 </section>
 <p class="bridge">Effort has a price, and it is legible. Plotted properly, the point where paying more stops buying anything is visible on a chart.</p>
 <section id="model-cost-curve">

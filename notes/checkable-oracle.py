@@ -6,14 +6,15 @@ NOTE = {
                  " because it can tell for itself whether the last one was closer.",
 
     "prerequisites": [],
-    "related": ["agent-eyes", "deterministic-gauntlet", "ralph-loop"],
+    "related": ["agent-eyes", "deterministic-gauntlet", "ralph-loop", "goal-judge",
+                "ticket-scoping"],
 
     "skeleton": [
         "One pass with no feedback signal gets you \"pretty good\" and stops there.",
         "An objective check — tests, screenshot, simulator — lets it grade its own attempt.",
         "Two or three self-graded iterations is where pretty good becomes almost perfect.",
         "The check must be machine-readable, not a matter of taste.",
-        "Pick the check that fits the domain; any domain has one.",
+        "\"Double-check your work\" adds cost. A pass/fail check adds quality.",
     ],
 
     "mechanism": [
@@ -41,11 +42,24 @@ NOTE = {
         " questions — is this headline persuasive, is this flow confusing — are not oracles,"
         " because there is no pass/fail to read back. Those still need a human, or an explicit"
         " persona framing.",
+
+        "Two refinements since, both from Simon Scrapes. First, telling Claude to double-check"
+        " in the prompt is now dead weight: per Anthropic's Opus 5 guide it already checks its"
+        " own work unprompted, so the line adds cost without changing the result. What it cannot"
+        " know unprompted is your pass/fail. Second, the check should come straight from the"
+        " definition of done in the brief ([[ticket-scoping]]). \"Every figure matches the"
+        " export\" becomes a small check_report script that compares each figure and confirms"
+        " every template section is filled: the first run fails on one figure, Claude fixes it,"
+        " reruns, passes, and only then shows you — you read evidence instead of running the"
+        " checks yourself. The check doesn't have to be code (a brand-voice doc a draft is graded"
+        " against counts), but the more deterministic it is, the more it catches.",
     ],
 
     "numbers": [
         {"value": "2-3", "unit": "iterations", "label": "from \"pretty good\" to \"almost"
                                                         " perfect\", given a check"},
+        {"value": "2-3x", "unit": "quality", "label": "Boris's January 2026 claim for what a"
+                                                      " way to verify adds to the final result"},
     ],
 
     "analogy": None,
@@ -55,6 +69,9 @@ NOTE = {
         "Give UI work a screenshot tool (browser or simulator), not a written description.",
         "Give logic work a test command it can run itself, not a request to be careful.",
         "Say explicitly to iterate until the check passes, not to make one attempt.",
+        "Turn the brief's definition of done into the check — a script, or a doc the draft is"
+        " graded against.",
+        "Don't write \"double-check your work\" — give it criteria it can pass or fail.",
         "Check in the tooling — an MCP server or script in the repo — so the loop is shared.",
     ],
 
@@ -96,4 +113,13 @@ NOTE = {
         "title": "Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course)",
         "duration": "27:55",
     },
+
+    "also": [
+        {
+            "url": "https://www.youtube.com/watch?v=J9NQTYUP6k0",
+            "channel": "Simon Scrapes",
+            "title": "How the Top 1% Use Claude Code Differently",
+            "duration": "18:09",
+        },
+    ],
 }

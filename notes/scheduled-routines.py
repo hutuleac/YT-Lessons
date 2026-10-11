@@ -34,6 +34,14 @@ NOTE = {
         " brief surfaces the day's highest-priority item before you've opened the repo, and a"
         " weekly review can catch a pattern — the same onboarding complaint from three different"
         " customers — that no single note would have surfaced on its own.",
+
+        "Two later changes widen what a routine can be. Triggers no longer have to be a clock: an"
+        " event — a to-do added, a lead landing in the CRM — can start the work. And Claude Code"
+        " projects now run as one ongoing conversation that spawns its own threads and keeps"
+        " running with your machine off, so the isolated context a routine needs persists"
+        " between runs. Simon Scrapes runs his whole social-content pipeline this way; his only"
+        " step is approving the output. The low-stakes-first rule still applies — what changes"
+        " is how much of the loop can run before it reaches you.",
     ],
 
     "numbers": [
@@ -50,6 +58,8 @@ NOTE = {
         "Give every routine an explicit word or scope cap so it stays a brief, not a report.",
         "Point routines at the same context folders the rest of the system already reads and"
         " writes to, so their output compounds instead of living in isolation.",
+        "Trigger routines on events (a new lead, a new to-do), not only on a schedule.",
+        "Keep your part to approving the output — that's the step that stays human.",
     ],
 
     "diagrams": [
@@ -84,4 +94,13 @@ NOTE = {
         "title": "Claude Code New Features, Explained",
         "duration": "48:10",
     },
+
+    "also": [
+        {
+            "url": "https://www.youtube.com/watch?v=J9NQTYUP6k0",
+            "channel": "Simon Scrapes",
+            "title": "How the Top 1% Use Claude Code Differently",
+            "duration": "18:09",
+        },
+    ],
 }

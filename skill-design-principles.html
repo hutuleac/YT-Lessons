@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>How to design a skill an agent actually follows</title>
 <meta name="description" content="Seven small techniques for turning a fuzzy request into working code, and for keeping the skills and codebase that get you there lean instead of bloated.">
@@ -127,7 +128,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -145,6 +146,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -152,6 +157,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -227,7 +234,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="wrap">
 <p>The problem it answers is that an agent given everything at once — colours, copy, functionality — has no way to build any of it with real accuracy, and asking the user to dump all of that context up front does not work because the user does not know what context the agent needs. The grooming skill inverts the direction: the agent interviews the user instead of the user briefing the agent.</p>
 <p>The five rules are what make the interview usable rather than exhausting. One branch at a time keeps the questions from jumping between the checkout page and the about page mid-thought — a decision tree is walked one path to its end before the next path opens. One question at a time means the agent waits for an answer instead of stacking three questions the user has to hold in their head. Recommend one means every question ships with a default the user can just accept, so the interview does not stall on questions the user has no opinion about. Do not act is the backstop: nothing gets built until the user has confirmed, so a misunderstanding costs a correction, not a rewrite.</p>
-<p>The result is closer to a decision machine than a chat: the model supplies options, the user picks, and each pick stacks onto the last until the tree runs out of branches. That is also why it pairs with a spec — see [[spec-driven-trap]] and the sibling note on writing the result down before the conversation is lost.</p>
+<p>The result is closer to a decision machine than a chat: the model supplies options, the user picks, and each pick stacks onto the last until the tree runs out of branches. That is also why it pairs with a spec — see <a class="ref" href="agent-native-engineering.html#spec-driven-trap">The spec-driven development trap</a> and the sibling note on writing the result down before the conversation is lost.</p>
 <p>You don't need a packaged skill to get this behaviour — Claude Code's plan mode ships with a built-in tool for exactly this, called the ask user question tool, and naming it directly in a prompt ("interview me in detail using the ask user question tool about technical implementation, UI/UX concerns, and tradeoffs") gets a plan mode that would otherwise ask two generic questions to instead run several rounds of increasingly specific ones — workflow shape, cost handling, storage approach, visual style. Ross Mike's framing for why this is worth the extra friction: a vague plan lets the agent make the assumptions instead of you, and every wrong assumption costs a redo once the feature is already built — so the tokens spent being interviewed are cheaper than the tokens spent unwinding a wrong build.</p>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
@@ -291,7 +298,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="wrap">
 <p>Once a spec exists, it has to be broken into tickets an agent can pick up one at a time. The default most spec-driven frameworks use is to slice by layer: one ticket for the database schema, one for the API, one for the UI. That grouping mirrors how a team is often organised, but it has a specific cost for agent-driven work — after the database ticket ships, the only thing that exists is a database. There is nothing to run, click, or test until the API and UI tickets land too.</p>
 <p>Slicing by feature instead means ticket one is the login page end to end: its schema, its endpoint, its UI, all in one ticket. The payoff is that each ticket is a fully functional slice the moment it merges — it can be tested for real, not just reviewed as a diff. That also keeps the application modular: a later change to how login works touches one feature's ticket, not a layer shared by every feature in the app.</p>
-<p>This is the same shift in checkpoint placement as [[review-checkpoints]] applied to how work gets divided rather than when it gets reviewed — smaller, self-contained units are easier to verify and easier to change without touching everything else.</p>
+<p>This is the same shift in checkpoint placement as <a class="ref" href="lead-developer.html#review-checkpoints">Shift the checkpoint left or right</a> applied to how work gets divided rather than when it gets reviewed — smaller, self-contained units are easier to verify and easier to change without touching everything else.</p>
 </div>
 <figure><div class="plate"><svg viewBox="0 0 480 200" role="img"
   aria-label="Two ways of slicing three tickets. By layer: ticket one is database, ticket two is API, ticket three is UI — after ticket one, only a database exists, nothing testable. By feature: ticket one is the full login feature end to end, immediately testable; ticket two and three are the next features.">
@@ -329,7 +336,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 </div></div>
 <div class="wrap">
 <p>A Ralph loop takes a PRD or task list and works through it without a human in the middle of each step: the agent picks up the next task, builds it, writes and runs a test for it, records progress to a file, and moves to the next task — repeating until the list is empty. Left running, it can finish a small plan in minutes while you do something else. The name comes from the community's own joke about how unsophisticated the technique actually is — a dumb loop, not a clever agent.</p>
-<p>The gate is the test, not the agent's own judgement of done. If the test for a feature fails, the loop does not move on to the next feature — it goes back and keeps working the one that's broken. This is what makes the loop trustworthy enough to leave unattended: it cannot silently build feature three on top of a broken feature two, because feature two has to pass before three starts. See [[deterministic-gauntlet]] for why a check outside the prompt holds up where a written rule doesn't.</p>
+<p>The gate is the test, not the agent's own judgement of done. If the test for a feature fails, the loop does not move on to the next feature — it goes back and keeps working the one that's broken. This is what makes the loop trustworthy enough to leave unattended: it cannot silently build feature three on top of a broken feature two, because feature two has to pass before three starts. See <a class="ref" href="agent-native-engineering.html#deterministic-gauntlet">The deterministic gauntlet</a> for why a check outside the prompt holds up where a written rule doesn't.</p>
 <p>But the loop has no opinion of its own — it only executes what the plan says, faster and without supervision. A great plan run through the loop produces a working product in minutes. A vague plan run through the same loop produces vague software just as fast, because every gap in the plan becomes an assumption the agent fills in without asking. Ross Mike's summary: if your plan is bad, running Ralph is just donating tokens.</p>
 <p>The stronger claim in the source is about sequencing, not the loop itself: don't reach for it until you've built features by hand first. Doing the plan-build-test cycle yourself, one feature at a time, is what builds the judgement to tell whether an agent's output is actually right — what he calls developing a sense for 'vibe QA.' Turning on full automation before you have that sense means you can't evaluate what the loop hands back, so mistakes compound for however long you left it running instead of getting caught on the first feature.</p>
 </div>
@@ -365,7 +372,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="do"><h3>What to do</h3><ul>
 <li>Build and test features one at a time by hand before turning on an autonomous loop.</li>
 <li>Only automate once you have something built and deployed you can actually point to.</li>
-<li>Feed the loop a plan that's been interviewed out — see [[grooming-skill]] — since the loop cannot fix a bad plan, only execute it faster.</li>
+<li>Feed the loop a plan that's been interviewed out — see <a class="ref" href="#grooming-skill">The grooming skill</a> — since the loop cannot fix a bad plan, only execute it faster.</li>
 <li>Have every feature write and pass its own test before the loop is allowed to move on.</li>
 </ul></div>
 <div class="src"><a href="https://www.youtube.com/watch?v=zxMjOqM7DFs" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code Clearly Explained (and how to use it) &middot; 31:28 &#8599;</a></div>
@@ -419,7 +426,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <div class="wrap">
 <p>Picture a payment-processing function that calls calculate discounts, validate cards, and several other small functions. To understand what the main function does, an agent has to open every one of those doors — read each called function, and often what those call in turn — before it has learned how the whole thing behaves. That is a real benefit for unit testing, since each small function is independently testable, but it is a token cost for comprehension: understanding the main function this way might spend on the order of ten thousand tokens working through every door.</p>
 <p>The fix is not to merge everything into one giant file — that trades a comprehension problem for an unmaintainable one. Each function keeps its own file. What changes is that the many small functions get one shared entry point in front of them, so the agent — and the rest of the program — has a single door to walk through instead of many. Reading that one door can cost closer to a thousand tokens instead of ten thousand, because the agent no longer has to trace every function calling every other function back and forth to build a mental model.</p>
-<p>This only pays off if the door is real, not decorative — a wrapper that just forwards every call unchanged adds a hop without removing any of the underlying ones. The companion move for finding out which of those many small functions are still pulling their weight is the [[deletion-test]].</p>
+<p>This only pays off if the door is real, not decorative — a wrapper that just forwards every call unchanged adds a hop without removing any of the underlying ones. The companion move for finding out which of those many small functions are still pulling their weight is the <a class="ref" href="#deletion-test">The deletion test</a>.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>~10,000</b><i>tokens</i><span>estimated cost of learning via many doors</span></div>

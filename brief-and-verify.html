@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stop steering Claude: brief it, check it, and add only what it gets wrong</title>
+<meta name="description" content="Most Claude Code advice from a year ago — plan first, think hard, write long rules, install skill packs — patched models that no longer ship. The current pattern inverts it: say what done looks like, give Claude a way to prove it, and only add infrastructure where it actually fails.">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  /* Prose stays near a comfortable line length; boxes/plates/lists are free to use much
+     more of a wide screen, since they don't suffer the way a long paragraph does. */
+  --measure:clamp(560px, 44vw, 900px);
+  --wide:clamp(680px, 66vw, 1360px);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+    --ink:#131A26; --muted:#5C6779;
+    --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+  }
+}
+/* Explicit override for the deck's D-key toggle: wins over the media query either way
+   because it's set after it and matches on attribute rather than system preference. */
+:root[data-theme="dark"]{
+  --void:#0B0E14; --surface:#121824; --surface-2:#1B2333; --line:#2A3446;
+  --ink:#E7EAF0; --muted:#8A94A8;
+  --signal:#5EEAD4; --interference:#E879A6; --sand:#F2D9A7;
+}
+:root[data-theme="light"]{
+  --void:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D3DBE6;
+  --ink:#131A26; --muted:#5C6779;
+  --signal:#0E9C8A; --interference:#C4437A; --sand:#8A6A22;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--serif); font-size:clamp(19px,1.05vw + 14px,22px); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+.wide{max-width:var(--wide); margin:0 auto; padding:0 22px}
+
+/* ---- signature: the context rail ---- */
+.rail{position:fixed; left:0; top:0; bottom:0; width:3px; background:var(--line); z-index:50}
+.rail i{display:block; width:100%; height:0; background:var(--signal); transition:height .12s linear}
+.rail.deep i{background:var(--interference)}
+.rail b{
+  position:absolute; left:12px; top:0; font:500 10px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap; transform:translateY(-50%); opacity:0; transition:opacity .2s
+}
+.rail.on b{opacity:1}
+@media (max-width:820px){ .rail{display:none} }
+
+/* ---- masthead ---- */
+header{padding:16vh 0 9vh; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--signal); margin:0 0 26px
+}
+h1{
+  font-family:var(--mono); font-size:clamp(30px,5.6vw,52px); line-height:1.06;
+  letter-spacing:-.035em; font-weight:600; margin:0 0 26px; text-wrap:balance
+}
+.standfirst{font-size:21px; color:var(--ink); margin:0 0 22px}
+.audience{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--interference); padding-left:12px; margin:0
+}
+
+/* ---- concept sections ---- */
+section{padding:8vh 0 2vh; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.bridge{
+  font-size:19px; color:var(--muted); font-style:italic;
+  max-width:var(--measure); margin:0 auto -3vh; padding:6vh 22px 0
+}
+.chead{margin-bottom:34px}
+.cnum{
+  font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:12px
+}
+.cnum s{text-decoration:none; color:var(--interference)}
+/* A prerequisite taught by another lesson links there instead of being dragged in here. */
+.cnum a.out{color:var(--signal); text-decoration:none; border-bottom:1px solid var(--line)}
+.cnum a.out:hover{border-color:var(--signal)}
+h2{
+  font-family:var(--mono); font-size:clamp(23px,3.4vw,33px); line-height:1.14;
+  letter-spacing:-.03em; font-weight:600; margin:0 0 16px
+}
+.oneline{font-size:20px; color:var(--ink); margin:0}
+p{margin:0 0 30px}
+
+/* ---- numbers ---- */
+.figs{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; margin:34px auto; max-width:var(--wide)
+}
+.fig{background:var(--surface); padding:18px 16px}
+.fig b{display:block; font:600 25px/1 var(--mono); letter-spacing:-.03em; color:var(--sand)}
+.fig i{display:block; font:400 11px/1 var(--mono); color:var(--muted); margin:6px 0 9px; font-style:normal}
+.fig span{font-family:var(--sans); font-size:12.5px; line-height:1.4; color:var(--muted)}
+
+/* ---- diagrams ---- */
+figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
+.plate{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px 20px; overflow-x:auto}
+/* Below ~470px the diagrams would shrink until their labels overflow their own boxes,
+   so they scroll inside the plate instead of becoming illegible. SVG text scales with
+   the plate (vector, not raster), so the cap is set high to fill the wide-page plate
+   and keep labels legible rather than near-1:1 with their viewBox. */
+.plate svg{display:block; width:100%; min-width:420px; max-width:820px; margin:0 auto; height:auto; overflow:visible}
+/* A source chart is a citation, not a themed diagram — it keeps its own baked-in
+   background, so it gets a thin frame instead of the SVG plate's padding. */
+.plate.photo{padding:0}
+.plate.photo img{display:block; width:100%; height:auto; border-radius:7px}
+.d-label{font:400 10px var(--mono); fill:var(--muted); letter-spacing:.08em}
+.d-num{font:600 11px var(--mono); fill:var(--sand); letter-spacing:.04em}
+.d-node{font:500 12px var(--mono); fill:var(--ink)}
+.d-fix{font:600 12px var(--mono); fill:var(--signal)}
+figcaption{margin-top:16px}
+figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+
+/* ---- analogy ---- */
+.analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
+.analogy q{
+  display:block; font-size:23px; line-height:1.4; quotes:none;
+  border-left:2px solid var(--signal); padding-left:20px
+}
+.analogy p{font-family:var(--sans); font-size:14px; color:var(--muted); margin:14px 0 0 22px}
+
+/* ---- practice ---- */
+.do{max-width:var(--wide); margin:40px auto 0; padding:24px; background:var(--surface-2); border-radius:8px}
+.do h3{font:500 11px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 16px}
+.do ul{margin:0; padding:0; list-style:none}
+.do li{font-family:var(--sans); font-size:15px; line-height:1.5; padding:0 0 0 22px; margin-bottom:12px; position:relative}
+.do li:last-child{margin-bottom:0}
+.do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
+
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
+/* ---- source ---- */
+.src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
+.src a{
+  font:400 12px var(--mono); color:var(--muted); text-decoration:none;
+  border-bottom:1px solid var(--line)
+}
+.src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
+
+/* ---- closing ---- */
+.close{padding:10vh 0 14vh}
+.close h2{color:var(--signal)}
+footer{border-top:1px solid var(--line); padding:34px 0; font:400 12px var(--mono); color:var(--muted)}
+footer a{color:var(--muted)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"><i></i><b></b></div>
+<header><div class='wrap'>
+<p class="eyebrow">Claude Code setup</p>
+<h1>Stop steering Claude: brief it, check it, and add only what it gets wrong</h1>
+<p class="standfirst">Most Claude Code advice from a year ago — plan first, think hard, write long rules, install skill packs — patched models that no longer ship. The current pattern inverts it: say what done looks like, give Claude a way to prove it, and only add infrastructure where it actually fails.</p>
+<p class="audience">You've used Claude Code for months and your setup has grown by accretion — plan-mode habits, a long CLAUDE.md, a folder of skills — and you're not sure which of it still earns its tokens.</p>
+</div></header>
+<section id="ticket-scoping">
+<div class="wrap"><div class="chead">
+<span class="cnum">1 / 8 &middot; start here</span>
+<h2>The ticket needs a visible finish line</h2>
+<p class="oneline">A vague prompt makes the agent guess what matters, and once it's guessing you're no longer managing the work, you're cleaning it up — a real ticket names the scope and the finish line.</p>
+</div></div>
+<div class="wrap">
+<p>The failure mode isn't the agent's competence, it's the size and shape of what it was given. 'Make this pop' has no finish line, so the agent supplies one — its own guess at what matters — and a guess you didn't make is a guess you now have to check line by line. A ticket like 'add a waitlist form with name, email, company, and a success state, matching the current brand' has a scope an agent can actually finish and a reviewer can actually check against.</p>
+<p>Greg Isenberg's version puts plan mode before the build: the agent inspects the repo, hands back the files it would touch, the smallest implementation, the risk, and what it is leaving out, and waits. Sized to one ticket, not a project plan (see <a class="ref" href="agent-native-engineering.html#spec-driven-trap">The spec-driven development trap</a>), so you have something concrete to react to.</p>
+<p>That step has since been dropped by the person who invented it. Boris Cherny, who built Claude Code, said in January that most of his sessions started in plan mode; by autumn 2026 he said on Hacker News it is no longer useful. Plan mode never changed what Claude could do — it appended a reminder not to start coding yet, a fix for older models (Sonnet 4.6, early Opus) that jumped straight in. Newer models plan while they work, so his brief became three parts: the task, the guardrails around it, and what done looks like — then let the model work it out and check the result afterwards. For bigger changes he asks for a diagram or an interactive demo of what changed. Plan mode still exists and still earns its place on a model that dives in too early; it is no longer the default.</p>
+<p>The definition of done is the part that compounds. It is the finish line the agent works toward, the thing you check the output against, and — written precisely enough — the check the agent can run on itself (<a class="ref" href="#checkable-oracle">Give it a way to check its work</a>).</p>
+<p>Ticket size is also what makes review possible. A tightly scoped ticket produces a diff you can actually read; a vague one produces a pile of changes that might look impressive but is hard to trust, because nothing bounded what got touched.</p>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 170" role="img"
+  aria-label="Two prompts. Vague prompt: make this pop, leads to the agent guessing what matters, producing a large unreviewable diff. Specific ticket: add a waitlist form with name, email, company and a success state, leads directly to a small reviewable diff.">
+  <text x="0" y="14" class="d-label">VAGUE</text>
+  <rect x="0" y="24" width="150" height="30" rx="4" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="75" y="43" class="d-label" text-anchor="middle">"make this pop"</text>
+  <path d="M75 54 V70" stroke="var(--interference)" stroke-width="1.4"/>
+  <text x="75" y="86" class="d-fix" text-anchor="middle">agent guesses</text>
+  <rect x="0" y="94" width="150" height="30" rx="4" fill="var(--interference)" opacity="0.4"/>
+  <text x="75" y="113" class="d-label" text-anchor="middle">big, unreviewable diff</text>
+
+  <text x="250" y="14" class="d-label">SPECIFIC TICKET</text>
+  <rect x="250" y="24" width="200" height="46" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="260" y="40" class="d-label">"waitlist form: name,</text>
+  <text x="260" y="54" class="d-label">email, company, success</text>
+  <text x="260" y="66" class="d-label">state, match brand"</text>
+  <path d="M350 70 V86" stroke="var(--signal)" stroke-width="1.4"/>
+  <text x="350" y="102" class="d-fix" text-anchor="middle">agent builds to spec</text>
+  <rect x="270" y="110" width="160" height="30" rx="4" fill="var(--signal)" opacity="0.4"/>
+  <text x="350" y="129" class="d-label" text-anchor="middle">small, reviewable diff</text>
+</svg></div><figcaption><b>What the agent does with the gap</b><span>A vague prompt leaves a gap the agent has to fill on its own — with its guess, not yours.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write the ticket the way you'd brief a new hire: job, scope, expected experience, and what's off-limits — not "make it better."</li>
+<li>Brief in three lines — task: this week's report from the CRM export; guardrails: don't amend the template, don't email anyone; done: every figure matches the export.</li>
+<li>Reach for plan mode only when the model starts building before it understands the job.</li>
+<li>When it finishes, ask for a one-page visual of what it did and what it assumed.</li>
+<li>If a ticket is big enough that you can't review the diff in one sitting, it's not one ticket.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">Once the brief carries the task, the guardrails and the finish line, the next old habit to drop is steering how hard Claude thinks about it.</p>
+<section id="effort-levels">
+<div class="wrap"><div class="chead">
+<span class="cnum">2 / 8 &middot; builds on <a class="out" href="llm-fundamentals.html#tokens">tokens</a></span>
+<h2>Your effort level is too high</h2>
+<p class="oneline">Effort is thinking tokens spent per task, and the benchmarks that justify cranking it up hold the task fixed — but you can rewrite the task, and a better-specified task needs less effort.</p>
+</div></div>
+<div class="wrap">
+<p>Effort level controls how many reasoning tokens the agent spends. Crank it up and it thinks harder about the same work — including the parts that do not reward thinking. Exploring a codebase is the clearest case: it is a task you do not really need effort for, so extra effort mostly buys you a slower, more expensive traversal and an agent pushing hard on things that did not need pushing.</p>
+<p>The benchmark charts do show quality rising with effort, and Pocock's objection to them is precise: those charts hold the task static. The task is a fixed prompt on a fixed problem. You, unlike the benchmark, can change how the task is specified.</p>
+<p>That is the substitution worth understanding. High-quality information given to the agent up front does the work that reasoning tokens would otherwise have to do. The better the spec, the less effort the same job requires — so effort is a knob you reach for when your specification has run out, not the first thing you turn up.</p>
+<p>The practical recommendation is to start at the lowest effort level you have access to and raise it from there. Not zero: some thinking tokens are worth having, because chain of thought is a genuinely useful way to work with agents.</p>
+<p>The old in-prompt version of this dial is gone, per Simon Scrapes. Claude Code once mapped "think", "think hard", "think harder" and "ultrathink" to bigger thinking budgets; it now reads them as ordinary words, and effort is a separate setting with a recommended level per model. Simon Scrapes, relaying Anthropic, puts the default further up than Pocock does: Opus 5.5 recommends medium, and Anthropic says medium matches or beats Opus 5 on high for coding and knowledge work, so his advice is to leave it on the recommendation. The two disagree on the floor, not the direction — neither raises effort by default, and both treat a better-specified task as the thing that actually buys quality.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>medium</b><i></i><span>Opus 5.5's recommended effort — which Anthropic says matches or beats Opus 5 on high for coding and knowledge work</span></div>
+</div>
+<div class="analogy"><q>The more high-quality information you give it, the lower effort you actually need to complete the task.</q><p>It turns effort from a quality dial into a symptom: if you need max effort for routine work, the specification is doing too little.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Start at the lowest effort level available and raise it only when output actually suffers.</li>
+<li>Don't spend effort on exploration — spend it on the reasoning-heavy step, if any.</li>
+<li>Improve the spec before raising the dial; information substitutes for thinking tokens.</li>
+<li>Keep some thinking tokens — chain of thought is worth its cost.</li>
+<li>Drop "think hard" / "ultrathink" from prompts — set effort in the setting instead.</li>
+<li>If you don't want to tune it, leave it on the model's recommended level, never above.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/shorts/iQb3F9UzBR4" target="_blank" rel="noopener">Matt Pocock &middot; Your effort level is TOO DAMN HIGH &middot; 1:17 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">Checking after instead of planning before only works if the check is something Claude can run itself — so the definition of done has to become one.</p>
+<section id="checkable-oracle">
+<div class="wrap"><div class="chead">
+<span class="cnum">3 / 8 &middot; start here</span>
+<h2>Give it a way to check its work</h2>
+<p class="oneline">Hand the agent something that can objectively score its own output — a test suite, a screenshot, a simulator — and it stops needing you between attempts, because it can tell for itself whether the last one was closer.</p>
+</div></div>
+<div class="wrap">
+<p>Boris, who built Claude Code, describes this as the workflow that separates a good result from a nearly correct one. Give the agent a mock and ask for the web UI and it gets close on the first attempt. The gap between close and right is not more instruction — it is more attempts, and attempts are only worth anything if something tells the agent which direction it moved in.</p>
+<p>That something has to be objective. A unit test run, a Puppeteer screenshot of the page, a screenshot from the iOS simulator: each produces evidence the model can read back on the next turn and compare against the target. Without one, the agent has already emitted its best single guess, and asking it to try again just resamples the same guess. With one, it has a gradient — this failed, that passed, the layout is off by this much — and it can walk it without you in the loop. His number is two or three iterations to go from good to almost perfect.</p>
+<p>The practical consequence is that setting up the check is the work. Whatever the domain is — unit tests, integration tests, browser screenshots, native app screenshots — the job is to hand the agent a way to see its own result, and then let it iterate. This is why a Puppeteer MCP server checked into a repo is worth more than any prompt written about the UI: it converts a single-shot request into a loop.</p>
+<p>It is a narrower thing than having the agent judge a product as a user would. Taste questions — is this headline persuasive, is this flow confusing — are not oracles, because there is no pass/fail to read back. Those still need a human, or an explicit persona framing.</p>
+<p>Two refinements since, both from Simon Scrapes. First, telling Claude to double-check in the prompt is now dead weight: per Anthropic's Opus 5 guide it already checks its own work unprompted, so the line adds cost without changing the result. What it cannot know unprompted is your pass/fail. Second, the check should come straight from the definition of done in the brief (<a class="ref" href="#ticket-scoping">The ticket needs a visible finish line</a>). "Every figure matches the export" becomes a small check_report script that compares each figure and confirms every template section is filled: the first run fails on one figure, Claude fixes it, reruns, passes, and only then shows you — you read evidence instead of running the checks yourself. The check doesn't have to be code (a brand-voice doc a draft is graded against counts), but the more deterministic it is, the more it catches.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>2-3</b><i>iterations</i><span>from "pretty good" to "almost perfect", given a check</span></div>
+<div class="fig"><b>2-3x</b><i>quality</i><span>Boris's January 2026 claim for what a way to verify adds to the final result</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 230" role="img"
+  aria-label="A chart with attempts on the horizontal axis (1, 2, 3) and closeness to the target on the vertical axis. Without a check, the curve rises to pretty good on the first attempt and stays flat across attempts two and three. With a check, it starts at the same point and climbs on each attempt, reaching almost perfect by the third.">
+  <line x1="46" y1="26" x2="46" y2="170" stroke="var(--line)" stroke-width="1.5"/>
+  <line x1="46" y1="170" x2="420" y2="170" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="0" y="34" class="d-label">target</text>
+  <text x="0" y="174" class="d-label">rough</text>
+  <text x="120" y="190" class="d-label">attempt 1</text>
+  <text x="230" y="190" class="d-label">attempt 2</text>
+  <text x="340" y="190" class="d-label">attempt 3</text>
+
+  <path d="M46 158 L140 92 L250 88 L360 86" fill="none" stroke="var(--interference)" stroke-width="2"/>
+  <circle cx="140" cy="92" r="4" fill="var(--interference)"/>
+  <circle cx="250" cy="88" r="4" fill="var(--interference)"/>
+  <circle cx="360" cy="86" r="4" fill="var(--interference)"/>
+  <text x="250" y="112" class="d-label">no check &#8212; flat</text>
+
+  <path d="M46 158 L140 92 L250 62 L360 42" fill="none" stroke="var(--signal)" stroke-width="2"/>
+  <circle cx="140" cy="92" r="4" fill="var(--signal)"/>
+  <circle cx="250" cy="62" r="4" fill="var(--signal)"/>
+  <circle cx="360" cy="42" r="4" fill="var(--signal)"/>
+  <text x="250" y="34" class="d-num">tests / screenshots</text>
+
+  <text x="46" y="216" class="d-fix">the check is what turns a second attempt into progress</text>
+</svg></div><figcaption><b>Why one shot plateaus</b><span>Without a check, every extra attempt is another sample of the same guess. With one, each attempt starts from evidence about the last.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Before prompting, ask what would tell the agent it got this wrong — then wire it up.</li>
+<li>Give UI work a screenshot tool (browser or simulator), not a written description.</li>
+<li>Give logic work a test command it can run itself, not a request to be careful.</li>
+<li>Say explicitly to iterate until the check passes, not to make one attempt.</li>
+<li>Turn the brief's definition of done into the check — a script, or a doc the draft is graded against.</li>
+<li>Don't write "double-check your work" — give it criteria it can pass or fail.</li>
+<li>Check in the tooling — an MCP server or script in the repo — so the loop is shared.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=pQ6G9TQfGIA" target="_blank" rel="noopener">frugle &middot; Anthropic's FREE 24-Min Prompt Engineering Workshop (Beats Every $500 Course) &middot; 27:55 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">A check Claude can run still needs something to keep it going until the check passes, and /goal's judge can only rule on what the check prints into the chat.</p>
+<section id="goal-judge">
+<div class="wrap"><div class="chead">
+<span class="cnum">4 / 8 &middot; builds on <s>checkable-oracle</s></span>
+<h2>The /goal judge only reads the chat</h2>
+<p class="oneline">/goal keeps Claude taking turns until a separate small model rules the goal met — but that judge sees only the conversation, never your files or commands, so a goal it can't verify from the transcript ends the loop early.</p>
+</div></div>
+<div class="wrap">
+<p>A check Claude can run is only half of an unattended loop. The other half is something that keeps Claude going until the check passes — otherwise you sit there typing "continue" to get it to fix its own evidence. /goal is that half: after every turn, a separate small model reads the goal you set and decides whether the condition is met. If not, Claude takes another turn.</p>
+<p>The catch is what the judge can see. It doesn't run commands or read files independently; it gets the conversation — your goal and Claude's output — and nothing else. So it can only rule on evidence that has been printed into the transcript. Set a goal like "the report is finished" and the only evidence available is Claude saying the report is finished, which the judge has no way to contradict. The loop stops on a claim, not a result.</p>
+<p>That is why the goal has to name the proof, not just the end state. "The check_report script passes and you show me the output" forces the evidence into the chat where the judge can read it, and it ties the goal to the check written from your definition of done (<a class="ref" href="#checkable-oracle">Give it a way to check its work</a>). Anthropic's guidance, as relayed in the video: one end state, how to prove it, what mustn't change, and a turn limit so a goal that can never be met doesn't run indefinitely.</p>
+<p>The speaker frames this as how it works today, and hopes the explicit command goes away — that you'll eventually set the done criteria and the loop will simply run until they're validated. The judge-sees-only-the-transcript constraint is the part to check again before relying on it.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>15</b><i>turns</i><span>the turn cap in the example goal — a stop condition, not a target</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 500 236" role="img"
+  aria-label="A loop. Claude works, its turn lands in the transcript, which holds your goal, Claude's reply and any printed output. A small judge model reads only the transcript. If the goal is met the loop stops; if not, Claude takes another turn. Files, commands and disk sit outside the loop with a dashed line to the judge marked never read.">
+  <path d="M410 46 V18 H60 V46" fill="none" stroke="var(--interference)" stroke-width="1.4"/>
+  <text x="235" y="12" class="d-label" text-anchor="middle">not met &#8594; another turn</text>
+
+  <rect x="0" y="46" width="120" height="40" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="60" y="70" class="d-node" text-anchor="middle">Claude works</text>
+  <path d="M120 66 H170" stroke="var(--line)" stroke-width="1.5"/>
+
+  <rect x="170" y="36" width="140" height="74" rx="5" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="240" y="54" class="d-fix" text-anchor="middle">transcript</text>
+  <text x="182" y="72" class="d-label">your goal</text>
+  <text x="182" y="86" class="d-label">Claude's reply</text>
+  <text x="182" y="100" class="d-label">printed output</text>
+  <path d="M310 66 H350" stroke="var(--signal)" stroke-width="1.5"/>
+
+  <rect x="350" y="46" width="120" height="40" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="410" y="64" class="d-node" text-anchor="middle">judge</text>
+  <text x="410" y="78" class="d-label" text-anchor="middle">small model</text>
+  <path d="M450 86 V112" stroke="var(--signal)" stroke-width="1.5"/>
+  <text x="450" y="126" class="d-fix" text-anchor="middle">met &#8594; stop</text>
+
+  <rect x="170" y="150" width="140" height="46" rx="5" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="240" y="170" class="d-label" text-anchor="middle">files &#183; commands</text>
+  <text x="240" y="184" class="d-label" text-anchor="middle">disk</text>
+  <path d="M310 173 H380 V86" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="380" y="134" class="d-num" text-anchor="middle">&#10005;</text>
+  <text x="370" y="148" class="d-label" text-anchor="end">never read</text>
+
+  <text x="0" y="226" class="d-fix">a goal it can't verify from the chat ends on Claude's word</text>
+</svg></div><figcaption><b>What the judge can see</b><span>The judge rules on the transcript alone. Anything that only exists on disk — a test result, a file diff — counts only once Claude prints it.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Write the goal as: end state, how to prove it, what mustn't change, turn cap.</li>
+<li>Make the proof something printed into the chat — "show me the output" — not a file the judge will never open.</li>
+<li>Point the goal at the check you already wrote, not at a description of being done.</li>
+<li>Example: /goal check_report passes and you show me the output; the template is unchanged; stop after 15 turns.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">With the loop running unattended, what it reads before every turn matters more — and most of an old CLAUDE.md was written for a model you no longer use.</p>
+<section id="claude-md-as-index">
+<div class="wrap"><div class="chead">
+<span class="cnum">5 / 8 &middot; builds on <a class="out" href="claude-code-in-practice.html#context-hierarchy">context-hierarchy</a></span>
+<h2>CLAUDE.md is a contents page</h2>
+<p class="oneline">CLAUDE.md should hold only what's always true and Claude can't work out — everything else becomes a pointer to a file Claude opens when it needs it.</p>
+</div></div>
+<div class="wrap">
+<p>Most instructions in an old CLAUDE.md were written to correct a model that no longer ships. Per the video, when Opus 5 shipped Anthropic deleted over 80% of Claude Code's own instructions for exactly that reason. The same audit applies to yours: a line that tells Claude to do what it already does is paid for on every request and makes the lines that matter easier to miss. Anthropic's docs, as the speaker cites them, already say to keep the file under 200 lines, because longer files cost more and get followed less.</p>
+<p>The reframe is to treat CLAUDE.md the way SKILL.md works inside a skill folder: a contents page, not the content. Four kinds of line still earn a place — the tools and commands Claude can't guess, anything you do differently from how Claude would by default, gotchas it has got wrong more than once, and boundaries ("only write the email draft"). Everything else becomes a pointer to a file Claude opens only when the work calls for it — progressive disclosure, with CLAUDE.md holding only what's always true.</p>
+<p>How the pointer is written decides whether that disclosure actually happens. An @-import loads the whole file into every session, which defeats the point; a path in backticks plus when to open it ("read <code>docs/client-brief.md</code> before any client work") lets Claude load it at the right moment. And per the speaker's reading of Anthropic's docs, a file reached only through another file gets its first 100 lines previewed, not read — so a chain of pointers silently truncates the detail at the end of it. Pointing to every file straight from CLAUDE.md, and putting a contents list at the top of anything over 100 lines, keeps a partial read from losing what matters. (Anthropic sets the contents-list rule for skill files; extending it to every file the index points at is the speaker's own practice.)</p>
+</div>
+<div class="figs">
+<div class="fig"><b>80%+</b><i></i><span>of Claude Code's own instructions Anthropic deleted when Opus 5 shipped</span></div>
+<div class="fig"><b>200</b><i>lines</i><span>Anthropic's ceiling for a CLAUDE.md</span></div>
+<div class="fig"><b>100</b><i>lines</i><span>previewed from a file reached only through another file — and the length past which a file gets a contents list</span></div>
+<div class="fig"><b>4</b><i>kinds of line</i><span>that still belong in CLAUDE.md itself</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 500 236" role="img"
+  aria-label="CLAUDE.md as an index with three pointers. An at-import loads the whole file into every session. A backticked path with when to open it is opened on demand and read in full. A file reached only through another file gets only its first 100 lines previewed.">
+  <rect x="0" y="86" width="120" height="48" rx="5" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="60" y="108" class="d-fix" text-anchor="middle">CLAUDE.md</text>
+  <text x="60" y="124" class="d-label" text-anchor="middle">the index</text>
+
+  <path d="M120 98 H140 V34 H170" fill="none" stroke="var(--interference)" stroke-width="1.4"/>
+  <rect x="170" y="16" width="150" height="36" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="245" y="38" class="d-node" text-anchor="middle">@import file</text>
+  <text x="332" y="31" class="d-label">loaded every</text>
+  <text x="332" y="45" class="d-label">session &#8212; always paid</text>
+
+  <path d="M120 110 H170" stroke="var(--signal)" stroke-width="1.5"/>
+  <rect x="170" y="92" width="150" height="36" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="245" y="114" class="d-node" text-anchor="middle">`brief.md` + when</text>
+  <text x="332" y="107" class="d-fix">opened on demand,</text>
+  <text x="332" y="121" class="d-fix">read in full</text>
+
+  <path d="M120 122 H140 V186 H170" fill="none" stroke="var(--line)" stroke-width="1.4"/>
+  <rect x="170" y="168" width="70" height="36" rx="5" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="205" y="190" class="d-node" text-anchor="middle">a.md</text>
+  <path d="M240 186 H260" stroke="var(--line)" stroke-width="1.4"/>
+  <rect x="260" y="168" width="60" height="36" rx="5" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <text x="290" y="190" class="d-node" text-anchor="middle">b.md</text>
+  <text x="332" y="183" class="d-num">first 100 lines</text>
+  <text x="332" y="197" class="d-label">previewed only</text>
+
+  <text x="0" y="230" class="d-fix">every arrow starts at the index</text>
+</svg></div><figcaption><b>Three ways to point, three different reads</b><span>An @-import is paid for every session; a nested pointer is read only in part. A direct path, opened when needed, is the only one that gets the whole file at the right time.</span></figcaption></figure>
+<div class="analogy"><q>Claude.md to me now is the contents page for your workspace. It's the same job that skill.md does inside a skill folder.</q><p>It turns "what should CLAUDE.md say?" into "where does this live, and when should Claude go and get it?" — a placement question instead of a writing one.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Delete every line Claude follows without being told.</li>
+<li>Keep: commands it can't guess, your deviations, repeat gotchas, boundaries.</li>
+<li>Write pointers as a backticked path plus when to open it — never an @-import.</li>
+<li>Link every reference file straight from CLAUDE.md, not through another file.</li>
+<li>Put a contents list at the top of any referenced file over 100 lines.</li>
+<li>Run a prompt audit for stale-model instructions, dead paths and contradictions, and approve its cuts before it changes anything.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">CLAUDE.md holds what's always true about the workspace; a skill holds what's true about one process — and, like the index, only the part Claude can't do on its own.</p>
+<section id="skill-from-corrections">
+<div class="wrap"><div class="chead">
+<span class="cnum">6 / 8 &middot; start here</span>
+<h2>A skill is the corrections, not the process</h2>
+<p class="oneline">Run the job without a skill first and write down only where Claude went wrong — those corrections are the skill, because anything Claude already does right costs tokens without changing the output.</p>
+</div></div>
+<div class="wrap">
+<p>A skill changes the output only where it tells Claude something it wouldn't have done on its own. Write a skill from the process in your head and most of it describes steps Claude already gets right — each one paid for in tokens, none of them moving the result. Anthropic's skill guide, as the speaker relays it, runs it the other way round: complete the task without a skill, run it on real tasks, and write down where it actually went wrong. The skill is then reverse-engineered from real failures rather than imagined ones, and Anthropic's team say most of their own best skills started as a few lines and a single gotcha.</p>
+<p>The evidence that this matters is a placebo test. One developer (unnamed in the video) ran nine widely-starred skill packs — 450 runs on Opus 5.5, at the end of September — and only two of the nine beat a dummy file of the same length. The same-length dummy is the point: it controls for "any extra text changes behaviour," so what's left is whether the skill's content did anything. For seven of nine, it didn't.</p>
+<p>Corrections are also model-specific. What a model gets wrong out of the box is a property of that model, so the skill has to be built on the model you'll actually run it on — another model will need more or fewer instructions. This refines rather than contradicts capturing a skill from one clean run (<a class="ref" href="ai-employee-setup.html#skills-connectors-hooks">Skills, connectors, and hooks</a>): capture from the run, but keep only the corrections that got it to your definition of done.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>2 of 9</b><i>skill packs</i><span>that beat a same-length dummy file in one developer's test</span></div>
+<div class="fig"><b>450</b><i>runs</i><span>in that test, on Opus 5.5</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 246" role="img"
+  aria-label="Two skills compared as stacked columns. A skill written from the process is a tall column, mostly steps Claude already does right, with a thin slice of corrections at the top. A skill written from corrections is only that thin slice. Only the corrections change the output; the rest costs tokens.">
+  <text x="70" y="14" class="d-label" text-anchor="middle">FROM THE PROCESS</text>
+  <rect x="20" y="24" width="100" height="22" rx="3" fill="var(--signal)" opacity="0.55"/>
+  <rect x="20" y="48" width="100" height="142" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="70" y="110" class="d-label" text-anchor="middle">steps Claude</text>
+  <text x="70" y="124" class="d-label" text-anchor="middle">does anyway</text>
+  <text x="70" y="208" class="d-num" text-anchor="middle">all of it costs tokens</text>
+
+  <text x="250" y="14" class="d-label" text-anchor="middle">FROM CORRECTIONS</text>
+  <rect x="200" y="24" width="100" height="22" rx="3" fill="var(--signal)" opacity="0.55"/>
+  <rect x="200" y="48" width="100" height="142" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>
+  <text x="250" y="122" class="d-label" text-anchor="middle">left out</text>
+
+  <path d="M300 35 H330" stroke="var(--signal)" stroke-width="1.5"/>
+  <text x="336" y="32" class="d-fix">the corrections &#8212;</text>
+  <text x="336" y="46" class="d-fix">the only part that</text>
+  <text x="336" y="60" class="d-fix">changes the output</text>
+
+  <text x="0" y="240" class="d-fix">same score with and without it = decoration</text>
+</svg></div><figcaption><b>Where a skill's tokens go</b><span>Written from the process, most of a skill restates what Claude does anyway. Written from the corrections, it is only the part that changes the output.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Do the job with Claude and no skill first; log every correction you make.</li>
+<li>Write the skill from the corrections only — not from the process.</li>
+<li>Build and test it on the model you'll actually run it on.</li>
+<li>Run <code>claude plugin eval</code> with and without the skill; delete it if the scores match.</li>
+<li>Run /skill-doctor to see what each skill costs and how often it fires; cut the unused ones first, then eval the rest.</li>
+<li>Treat an installed skill pack as unproven until it beats no skill on your task.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">Corrections in a skill are still text the model can drop. For anything that must never happen, text is the wrong tool.</p>
+<section id="deterministic-gauntlet">
+<div class="wrap"><div class="chead">
+<span class="cnum">7 / 8 &middot; builds on <a class="out" href="context-engineering.html#context-window">context-window</a></span>
+<h2>The deterministic gauntlet</h2>
+<p class="oneline">A long list of written rules loses its power, because the model forgets rules in the middle of the text. A tool that checks the code does not forget. Use a tool, not a long list of rules.</p>
+</div></div>
+<div class="wrap">
+<p>Uncle Bob's first method with agents was simple: write down the rules. His prompts grew into documents of five to ten pages. They covered test-driven development, clean code, and style. He wanted the agents to follow all of it. The agents read the rules. Then they did not follow the rules. His own words for this: the agents treat the rules "in the Pirates of the Caribbean sense — they're more like guidelines."</p>
+<p>The cause is the same effect that shapes the whole context window. Text at the start and the end of a long prompt keeps the model's attention. Text in the middle does not. A long document buries most of its own rules. Rule fifty of a fifty-rule document has, in practice, no effect at all.</p>
+<p>So he stopped writing long rule documents. His fix has two parts. First, cut the prompt down to the few words the agent must actually obey. Second, move every other rule out of the prompt and into a tool. He uses two tools for this: the CRAP score and mutation testing. The agent must run the tool and fix the code until the tool reports a pass. A tool sits outside the context window. It cannot get lost in the middle of a long document, because it is not part of the document.</p>
+<p>This method costs time. Each check in the loop slows the agent down. He trades speed for quality, and he says he has not found the point where this trade stops paying off. But he has found a floor. Even with many checks, the agent still works about two to four times faster than he does by hand.</p>
+<p>Shouting doesn't rescue a buried rule either. Writing IMPORTANT or MUST in capitals because the model kept missing something no longer works, per Simon Scrapes. In Claude Code the tool form of a must-never rule is a hook: a small script that runs at a moment you define — before every tool call, say — deterministically, spending no model tokens and firing whatever the model decided. "Never email the client" as a CLAUDE.md line is a request; as a hook that blocks any email to a client, it is a guarantee. That gives a mechanical audit: every all-caps line is either something Claude does anyway, so delete it, or something that must never happen, so make it a hook.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>5-10</b><i>pages</i><span>length his early instruction documents grew to before he abandoned steering</span></div>
+<div class="fig"><b>2-4x</b><i>productivity</i><span>his estimated margin over doing the work himself, even slowed by the check loop</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 480 210" role="img"
+  aria-label="Diagram contrasting a prompted rule, which fades as it is buried in a long document, with a deterministic tool loop, where the agent edits code and re-checks until the tool passes.">
+  <defs>
+    <marker id="dg-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+
+  <text x="0" y="14" class="d-label">PROMPTED RULE</text>
+  <rect x="0" y="24" width="220" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="110" y="43" class="d-label" text-anchor="middle">rule 1 (kept)</text>
+  <rect x="0" y="60" width="220" height="30" rx="4" fill="var(--interference)" opacity="0.18" stroke="var(--line)"/>
+  <text x="110" y="79" class="d-label" text-anchor="middle" opacity="0.6">rule 25 (lost in the middle)</text>
+  <rect x="0" y="96" width="220" height="30" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="110" y="115" class="d-label" text-anchor="middle">rule 50 (kept)</text>
+
+  <text x="260" y="14" class="d-label">DETERMINISTIC LOOP</text>
+  <rect x="260" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="305" y="45" class="d-node" text-anchor="middle">agent</text>
+  <rect x="380" y="24" width="90" height="34" rx="4" fill="var(--surface-2)" stroke="var(--line)"/>
+  <text x="425" y="41" class="d-node" text-anchor="middle">crap +</text>
+  <text x="425" y="53" class="d-node" text-anchor="middle">mutation</text>
+  <line x1="350" y1="41" x2="378" y2="41" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#dg-arrow)"/>
+  <path d="M425 60 C 425 100, 305 100, 305 60" fill="none" stroke="var(--signal)" stroke-width="1.5" marker-end="url(#dg-arrow)"/>
+  <text x="365" y="96" class="d-fix" text-anchor="middle">fail &#8594; fix &#8594; recheck</text>
+  <text x="425" y="80" class="d-label" text-anchor="middle">pass &#8594; done</text>
+
+  <text x="0" y="150" class="d-label">A tool never lives in the middle of the prompt, so it never fades.</text>
+  <text x="0" y="170" class="d-label">The agent loops on it directly until the check itself says stop.</text>
+</svg></div><figcaption><b>A rule you write versus a rule you enforce</b><span>A prompted rule fades once it's buried mid-document. A tool sits outside the context window entirely, so the agent can't lose track of it — it just loops until the tool says pass.</span></figcaption></figure>
+<div class="analogy"><q>They treat those rules in the Pirates of the Caribbean sense — they're more like guidelines.</q><p>This shows why long written rules lose strength. The model does not disobey on purpose. It has lost the rule somewhere in the middle of its own context.</p></div>
+<div class="do"><h3>What to do</h3><ul>
+<li>Keep the system prompt short. Use only the few sentences the agent must obey.</li>
+<li>Put every other rule into a tool the agent must pass, not into a paragraph it might read.</li>
+<li>Run the tool in a loop. Change the code until the tool passes, not until the agent says it is done.</li>
+<li>Bring back checks you once rejected as too slow for a human. An agent does not mind the wait.</li>
+<li>Search CLAUDE.md for anything in capitals. Delete it if Claude does it anyway; turn it into a hook if it must never happen.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<p class="bridge">Brief, check, goal, a lean index, corrective skills, hooks for the hard lines — that's a package that can run without you starting it.</p>
+<section id="scheduled-routines">
+<div class="wrap"><div class="chead">
+<span class="cnum">8 / 8 &middot; start here</span>
+<h2>Scheduled routines</h2>
+<p class="oneline">Give an agent recurring, low-stakes responsibilities on a schedule — a morning brief, a weekly review — before ever letting it ship unsupervised, so the boring-but-essential work happens without you remembering to ask for it.</p>
+</div></div>
+<div class="wrap">
+<p>The instinct once an agent can run on a schedule is to reach for the most dramatic version — shipping code while you sleep. The safer and more useful starting point is the opposite: hand it the kind of recurring work that's low-stakes precisely because it doesn't touch production, but that a business quietly depends on someone doing — reading customer notes, noticing which issues keep coming up, deciding what's worth working on next.</p>
+<p>A routine is that task, scoped and scheduled: read the customer and context folders, check open issues, write a summary to a specific file, with an explicit word cap and an explicit 'don't edit code, don't open a pull request.' The constraints are as load- bearing as the task — they're what makes a recurring agent safe to leave running unattended before you've built up trust in its judgment.</p>
+<p>The payoff compounds because the routine's output feeds the rest of the system: a morning brief surfaces the day's highest-priority item before you've opened the repo, and a weekly review can catch a pattern — the same onboarding complaint from three different customers — that no single note would have surfaced on its own.</p>
+<p>Two later changes widen what a routine can be. Triggers no longer have to be a clock: an event — a to-do added, a lead landing in the CRM — can start the work. And Claude Code projects now run as one ongoing conversation that spawns its own threads and keeps running with your machine off, so the isolated context a routine needs persists between runs. Simon Scrapes runs his whole social-content pipeline this way; his only step is approving the output. The low-stakes-first rule still applies — what changes is how much of the loop can run before it reaches you.</p>
+</div>
+<div class="figs">
+<div class="fig"><b>7:00am weekdays</b><i></i><span>morning brief schedule</span></div>
+<div class="fig"><b>500</b><i>words</i><span>morning brief length cap</span></div>
+<div class="fig"><b>Fridays 3:00pm</b><i></i><span>weekly ops review schedule</span></div>
+</div>
+<figure><div class="plate"><svg viewBox="0 0 460 160" role="img"
+  aria-label="Two scheduled routines. Morning brief, every weekday 7am, reads customer notes and issues, writes context slash morning-brief.md, under 500 words, no code edits. Weekly ops review, every Friday 3pm, groups issues and notes, writes context slash weekly-ops.md, no code edits.">
+  <text x="0" y="14" class="d-label">MON&#8211;FRI 7AM</text>
+  <rect x="0" y="22" width="200" height="80" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="10" y="40" class="d-label">read /customers, /context,</text>
+  <text x="10" y="54" class="d-label">open issues</text>
+  <text x="10" y="72" class="d-node">&#8594; morning-brief.md</text>
+  <text x="10" y="90" class="d-fix">under 500 words, no code</text>
+
+  <text x="250" y="14" class="d-label">FRI 3PM</text>
+  <rect x="250" y="22" width="200" height="80" rx="4" fill="var(--surface-2)" stroke="var(--signal)"/>
+  <text x="260" y="40" class="d-label">group issues, find</text>
+  <text x="260" y="54" class="d-label">duplicates, notes</text>
+  <text x="260" y="72" class="d-node">&#8594; weekly-ops.md</text>
+  <text x="260" y="90" class="d-fix">no code, no PR</text>
+
+  <text x="0" y="134" class="d-label">Both write to a file. Neither touches production.</text>
+</svg></div><figcaption><b>Two routines, same shape</b><span>Read, summarize, write to a file — never touch code. The safety is in what the routine is <em>not</em> allowed to do.</span></figcaption></figure>
+<div class="do"><h3>What to do</h3><ul>
+<li>Start scheduled work with a read-only routine — no code edits, no pull requests — before trusting an agent with anything that ships.</li>
+<li>Give every routine an explicit word or scope cap so it stays a brief, not a report.</li>
+<li>Point routines at the same context folders the rest of the system already reads and writes to, so their output compounds instead of living in isolation.</li>
+<li>Trigger routines on events (a new lead, a new to-do), not only on a schedule.</li>
+<li>Keep your part to approving the output — that's the step that stays human.</li>
+</ul></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=SkY-tR9kf-k" target="_blank" rel="noopener">Greg Isenberg &middot; Claude Code New Features, Explained &middot; 48:10 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
+</section>
+<div class="close"><div class="wrap"><h2>Leave it alone until it fails</h2><p>Every move here is the same move: give Claude the outcome and a way to prove it, watch where it actually goes wrong, and add infrastructure — a line in CLAUDE.md, a correction in a skill, a hook — only there. Re-run that audit each time the model changes, because the failures are a property of the model, not of your process.</p></div></div>
+<footer><div class="wrap">Built from short-form video. <a href="index.html">All lessons</a></div></footer>
+<script>
+(function(){
+  var r=document.getElementById('rail'),f=r.firstElementChild,t=r.lastElementChild;
+  function u(){
+    var h=document.documentElement,
+        m=(h.scrollHeight-h.clientHeight)||1,
+        p=Math.min(1,Math.max(0,(h.scrollTop||document.body.scrollTop)/m));
+    f.style.height=(p*100)+'%';
+    t.style.top=(4+p*92)+'%';
+    t.textContent=p<0.72?'smart zone':'dumb zone';
+    r.classList.toggle('deep',p>=0.72);
+    r.classList.toggle('on',p>0.02);
+  }
+  addEventListener('scroll',u,{passive:true}); addEventListener('resize',u); u();
+})();
+</script>
+</body>
+</html>

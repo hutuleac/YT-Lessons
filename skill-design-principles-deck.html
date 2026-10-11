@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>How to design a skill an agent actually follows &mdash; deck</title>
 <style>
@@ -126,7 +127,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -144,6 +145,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -151,6 +156,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -538,7 +545,7 @@ html.overview .slide figcaption b{font-size:11px; line-height:1.3}
   <text x="0" y="160" class="d-label">the loop repeats one feature until its own test says stop</text>
 </svg></div><figcaption><b>Gated on the test, not on the agent's word</b><span>Each feature must pass its own test before the loop advances — a failure sends it back to the same feature instead of compounding forward.</span></figcaption></figure><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:54.1%"></i></div></section>
 <section class="slide k-quote"><div class="tick"><span>The Ralph loop</span><s>21 / 37</s></div><q>Imagine not knowing how to drive, but then buying a Tesla for the self-driving stuff.</q><p>Full automation before you've done the manual version means you can't tell when it's steering you wrong.</p><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:56.8%"></i></div></section>
-<section class="slide k-do"><div class="tick"><span>The Ralph loop</span><s>22 / 37</s></div><h2>What to do</h2><ul class="acts"><li class="step">Build and test features one at a time by hand before turning on an autonomous loop.</li><li class="step">Only automate once you have something built and deployed you can actually point to.</li><li class="step">Feed the loop a plan that's been interviewed out — see [[grooming-skill]] — since the loop cannot fix a bad plan, only execute it faster.</li><li class="step">Have every feature write and pass its own test before the loop is allowed to move on.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:59.5%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The Ralph loop</span><s>22 / 37</s></div><h2>What to do</h2><ul class="acts"><li class="step">Build and test features one at a time by hand before turning on an autonomous loop.</li><li class="step">Only automate once you have something built and deployed you can actually point to.</li><li class="step">Feed the loop a plan that's been interviewed out — see <em>The grooming skill</em> — since the loop cannot fix a bad plan, only execute it faster.</li><li class="step">Have every feature write and pass its own test before the loop is allowed to move on.</li></ul><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:59.5%"></i></div></section>
 <section class="slide k-section"><div class="tick"><span>Named vocabulary instead of instructions</span><s>23 / 37</s></div><p class="idx">06</p><h2>Named vocabulary instead of instructions</h2><p class="lead">A code review checklist built from named smells — shotgun surgery, feature envy, data clumps — packs a whole diagnostic step into one word the model already knows, instead of a paragraph explaining what to look for.</p><div class="src"><a href="https://www.youtube.com/watch?v=8D8ewFBJfFM" target="_blank" rel="noopener">Eric Tech &middot; Matt Pocock's Claude Code Skills Beat Superpowers Now &middot; 24:17 &#8599;</a></div><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:62.2%"></i></div></section>
 <section class="slide k-bullets"><div class="tick"><span>Named vocabulary instead of instructions</span><s>24 / 37</s></div><h2>Named vocabulary instead of instructions</h2><ol class="bul"><li class="step">The review checklist is 12 words, not 12 paragraphs of instructions.</li><li class="step">The words come from Fowler's Refactoring — a book the model has already read.</li><li class="step">Shotgun surgery: one change that has to be repeated in many places.</li><li class="step">Feature envy: logic living in the wrong file.</li><li class="step">Data clumps: the same group of fields passed around separately instead of as one type.</li></ol><div class="foot"><em>Skill design</em><em>How to design a skill an agent actually follows</em></div><div class="bar"><i style="width:64.9%"></i></div></section>
 <section class="slide k-figs"><div class="tick"><span>Named vocabulary instead of instructions</span><s>25 / 37</s></div><figure><div class="plate"><svg viewBox="0 0 480 150" role="img"

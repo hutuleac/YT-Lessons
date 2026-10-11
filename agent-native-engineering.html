@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stop steering agents. Build gauntlets instead.</title>
 <meta name="description" content="Uncle Bob spent fifty years writing rules for humans. In the last year, he tested which rules still work for agents, which rules need new limits, and which rules were never real rules at all, just habits built around a human's limits.">
@@ -127,7 +128,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -145,6 +146,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -152,6 +157,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -182,6 +189,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>The cause is the same effect that shapes the whole context window. Text at the start and the end of a long prompt keeps the model's attention. Text in the middle does not. A long document buries most of its own rules. Rule fifty of a fifty-rule document has, in practice, no effect at all.</p>
 <p>So he stopped writing long rule documents. His fix has two parts. First, cut the prompt down to the few words the agent must actually obey. Second, move every other rule out of the prompt and into a tool. He uses two tools for this: the CRAP score and mutation testing. The agent must run the tool and fix the code until the tool reports a pass. A tool sits outside the context window. It cannot get lost in the middle of a long document, because it is not part of the document.</p>
 <p>This method costs time. Each check in the loop slows the agent down. He trades speed for quality, and he says he has not found the point where this trade stops paying off. But he has found a floor. Even with many checks, the agent still works about two to four times faster than he does by hand.</p>
+<p>Shouting doesn't rescue a buried rule either. Writing IMPORTANT or MUST in capitals because the model kept missing something no longer works, per Simon Scrapes. In Claude Code the tool form of a must-never rule is a hook: a small script that runs at a moment you define — before every tool call, say — deterministically, spending no model tokens and firing whatever the model decided. "Never email the client" as a CLAUDE.md line is a request; as a hook that blocks any email to a client, it is a guarantee. That gives a mechanical audit: every all-caps line is either something Claude does anyway, so delete it, or something that must never happen, so make it a hook.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>5-10</b><i>pages</i><span>length his early instruction documents grew to before he abandoned steering</span></div>
@@ -223,8 +231,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <li>Put every other rule into a tool the agent must pass, not into a paragraph it might read.</li>
 <li>Run the tool in a loop. Change the code until the tool passes, not until the agent says it is done.</li>
 <li>Bring back checks you once rejected as too slow for a human. An agent does not mind the wait.</li>
+<li>Search CLAUDE.md for anything in capitals. Delete it if Claude does it anyway; turn it into a hook if it must never happen.</li>
 </ul></div>
-<div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
 </section>
 <p class="bridge">One agent that checks its own work is the base case. The next question: what happens when you stop asking one agent to do everything.</p>
 <section id="single-job-agents">
@@ -238,6 +247,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <p>The Specifier reads a document written by a human. It turns the document into a Gherkin test (given/when/then) and a QA procedure. The QA procedure is written from a human's point of view: "you are a human operating this system at the UI." The Coder writes unit tests and the code. This code must make the story and the Gherkin test pass. The Cleaner runs a CRAP check and a general review. This cleans up the mess the coder leaves behind. The Hardener runs mutation testing. Uncle Bob calls this stage "absolutely merciless": it aims for full coverage across every changed operator. The QA agent turns the procedure into a script. This script runs the system and returns a clear pass or fail.</p>
 <p>This method has two gains. First, each agent keeps a small context, so it can hold its few rules and follow them. Second, several agents can run at the same time. Uncle Bob's laptop runs three or more coders at once, with no trouble. Each agent starts, does its one job, and then stops. So the next stage starts with a clean context. It does not carry the last stage's problems forward.</p>
 <p>This method also costs something. Agents need real coordination between stages. Each agent takes 10 to 15 seconds just to start and load its context. But the numbers still favor the pipeline. One agent alone finishes a task in about five minutes, with weak results. The full pipeline takes about an hour, with much better results. A human doing the same work by hand takes about half a day.</p>
+<p>The counterweight is that newer models build this pipeline themselves, and over-build it. Per Anthropic's Opus 5 guide, as relayed by Simon Scrapes, the model hands work to sub agents more readily than any before it, which on small jobs just multiplies cost and time — so the advice has shifted from hand-wiring orchestrators and agent files to capping how many sub agents it may spawn and letting it choose the split. The one place to still say it explicitly is inside a skill: a heavy research step or an MCP call belongs in a sub agent so the main context stays clean, which is the original reason for splitting work at all.</p>
 </div>
 <div class="figs">
 <div class="fig"><b>~5 min</b><i>time</i><span>a single unconstrained agent takes on a task, with questionable results</span></div>
@@ -291,8 +301,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal); outline-of
 <li>Stop a stage's agent when its job is done. Start the next stage with a clean context.</li>
 <li>Run stages that do not depend on each other at the same time. Plan for startup time on each agent.</li>
 <li>Give a reviewer or checker the diff, not the whole codebase. It will not need to explore what already happened.</li>
+<li>On a current model, cap the sub-agent count in config before hand-building a team — it will split the work itself, and over-split small jobs.</li>
+<li>In a skill, name the noisy step — research, an MCP call — as a sub-agent step.</li>
 </ul></div>
-<div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a></div>
+<div class="src"><a href="https://www.youtube.com/watch?v=zcLPGC-tvgk" target="_blank" rel="noopener">Matt Pocock &middot; LIVE: Uncle Bob on Software Fundamentals in the Age of AI &middot; 56:39 &#8599;</a><a href="https://www.youtube.com/watch?v=J9NQTYUP6k0" target="_blank" rel="noopener">Simon Scrapes &middot; How the Top 1% Use Claude Code Differently &middot; 18:09 &#8599;</a></div>
 </section>
 <p class="bridge">Splitting agents by job keeps each one's context free of unrelated topics. Here is the reason that protection matters at all.</p>
 <section id="context-trajectory">

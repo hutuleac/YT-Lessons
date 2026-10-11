@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Everything is competing for the same window &mdash; deck</title>
 <style>
@@ -126,7 +127,7 @@ figure{margin:44px auto; max-width:var(--wide); padding:0 22px}
 .d-fix{font:600 12px var(--mono); fill:var(--signal)}
 figcaption{margin-top:16px}
 figcaption b{display:block; font-family:var(--mono); font-size:14px; font-weight:600; margin-bottom:6px}
-figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
+figcaption span{display:block; font-family:var(--sans); font-size:13.5px; line-height:1.5; color:var(--muted)}
 
 /* ---- analogy ---- */
 .analogy{max-width:var(--wide); margin:38px auto; padding:0 22px}
@@ -144,6 +145,10 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
 .do li:last-child{margin-bottom:0}
 .do li::before{content:"\2192"; position:absolute; left:0; color:var(--interference); font-family:var(--mono)}
 
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); padding:.1em .35em; border-radius:4px}
+a.ref{color:inherit; text-decoration:none; border-bottom:1px solid var(--signal)}
+a.ref:hover{color:var(--signal)}
+
 /* ---- source ---- */
 .src{max-width:var(--wide); margin:26px auto 0; padding:0 22px}
 .src a{
@@ -151,6 +156,8 @@ figcaption span{font-family:var(--sans); font-size:13.5px; line-height:1.5; colo
   border-bottom:1px solid var(--line)
 }
 .src a:hover{color:var(--signal); border-color:var(--signal)}
+.src a + a{display:table; margin-top:8px}
+.src a + a::before{content:"+ "}
 
 /* ---- closing ---- */
 .close{padding:10vh 0 14vh}
@@ -481,7 +488,7 @@ html.overview .slide figcaption b{font-size:11px; line-height:1.3}
     <marker id="ped-b" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--signal)"/></marker>
   </defs>
 </svg></div><figcaption><b>One output, two different lifespans</b><span>The plan is written to its own file. The exploration that produced it only ever lived in the chat, so only it needs clearing.</span></figcaption></figure><div class="foot"><em>Context engineering</em><em>Everything is competing for the same window</em></div><div class="bar"><i style="width:21.6%"></i></div></section>
-<section class="slide k-do"><div class="tick"><span>The plan survives, the exploration doesn't have to</span><s>12 / 51</s></div><h2>What to do</h2><ul class="acts"><li class="step">Set `show clear context on plan accept: true` in settings.json.</li><li class="step">Take the offer to clear when a plan is accepted — the plan file survives it.</li><li class="step">Don't hand-copy plan-mode findings into notes before accepting; the plan file already keeps them.</li></ul><div class="foot"><em>Context engineering</em><em>Everything is competing for the same window</em></div><div class="bar"><i style="width:23.5%"></i></div></section>
+<section class="slide k-do"><div class="tick"><span>The plan survives, the exploration doesn't have to</span><s>12 / 51</s></div><h2>What to do</h2><ul class="acts"><li class="step">Set <code>show clear context on plan accept: true</code> in settings.json.</li><li class="step">Take the offer to clear when a plan is accepted — the plan file survives it.</li><li class="step">Don't hand-copy plan-mode findings into notes before accepting; the plan file already keeps them.</li></ul><div class="foot"><em>Context engineering</em><em>Everything is competing for the same window</em></div><div class="bar"><i style="width:23.5%"></i></div></section>
 <section class="slide k-section"><div class="tick"><span>The dumb zone</span><s>13 / 51</s></div><p class="idx">03</p><h2>The dumb zone</h2><p class="lead">Every model degrades as its context window fills, so a large window has a usable region and a wasteful one — the dumb zone is where you stop getting your tokens' worth.</p><div class="src"><a href="https://www.youtube.com/shorts/sOd7svdu_1I" target="_blank" rel="noopener">Matt Pocock &middot; What is the dumb zone? &middot; 1:47 &#8599;</a></div><div class="foot"><em>Context engineering</em><em>Everything is competing for the same window</em></div><div class="bar"><i style="width:25.5%"></i></div></section>
 <section class="slide k-bullets"><div class="tick"><span>The dumb zone</span><s>14 / 51</s></div><h2>The dumb zone</h2><ol class="bul"><li class="step">A 1M-token window is not 1M tokens of usable work.</li><li class="step">Add a token and the model tracks every relationship it has to every other token.</li><li class="step">Performance sinks gradually — there is no cliff, so nothing warns you.</li><li class="step">Rule of thumb: the dumb zone starts around 150k tokens.</li></ol><div class="foot"><em>Context engineering</em><em>Everything is competing for the same window</em></div><div class="bar"><i style="width:27.5%"></i></div></section>
 <section class="slide k-figs"><div class="tick"><span>The dumb zone</span><s>15 / 51</s></div><figure><div class="plate"><svg viewBox="0 0 340 190" role="img"
